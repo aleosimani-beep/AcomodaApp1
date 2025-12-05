@@ -83,6 +83,7 @@
     }
     input[type="text"],
     input[type="password"],
+    input[type="month"],
     select {
       width: 100%;
       border-radius: 10px;
@@ -126,10 +127,75 @@
       display: flex;
       flex-direction: column;
     }
+    .row {
+      display: flex;
+      gap: 8px;
+    }
+    .row > * {
+      flex: 1;
+    }
     .status {
       font-size: 12px;
       color: #4b5563;
       margin-top: 4px;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .tab-btn {
+      flex: 1;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+      border: 1px solid #d1d5db;
+      background: #eef2ff;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #1d4ed8;
+      color: white;
+      border-color: #1d4ed8;
+      font-weight: 600;
+    }
+    .tab-section {
+      display: none;
+    }
+    .tab-section.active {
+      display: block;
+    }
+    .badge-role {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #e0f2fe;
+      color: #0369a1;
+      margin-left: 4px;
+    }
+    .badge-user {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #fef3c7;
+      color: #92400e;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 4px 6px;
+      text-align: center;
+    }
+    th {
+      background: #eff6ff;
+      font-weight: 600;
     }
     .login-section, .app-section {
       display: none;
@@ -145,13 +211,10 @@
       background: #dcfce7;
       color: #166534;
     }
-    .badge-user {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
+    .small-text {
       font-size: 11px;
-      background: #fef3c7;
-      color: #92400e;
+      color: #6b7280;
+      margin-top: 2px;
     }
   </style>
 </head>
@@ -180,18 +243,18 @@
           <div class="field-group">
             <label for="pin-input">PIN</label>
             <input type="password" id="pin-input" placeholder="Ingrese PIN" />
-            <div class="status" id="login-status"></div>
-            <div class="status" style="font-size:11px;">
-              El PIN del coordinador es privado. Los PIN de acomodadores se cargan en la sección de acomodadores.
+            <div id="login-status" class="status"></div>
+            <div class="small-text">
+              El PIN del coordinador es privado. Los PIN de acomodadores se cargan en la pestaña "Acomodadores".
             </div>
           </div>
           <button id="btn-login">Entrar</button>
         </div>
       </section>
 
-      <!-- APP -->
+      <!-- APP PRINCIPAL -->
       <section id="app-section" class="app-section">
-        <div class="card">
+        <div class="card" id="sesion-info">
           <div class="card-header">
             Sesión
             <span id="sesion-rol-pill" class="pill"></span>
@@ -200,40 +263,116 @@
           <button id="btn-logout" class="secondary" style="margin-top:6px;">Cerrar sesión</button>
         </div>
 
-        <!-- Vista coordinador -->
+        <!-- Vista Coordinador -->
         <section id="vista-coordinador" style="display:none;">
-          <div class="card">
-            <div class="card-header">
-              Acomodadores
-              <span class="pill">Listado y PIN</span>
-            </div>
-            <div class="field-group">
-              <label for="ac-nombre">Nombre</label>
-              <input type="text" id="ac-nombre" placeholder="Ej: Juan Pérez" />
-            </div>
-            <div class="field-group">
-              <label for="ac-pin">PIN (para que ingrese a su cuenta)</label>
-              <input type="password" id="ac-pin" placeholder="Ej: 1234" />
-            </div>
-            <button id="btn-agregar-acomodador">Agregar acomodador</button>
-            <div id="estado-acomodadores" class="status"></div>
+          <div class="tabs">
+            <button class="tab-btn active" data-tab="tab-acomodadores">Acomodadores</button>
+            <button class="tab-btn" data-tab="tab-calendario">Calendario</button>
           </div>
 
-          <div class="card">
-            <div class="card-header">Listado actual</div>
-            <div id="lista-acomodadores" class="status">Sin acomodadores cargados.</div>
+          <!-- Tab Acomodadores -->
+          <div id="tab-acomodadores" class="tab-section active">
+            <div class="card">
+              <div class="card-header">
+                Acomodadores
+                <span class="pill">Listado y PIN</span>
+              </div>
+              <div class="field-group">
+                <label for="ac-nombre">Nombre</label>
+                <input type="text" id="ac-nombre" placeholder="Ej: Juan Pérez" />
+              </div>
+              <div class="field-group">
+                <label for="ac-pin">PIN (para que ingrese a su cuenta)</label>
+                <input type="password" id="ac-pin" placeholder="Ej: 1234" />
+              </div>
+              <button id="btn-agregar-acomodador">Agregar acomodador</button>
+              <div id="estado-acomodadores" class="status"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">Listado actual</div>
+              <div id="lista-acomodadores" class="status">Sin acomodadores cargados.</div>
+            </div>
+          </div>
+
+          <!-- Tab Calendario -->
+          <div id="tab-calendario" class="tab-section">
+            <div class="card">
+              <div class="card-header">
+                Configuración de reuniones
+                <span class="pill">Días y horario</span>
+              </div>
+              <div class="row">
+                <div class="field-group">
+                  <label for="dia-medio">Día entre semana</label>
+                  <select id="dia-medio">
+                    <option value="3">Miércoles</option>
+                    <option value="2">Martes</option>
+                    <option value="4">Jueves</option>
+                    <option value="5">Viernes</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label for="hora-medio">Hora entre semana</label>
+                  <input type="text" id="hora-medio" placeholder="Ej: 19:00" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="field-group">
+                  <label for="dia-fin">Día fin de semana</label>
+                  <select id="dia-fin">
+                    <option value="6">Sábado</option>
+                    <option value="0">Domingo</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label for="hora-fin">Hora fin de semana</label>
+                  <input type="text" id="hora-fin" placeholder="Ej: 18:00" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                Programa mensual
+                <span class="pill">Nombre del día</span>
+              </div>
+              <div class="field-group">
+                <label for="mes-cal">Mes</label>
+                <input type="month" id="mes-cal" />
+                <div class="small-text">Elegí el mes y generá las reuniones.</div>
+              </div>
+              <button id="btn-generar-reuniones" class="secondary">Generar reuniones del mes</button>
+              <div id="estado-calendario" class="status" style="margin-top:4px;"></div>
+
+              <div id="tabla-calendario-wrapper" style="margin-top:8px; display:none;">
+                <table id="tabla-calendario">
+                  <thead>
+                    <tr>
+                      <th>Fecha</th>
+                      <th>Día</th>
+                      <th>Hora</th>
+                      <th>Entrada</th>
+                      <th>Auditorio</th>
+                    </tr>
+                  </thead>
+                  <tbody></tbody>
+                </table>
+                <button id="btn-guardar-calendario" style="margin-top:6px;">Guardar programa</button>
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- Vista acomodador -->
+        <!-- Vista Acomodador -->
         <section id="vista-acomodador" style="display:none;">
           <div class="card">
             <div class="card-header">
               Mis asignaciones
-              <span class="pill">Vista básica</span>
+              <span class="pill">Próximas semanas</span>
             </div>
-            <div id="info-acom" class="status">
-              Por ahora esta versión solo muestra el ingreso correcto. Más adelante sumamos el programa.
+            <div id="lista-asignaciones-acom" class="status">
+              No se encontraron asignaciones para este acomodador.
             </div>
           </div>
         </section>
@@ -242,7 +381,7 @@
   </div>
 
   <script>
-    // utilidades
+    // --- utilidades ---
     function guardarLS(clave, valor) {
       localStorage.setItem(clave, JSON.stringify(valor));
     }
@@ -251,12 +390,30 @@
       if (!raw) return defecto;
       try { return JSON.parse(raw); } catch (e) { return defecto; }
     }
+    function hoyISO() {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const dd = String(d.getDate()).padStart(2,"0");
+      return y+"-"+m+"-"+dd;
+    }
+    function formatearFecha(fechaISO) {
+      if (!fechaISO) return "";
+      const d = new Date(fechaISO+"T00:00:00");
+      if (isNaN(d.getTime())) return fechaISO;
+      const dd = String(d.getDate()).padStart(2,"0");
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const y = d.getFullYear();
+      return dd+"/"+m+"/"+y;
+    }
+    const nombresDias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 
-    // estado
+    // --- estado ---
     let acomodadores = leerLS("acomoda_acomodadores", []);
+    let programa = leerLS("acomoda_programa", []);
     let sesionActual = null;
 
-    // elementos login
+    // --- elementos login/sesión ---
     const loginSection = document.getElementById("login-section");
     const appSection   = document.getElementById("app-section");
     const rolSelect    = document.getElementById("rol-select");
@@ -264,22 +421,40 @@
     const loginBtn     = document.getElementById("btn-login");
     const loginStatus  = document.getElementById("login-status");
 
-    // elementos sesión
     const sesionRolPill = document.getElementById("sesion-rol-pill");
     const sesionDetalle = document.getElementById("sesion-detalle");
     const btnLogout     = document.getElementById("btn-logout");
 
-    // vistas
     const vistaCoord = document.getElementById("vista-coordinador");
     const vistaAcom  = document.getElementById("vista-acomodador");
 
-    // acomodadores
+    // --- tabs ---
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const tabSections = document.querySelectorAll(".tab-section");
+
+    // --- acomodadores ---
     const acNombreInput = document.getElementById("ac-nombre");
     const acPinInput    = document.getElementById("ac-pin");
     const btnAgregarAc  = document.getElementById("btn-agregar-acomodador");
     const estadoAcs     = document.getElementById("estado-acomodadores");
     const listaAcsDiv   = document.getElementById("lista-acomodadores");
 
+    // --- calendario ---
+    const diaMedioSel = document.getElementById("dia-medio");
+    const horaMedioIn = document.getElementById("hora-medio");
+    const diaFinSel   = document.getElementById("dia-fin");
+    const horaFinIn   = document.getElementById("hora-fin");
+    const mesCalInput = document.getElementById("mes-cal");
+    const btnGenerarReu = document.getElementById("btn-generar-reuniones");
+    const estadoCal   = document.getElementById("estado-calendario");
+    const tablaCalWrapper = document.getElementById("tabla-calendario-wrapper");
+    const tablaCalBody = document.querySelector("#tabla-calendario tbody");
+    const btnGuardarCal = document.getElementById("btn-guardar-calendario");
+
+    // --- vista acomodador ---
+    const listaAsigAcom = document.getElementById("lista-asignaciones-acom");
+
+    // --- sesión ---
     function actualizarVistaSesion() {
       if (!sesionActual) {
         loginSection.classList.add("active");
@@ -290,19 +465,19 @@
       }
       loginSection.classList.remove("active");
       appSection.classList.add("active");
-
       if (sesionActual.rol === "coordinador") {
         vistaCoord.style.display = "block";
         vistaAcom.style.display = "none";
         sesionRolPill.textContent = "Coordinador";
         sesionRolPill.className = "pill pill-role-coord";
-        sesionDetalle.textContent = "Ingreso como coordinador (PIN privado).";
+        sesionDetalle.textContent = "Ingreso como coordinador.";
       } else {
         vistaCoord.style.display = "none";
         vistaAcom.style.display = "block";
         sesionRolPill.textContent = "Acomodador";
         sesionRolPill.className = "pill pill-role-aco";
         sesionDetalle.textContent = "Ingreso como acomodador: " + sesionActual.nombre;
+        renderAsignacionesAcomodador();
       }
     }
 
@@ -310,12 +485,10 @@
       const rol = rolSelect.value;
       const pin = (pinInput.value || "").trim();
       loginStatus.textContent = "";
-
       if (!pin) {
         loginStatus.textContent = "Ingresá el PIN.";
         return;
       }
-
       if (rol === "coordinador") {
         if (pin === "999") {
           sesionActual = { rol: "coordinador" };
@@ -341,6 +514,16 @@
       actualizarVistaSesion();
     });
 
+    // --- tabs ---
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const tabId = btn.dataset.tab;
+        tabButtons.forEach(b => b.classList.toggle("active", b === btn));
+        tabSections.forEach(sec => sec.classList.toggle("active", sec.id === tabId));
+      });
+    });
+
+    // --- acomodadores ---
     function renderAcomodadores() {
       if (!acomodadores.length) {
         listaAcsDiv.textContent = "Sin acomodadores cargados.";
@@ -381,7 +564,6 @@
     btnAgregarAc.addEventListener("click", () => {
       const nombre = (acNombreInput.value || "").trim();
       const pin    = (acPinInput.value || "").trim();
-
       if (!nombre || !pin) {
         estadoAcs.textContent = "Completá nombre y PIN.";
         return;
@@ -390,7 +572,6 @@
         estadoAcs.textContent = "Ya existe un acomodador con ese PIN.";
         return;
       }
-
       const nuevo = { id: Date.now().toString(), nombre, pin };
       acomodadores.push(nuevo);
       guardarLS("acomoda_acomodadores", acomodadores);
@@ -400,9 +581,169 @@
       renderAcomodadores();
     });
 
-    // init
+    // --- calendario ---
+    function obtenerFechasReuniones(mesISO, diaSemanaMedio, diaSemanaFin) {
+      const partes = mesISO.split("-");
+      if (partes.length !== 2) return [];
+      const anio = parseInt(partes[0], 10);
+      const mes  = parseInt(partes[1], 10) - 1;
+      if (isNaN(anio) || isNaN(mes)) return [];
+      const fechas = [];
+      const d = new Date(anio, mes, 1);
+      while (d.getMonth() === mes) {
+        const dow = d.getDay();
+        if (dow === diaSemanaMedio || dow === diaSemanaFin) {
+          const iso = d.toISOString().slice(0,10);
+          fechas.push({ fecha: iso, dow });
+        }
+        d.setDate(d.getDate() + 1);
+      }
+      return fechas;
+    }
+
+    function renderTablaCalendario(fechas, diaSemanaMedio, diaSemanaFin, horaMedio, horaFin) {
+      tablaCalBody.innerHTML = "";
+      if (!fechas.length) {
+        tablaCalWrapper.style.display = "none";
+        return;
+      }
+      fechas.sort((a,b) => a.fecha.localeCompare(b.fecha));
+      fechas.forEach(item => {
+        const tr = document.createElement("tr");
+
+        const tdFecha = document.createElement("td");
+        tdFecha.textContent = formatearFecha(item.fecha);
+        tr.appendChild(tdFecha);
+
+        const tdDia = document.createElement("td");
+        tdDia.textContent = nombresDias[item.dow];
+        tr.appendChild(tdDia);
+
+        const tdHora = document.createElement("td");
+        const hora = (item.dow === diaSemanaMedio) ? horaMedio : horaFin;
+        tdHora.textContent = hora || "";
+        tr.appendChild(tdHora);
+
+        const tdEntrada = document.createElement("td");
+        const selEntrada = document.createElement("select");
+        const optV = document.createElement("option");
+        optV.value = "";
+        optV.textContent = "-";
+        selEntrada.appendChild(optV);
+        acomodadores.forEach(ac => {
+          const opt = document.createElement("option");
+          opt.value = ac.id;
+          opt.textContent = ac.nombre;
+          selEntrada.appendChild(opt);
+        });
+        tdEntrada.appendChild(selEntrada);
+        tr.appendChild(tdEntrada);
+
+        const tdAud = document.createElement("td");
+        const selAud = document.createElement("select");
+        const optV2 = document.createElement("option");
+        optV2.value = "";
+        optV2.textContent = "-";
+        selAud.appendChild(optV2);
+        acomodadores.forEach(ac => {
+          const opt = document.createElement("option");
+          opt.value = ac.id;
+          opt.textContent = ac.nombre;
+          selAud.appendChild(opt);
+        });
+        tdAud.appendChild(selAud);
+        tr.appendChild(tdAud);
+
+        tr.dataset.fecha = item.fecha;
+        tr.dataset.dow = item.dow;
+
+        tablaCalBody.appendChild(tr);
+      });
+      tablaCalWrapper.style.display = "block";
+    }
+
+    btnGenerarReu.addEventListener("click", () => {
+      const mesISO = mesCalInput.value;
+      if (!mesISO) {
+        estadoCal.textContent = "Elegí un mes.";
+        return;
+      }
+      if (!acomodadores.length) {
+        estadoCal.textContent = "Primero cargá acomodadores.";
+        return;
+      }
+      const diaMedio = parseInt(diaMedioSel.value, 10);
+      const diaFin   = parseInt(diaFinSel.value, 10);
+      const horaMed  = (horaMedioIn.value || "").trim();
+      const horaFin  = (horaFinIn.value || "").trim();
+
+      const fechas = obtenerFechasReuniones(mesISO, diaMedio, diaFin);
+      if (!fechas.length) {
+        estadoCal.textContent = "No se encontraron reuniones para ese mes.";
+        tablaCalWrapper.style.display = "none";
+        return;
+      }
+      renderTablaCalendario(fechas, diaMedio, diaFin, horaMed, horaFin);
+      estadoCal.textContent = "Reuniones generadas. Asigná Entrada y Auditorio.";
+    });
+
+    btnGuardarCal.addEventListener("click", () => {
+      const nuevas = [];
+      const filas = Array.from(tablaCalBody.querySelectorAll("tr"));
+      filas.forEach(tr => {
+        const fecha = tr.dataset.fecha;
+        const dow   = parseInt(tr.dataset.dow, 10);
+        const hora  = tr.children[2].textContent || "";
+        const selEntrada = tr.children[3].querySelector("select");
+        const selAud     = tr.children[4].querySelector("select");
+        const entradaId  = selEntrada.value || null;
+        const auditorioId = selAud.value || null;
+        nuevas.push({ fecha, dow, hora, entradaId, auditorioId });
+      });
+      programa = nuevas;
+      guardarLS("acomoda_programa", programa);
+      estadoCal.textContent = "Programa mensual guardado en este dispositivo.";
+    });
+
+    // --- vista acomodador ---
+    function renderAsignacionesAcomodador() {
+      if (!sesionActual || sesionActual.rol !== "acomodador") return;
+      if (!programa.length) {
+        listaAsigAcom.textContent = "No hay programa cargado.";
+        return;
+      }
+      const hoy = hoyISO();
+      const futuras = programa
+        .filter(item =>
+          (item.entradaId === sesionActual.id || item.auditorioId === sesionActual.id) &&
+          item.fecha >= hoy
+        )
+        .sort((a,b) => a.fecha.localeCompare(b.fecha));
+      if (!futuras.length) {
+        listaAsigAcom.textContent = "No se encontraron asignaciones futuras para este acomodador.";
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      futuras.forEach(a => {
+        const div = document.createElement("div");
+        div.style.padding = "4px 0";
+        div.style.borderBottom = "1px solid #e5e7eb";
+        const rol = (a.entradaId === sesionActual.id) ? "Entrada" : "Auditorio";
+        div.innerHTML =
+          `<strong>${formatearFecha(a.fecha)}</strong> · ${nombresDias[a.dow]} · ${a.hora || ""} ` +
+          `<span class="badge-role">${rol}</span>`;
+        frag.appendChild(div);
+      });
+      listaAsigAcom.innerHTML = "";
+      listaAsigAcom.appendChild(frag);
+    }
+
+    // --- init ---
     function init() {
       renderAcomodadores();
+      if (!horaMedioIn.value) horaMedioIn.value = "19:00";
+      if (!horaFinIn.value)   horaFinIn.value   = "18:00";
+      if (!mesCalInput.value) mesCalInput.value = hoyISO().slice(0,7);
       actualizarVistaSesion();
     }
     init();
