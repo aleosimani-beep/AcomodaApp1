@@ -230,8 +230,8 @@
         <div class="card">
           <div class="card-header">
             Ingreso
-           <span class="pill pill-role-coord">Coordinador</span>
-            <span class="pill pill-role-aco">Acomodador PIN propio</span>
+            <span class="pill pill-role-coord">Coordinador</span>
+            <span class="pill pill-role-aco">Acomodador</span>
           </div>
           <div class="field-group">
             <label for="rol-select">Rol</label>
@@ -243,7 +243,9 @@
           <div class="field-group">
             <label for="pin-input">PIN</label>
             <input type="password" id="pin-input" placeholder="Ingrese PIN" />
-            <div class="small-text">El PIN del coordinador es privado. Los PIN de acomodadores se configuran en la pestaña "Acomodadores".</div>
+            <div class="small-text">
+              El PIN del coordinador es privado. Los PIN de acomodadores se configuran en la pestaña "Acomodadores".
+            </div>
           </div>
           <button id="btn-login">Entrar</button>
           <div id="login-status" class="status"></div>
@@ -256,9 +258,9 @@
           </p>
           <ul style="font-size:12px; color:#4b5563; margin-left:16px; margin-top:4px;">
             <li>Guardar acomodadores con PIN.</li>
-            <li>Armar un programa mensual con Entrada y Auditorio.</li>
-            <li>Cada acomodador puede ver sus próximas asignaciones.</li>
-            <li>Recordatorio local cuando el acomodador entra el día de su asignación.</li>
+            <li>Armar un programa mensual.</li>
+            <li>Cada acomodador ve sus próximas asignaciones.</li>
+            <li>Recordatorio local el día de la asignación.</li>
           </ul>
         </div>
       </section>
@@ -347,7 +349,7 @@
             <div class="card">
               <div class="card-header">
                 Programa mensual
-                <span class="pill">Entrada y Auditorio</span>
+                <span class="pill">Nombre del día</span>
               </div>
               <div class="field-group">
                 <label for="mes-cal">Mes</label>
@@ -362,7 +364,7 @@
                   <thead>
                     <tr>
                       <th>Fecha</th>
-                      <th>Tipo</th>
+                      <th>Día</th>
                       <th>Hora</th>
                       <th>Entrada</th>
                       <th>Auditorio</th>
@@ -383,7 +385,8 @@
                 <span class="pill">Dentro de la app</span>
               </div>
               <p style="font-size:13px; color:#374151;">
-                Cuando un acomodador entra el día de su asignación, la app muestra un aviso y, si el navegador lo permite, una notificación.
+                Cuando un acomodador entra el día de su asignación, la app muestra un aviso y,
+                si el navegador lo permite, una notificación.
               </p>
               <button id="btn-solicitar-permiso-notif" class="secondary">Solicitar permiso de notificaciones</button>
               <div id="estado-notif" class="status"></div>
@@ -408,7 +411,7 @@
   </div>
 
   <script>
-    // Utilidades
+    // --- utilidades ---
     function guardarLS(clave, valor) {
       localStorage.setItem(clave, JSON.stringify(valor));
     }
@@ -425,7 +428,6 @@
       return y+"-"+m+"-"+dd;
     }
     function formatearFecha(fechaISO) {
-      const nombresDias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
       if (!fechaISO) return "";
       const d = new Date(fechaISO+"T00:00:00");
       if (isNaN(d.getTime())) return fechaISO;
@@ -434,13 +436,14 @@
       const y = d.getFullYear();
       return dd+"/"+m+"/"+y;
     }
+    const nombresDias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 
-    // Estado
+    // --- estado ---
     let acomodadores = leerLS("acomoda_acomodadores", []);
     let programa = leerLS("acomoda_programa", []);
     let sesionActual = null;
 
-    // Elementos
+    // --- elementos ---
     const loginSection = document.getElementById("login-section");
     const appSection   = document.getElementById("app-section");
     const rolSelect    = document.getElementById("rol-select");
@@ -480,7 +483,7 @@
 
     const listaAsigAcom = document.getElementById("lista-asignaciones-acom");
 
-    // Sesión
+    // --- sesión ---
     function actualizarVistaSesion() {
       if (!sesionActual) {
         loginSection.classList.add("active");
@@ -496,7 +499,7 @@
         vistaAcom.style.display = "none";
         sesionRolPill.textContent = "Coordinador";
         sesionRolPill.className = "pill pill-role-coord";
-        sesionDetalle.textContent = "Ingreso como coordinador (PIN 999).";
+        sesionDetalle.textContent = "Ingreso como coordinador.";
       } else {
         vistaCoord.style.display = "none";
         vistaAcom.style.display = "block";
@@ -541,7 +544,7 @@
       actualizarVistaSesion();
     });
 
-    // Tabs
+    // --- tabs ---
     tabButtons.forEach(btn => {
       btn.addEventListener("click", () => {
         const tabId = btn.dataset.tab;
@@ -550,7 +553,7 @@
       });
     });
 
-    // Acomodadores
+    // --- acomodadores ---
     function renderAcomodadores() {
       if (!acomodadores.length) {
         listaAcsDiv.textContent = "Sin acomodadores cargados.";
@@ -608,7 +611,7 @@
       renderAcomodadores();
     });
 
-    // Calendario
+    // --- calendario ---
     function obtenerFechasReuniones(mesISO, diaSemanaMedio, diaSemanaFin) {
       const partes = mesISO.split("-");
       if (partes.length !== 2) return [];
@@ -620,7 +623,7 @@
       while (d.getMonth() === mes) {
         const dow = d.getDay();
         if (dow === diaSemanaMedio || dow === diaSemanaFin) {
-          const tipo = nombresDias[dow]; ? "Entre semana" : "Fin de semana";
+          const tipo = nombresDias[dow]; // ahora muestra el nombre del día
           const iso = d.toISOString().slice(0,10);
           fechas.push({ fecha: iso, tipo });
         }
@@ -642,12 +645,12 @@
         tdFecha.textContent = formatearFecha(item.fecha);
         tr.appendChild(tdFecha);
 
-        const tdTipo = document.createElement("td");
-        tdTipo.textContent = item.tipo;
-        tr.appendChild(tdTipo);
+        const tdDia = document.createElement("td");
+        tdDia.textContent = item.tipo;
+        tr.appendChild(tdDia);
 
         const tdHora = document.createElement("td");
-        const hora = item.tipo === "Entre semana" ? horaMedio : horaFin;
+        const hora = (item.tipo === nombresDias[parseInt(diaMedioSel.value,10)]) ? horaMedio : horaFin;
         tdHora.textContent = hora || "";
         tr.appendChild(tdHora);
 
@@ -710,7 +713,7 @@
         return;
       }
       renderTablaCalendario(fechas, horaMed, horaFin);
-      estadoCal.textContent = "Reuniones generadas. Asigná Entrada y Auditorio para cada fecha.";
+      estadoCal.textContent = "Reuniones generadas. Asigná Entrada y Auditorio.";
     });
 
     btnGuardarCal.addEventListener("click", () => {
@@ -731,7 +734,7 @@
       estadoCal.textContent = "Programa mensual guardado en este dispositivo.";
     });
 
-    // Notificaciones locales
+    // --- notificaciones ---
     function solicitarPermisoNotificaciones() {
       if (!("Notification" in window)) {
         estadoNotif.textContent = "Este navegador no soporta notificaciones.";
@@ -801,7 +804,7 @@
       listaAsigAcom.appendChild(frag);
     }
 
-    // Init
+    // --- init ---
     function init() {
       renderAcomodadores();
       if (!horaMedioIn.value) horaMedioIn.value = "19:00";
