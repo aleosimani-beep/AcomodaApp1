@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <title>Acomoda App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Firebase (solo se usa si luego completás firebaseConfig) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -408,9 +413,31 @@
     }
     const nombresDias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
 
+    // --- Firebase opcional ---
+    let db = null;
+    let firebaseHabilitado = false;
+    try {
+      const firebaseConfig = {
+        apiKey: "TU_API_KEY",
+        authDomain: "TU_AUTH_DOMAIN",
+        projectId: "TU_PROJECT_ID",
+        // el resto de propiedades (storageBucket, messagingSenderId, appId) no son obligatorias para Firestore
+      };
+      if (firebaseConfig.apiKey !== "TU_API_KEY") {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        firebaseHabilitado = true;
+        console.log("Firebase habilitado (modo nube).");
+      } else {
+        console.log("FirebaseConfig sin completar, funcionando en modo localStorage.");
+      }
+    } catch (e) {
+      console.log("Error inicializando Firebase, modo localStorage:", e);
+    }
+
     // --- estado ---
-    let acomodadores = leerLS("acomoda_acomodadores", []);
-    let programa = leerLS("acomoda_programa", []);
+    let acomodadores = [];
+    let programa = [];
     let sesionActual = null;
 
     // --- elementos login/sesión ---
@@ -548,9 +575,15 @@
         btnDel.style.fontSize = "11px";
         btnDel.style.padding = "3px 8px";
         btnDel.addEventListener("click", () => {
-          acomodadores = acomodadores.filter(a => a.id !== ac.id);
-          guardarLS("acomoda_acomodadores", acomodadores);
-          renderAcomodadores();
+          if (firebaseHabilitado && db) {
+            db.collection("acomodadores").doc(ac.id).delete().catch(err => {
+              console.error("Error al borrar acomodador en Firebase", err);
+            });
+          } else {
+            acomodadores = acomodadores.filter(a => a.id !== ac.id);
+            guardarLS("acomoda_acomodadores", acomodadores);
+            renderAcomodadores();
+          }
         });
 
         fila.appendChild(txt);
@@ -572,13 +605,27 @@
         estadoAcs.textContent = "Ya existe un acomodador con ese PIN.";
         return;
       }
-      const nuevo = { id: Date.now().toString(), nombre, pin };
-      acomodadores.push(nuevo);
-      guardarLS("acomoda_acomodadores", acomodadores);
-      acNombreInput.value = "";
-      acPinInput.value = "";
-      estadoAcs.textContent = "Acomodador agregado.";
-      renderAcomodadores();
+
+      if (firebaseHabilitado && db) {
+        db.collection("acomodadores").add({ nombre, pin })
+          .then(() => {
+            acNombreInput.value = "";
+            acPinInput.value = "";
+            estadoAcs.textContent = "Acomodador agregado en la nube.";
+          })
+          .catch(err => {
+            console.error("Error al guardar en Firebase", err);
+            estadoAcs.textContent = "Error al guardar en Firebase. Revisá la consola.";
+          });
+      } else {
+        const nuevo = { id: Date.now().toString(), nombre, pin };
+        acomodadores.push(nuevo);
+        guardarLS("acomoda_acomodadores", acomodadores);
+        acNombreInput.value = "";
+        acPinInput.value = "";
+        estadoAcs.textContent = "Acomodador agregado (modo local).";
+        renderAcomodadores();
+      }
     });
 
     // --- calendario ---
@@ -700,9 +747,28 @@
         const auditorioId = selAud.value || null;
         nuevas.push({ fecha, dow, hora, entradaId, auditorioId });
       });
-      programa = nuevas;
-      guardarLS("acomoda_programa", programa);
-      estadoCal.textContent = "Programa mensual guardado en este dispositivo.";
+
+      if (firebaseHabilitado && db) {
+        // Guardamos todo el programa en la colección "programa"
+        db.collection("programa").get().then(snap => {
+          const batch = db.batch();
+          snap.forEach(doc => batch.delete(doc.ref));
+          nuevas.forEach(row => {
+            const ref = db.collection("programa").doc();
+            batch.set(ref, row);
+          });
+          return batch.commit();
+        }).then(() => {
+          estadoCal.textContent = "Programa mensual guardado en Firebase.";
+        }).catch(err => {
+          console.error("Error guardando programa en Firebase", err);
+          estadoCal.textContent = "Error al guardar programa en Firebase.";
+        });
+      } else {
+        programa = nuevas;
+        guardarLS("acomoda_programa", programa);
+        estadoCal.textContent = "Programa mensual guardado (modo local).";
+      }
     });
 
     // --- vista acomodador ---
@@ -740,7 +806,37 @@
 
     // --- init ---
     function init() {
-      renderAcomodadores();
+      if (firebaseHabilitado && db) {
+        // Escuchamos acomodadores en tiempo real
+        db.collection("acomodadores").orderBy("nombre").onSnapshot(snap => {
+          acomodadores = snap.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          renderAcomodadores();
+        }, err => {
+          console.error("Error escuchando acomodadores:", err);
+        });
+
+        // Escuchamos programa en tiempo real
+        db.collection("programa").onSnapshot(snap => {
+          programa = snap.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          if (sesionActual && sesionActual.rol === "acomodador") {
+            renderAsignacionesAcomodador();
+          }
+        }, err => {
+          console.error("Error escuchando programa:", err);
+        });
+      } else {
+        // Modo local
+        acomodadores = leerLS("acomoda_acomodadores", []);
+        programa = leerLS("acomoda_programa", []);
+        renderAcomodadores();
+      }
+
       if (!horaMedioIn.value) horaMedioIn.value = "19:00";
       if (!horaFinIn.value)   horaFinIn.value   = "18:00";
       if (!mesCalInput.value) mesCalInput.value = hoyISO().slice(0,7);
