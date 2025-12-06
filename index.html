@@ -116,6 +116,10 @@
     .btn-danger {
       background: #dc2626;
     }
+    .btn-small {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+    }
     .estado {
       margin-top: 0.4rem;
       font-size: 0.78rem;
@@ -149,6 +153,7 @@
       border-radius: 0.75rem;
       padding: 0.9rem;
       border: 1px solid #e5e7eb;
+      margin-bottom: 0.7rem;
     }
     .panel-title {
       display: flex;
@@ -163,27 +168,15 @@
       font-size: 0.8rem;
       margin-top: 0.2rem;
     }
-    .tabs {
+    .menu-buttons {
       display: flex;
-      gap: 0.35rem;
-      margin-bottom: 0.5rem;
+      flex-direction: column;
+      gap: 0.4rem;
       margin-top: 0.4rem;
-      flex-wrap: wrap;
     }
-    .tab-btn {
-      flex: 1;
-      padding: 0.35rem;
-      font-size: 0.78rem;
-      border-radius: 999px;
-      border: 1px solid #d1d5db;
-      background: #e5e7eb;
-      cursor: pointer;
-      text-align: center;
-    }
-    .tab-btn.active {
-      background: #2563eb;
-      color: white;
-      border-color: #2563eb;
+    .menu-buttons button {
+      width: 100%;
+      text-align: left;
     }
     table {
       width: 100%;
@@ -205,6 +198,75 @@
       color: #6b7280;
       margin-top: 0.4rem;
     }
+    .tr-hoy {
+      background: #dbeafe;
+    }
+    .rol-entrada {
+      color: #2563eb;
+      font-weight: 600;
+    }
+    .rol-auditorio {
+      color: #059669;
+      font-weight: 600;
+    }
+
+    /* Mis asignaciones - tarjetas */
+    .proxima-label {
+      font-size: 0.8rem;
+      color: #2563eb;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .card-asig {
+      border-radius: 0.6rem;
+      border: 1px solid #e5e7eb;
+      padding: 0.55rem 0.7rem;
+      margin-top: 0.35rem;
+      background: #f9fafb;
+    }
+    .card-asig-proxima {
+      border-color: #2563eb;
+      background: #eff6ff;
+    }
+    .card-asig-pasada {
+      opacity: 0.7;
+    }
+    .card-asig-titulo {
+      font-size: 0.86rem;
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+    .card-asig-rol {
+      font-size: 0.8rem;
+    }
+
+    /* Reemplazos - tarjetas */
+    .card-reemp {
+      border-radius: 0.6rem;
+      border: 1px solid #e5e7eb;
+      padding: 0.55rem 0.7rem;
+      margin-top: 0.35rem;
+      background: #f9fafb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-reemp-info {
+      font-size: 0.8rem;
+    }
+
+    /* Form fila horizontal */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.3rem;
+    }
+    .form-field {
+      flex: 1 1 150px;
+      min-width: 0;
+    }
   </style>
 
   <!-- Firebase compat -->
@@ -220,9 +282,8 @@
       </div>
       <div style="display:flex; align-items:center; gap:0.5rem;">
         <span class="badge">v6 Firebase</span>
-        <!-- Botón salir: al inicio oculto -->
-        <button id="btnSalir" class="btn-secondary" type="button"
-                style="display:none; font-size:0.8rem; padding:0.3rem 0.6rem;"
+        <button id="btnSalir" class="btn-secondary btn-small" type="button"
+                style="display:none;"
                 onclick="cerrarSesion()">
           Salir
         </button>
@@ -235,7 +296,7 @@
         <h2>Ingreso</h2>
       </div>
       <p class="small-text">
-        Elegí tu rol e ingresá tu PIN. El PIN de coordinador es interno (999) y no se muestra en pantalla.
+        Elegí tu rol e ingresá tu PIN. El PIN de coordinador es interno (999).
       </p>
 
       <div class="rol-row">
@@ -255,19 +316,12 @@
       <button onclick="entrar()">Entrar</button>
 
       <div id="estadoConexion" class="estado info"></div>
-
-      <div style="margin-top:0.5rem;">
-        <button class="btn-secondary" type="button" onclick="probarFirebase()">
-          Probar conexión con Firebase
-        </button>
-        <div id="resultadoFirebase" class="small-text"></div>
-      </div>
     </div>
 
     <!-- APP LOGGED -->
     <div id="appSection" style="display:none;">
       <div class="layout">
-        <!-- Columna izquierda: info usuario + administración -->
+        <!-- Columna izquierda: info usuario -->
         <div>
           <div class="panel">
             <div class="panel-title">
@@ -275,77 +329,6 @@
             </div>
             <div id="infoUsuario" class="chip"></div>
             <div id="infoExtraUsuario" class="small-text" style="margin-top:0.25rem;"></div>
-          </div>
-
-          <!-- Panel Coordinador: Acomodadores + Config -->
-          <div id="panelCoordinadorLateral" class="panel" style="margin-top:0.7rem; display:none;">
-            <div class="panel-title">
-              <h2>Administración</h2>
-            </div>
-            <div class="tabs">
-              <button class="tab-btn active" id="tabAcom" onclick="cambiarTabAdmin('acom')">
-                Acomodadores
-              </button>
-              <button class="tab-btn" id="tabConfig" onclick="cambiarTabAdmin('config')">
-                Config. reuniones
-              </button>
-            </div>
-
-            <!-- Tab Acomodadores -->
-            <div id="tabAdminAcom">
-              <h3>Lista de acomodadores</h3>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Nombre</th>
-                    <th>PIN</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody id="tablaAcomodadores"></tbody>
-              </table>
-              <div id="sinAcomodadores" class="empty-text" style="display:none;">
-                No hay acomodadores cargados.
-              </div>
-
-              <h3 style="margin-top:0.7rem;">Agregar acomodador</h3>
-              <label for="nuevoNombreAcom">Nombre</label>
-              <input id="nuevoNombreAcom" type="text" placeholder="Ej: Pedro" />
-
-              <label for="nuevoPinAcom">PIN</label>
-              <input id="nuevoPinAcom" type="text" placeholder="Ej: 1111" />
-
-              <button type="button" onclick="agregarAcomodador()">Guardar acomodador</button>
-              <div id="estadoAcomodadores" class="estado"></div>
-            </div>
-
-            <!-- Tab Config reuniones -->
-            <div id="tabAdminConfig" style="display:none;">
-              <h3>Días y horario de reuniones</h3>
-              <p class="small-text">
-                Estos datos son de referencia para el programa mensual (no cambian las asignaciones ya cargadas).
-              </p>
-              <label>Días de reunión</label>
-              <div>
-                <label class="small-text">
-                  <input type="checkbox" id="diaMiercoles" /> Miércoles
-                </label>
-                <label class="small-text">
-                  <input type="checkbox" id="diaSabado" /> Sábado
-                </label>
-              </div>
-
-              <label for="horaReunion">Hora habitual</label>
-              <input id="horaReunion" type="time" />
-
-              <button type="button" onclick="guardarConfigReuniones()">Guardar configuración</button>
-              <div id="estadoConfig" class="estado"></div>
-
-              <div style="margin-top:0.5rem;">
-                <span class="small-text">Resumen:</span>
-                <div id="resumenConfigReuniones" class="small-text"></div>
-              </div>
-            </div>
           </div>
         </div>
 
@@ -357,11 +340,22 @@
               <h2>Menú coordinador</h2>
             </div>
             <p class="small-text">
-              Elegí qué sección querés usar.
+              Elegí una sección.
             </p>
-            <button type="button" onclick="abrirSeccionCoordinador('programa')">
-              Programa mensual y reemplazos
-            </button>
+            <div class="menu-buttons">
+              <button type="button" onclick="abrirSeccionCoordinador('acomodadores')">
+                Acomodadores
+              </button>
+              <button type="button" onclick="abrirSeccionCoordinador('config')">
+                Config. reuniones
+              </button>
+              <button type="button" onclick="abrirSeccionCoordinador('programa')">
+                Programa mensual
+              </button>
+              <button type="button" onclick="abrirSeccionCoordinador('reemplazos')">
+                Pedidos de reemplazo
+              </button>
+            </div>
           </div>
 
           <!-- MENÚ ACOMODADOR -->
@@ -370,21 +364,102 @@
               <h2>Menú acomodador</h2>
             </div>
             <p class="small-text">
-              Elegí qué querés hacer.
+              Elegí qué querés ver.
             </p>
-            <button type="button" onclick="abrirSeccionAcomodador('asig')">
-              Ver mis asignaciones
-            </button>
-            <button type="button" onclick="abrirSeccionAcomodador('reemplazo')">
-              Necesito reemplazo
-            </button>
+            <div class="menu-buttons">
+              <button type="button" onclick="abrirSeccionAcomodador('asig')">
+                Ver mis asignaciones
+              </button>
+              <button type="button" onclick="abrirSeccionAcomodador('reemplazo')">
+                Necesito reemplazo
+              </button>
+            </div>
           </div>
 
-          <!-- Panel Coordinador: Programa mensual + reemplazos -->
-          <div id="panelCoordinadorPrincipal" class="panel" style="display:none;">
+          <!-- PANEL COORDINADOR: ACOMODADORES -->
+          <div id="panelCoordinadorAcomodadores" class="panel" style="display:none;">
             <div class="panel-title">
-              <h2>Programa mensual</h2>
-              <button type="button" class="btn-secondary" style="font-size:0.75rem; padding:0.25rem 0.5rem;"
+              <h2>Acomodadores</h2>
+              <button type="button" class="btn-secondary btn-small"
+                      onclick="volverMenuCoordinador()">
+                ← Menú coordinador
+              </button>
+            </div>
+
+            <h3>Lista</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>PIN</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="tablaAcomodadores"></tbody>
+            </table>
+            <div id="sinAcomodadores" class="empty-text" style="display:none;">
+              No hay acomodadores cargados.
+            </div>
+
+            <h3 style="margin-top:0.7rem;">Agregar acomodador</h3>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="nuevoNombreAcom">Nombre</label>
+                <input id="nuevoNombreAcom" type="text" placeholder="Ej: Pedro" />
+              </div>
+              <div class="form-field">
+                <label for="nuevoPinAcom">PIN</label>
+                <input id="nuevoPinAcom" type="text" placeholder="Ej: 1111" />
+              </div>
+            </div>
+            <button type="button" onclick="agregarAcomodador()">Guardar acomodador</button>
+            <div id="estadoAcomodadores" class="estado"></div>
+          </div>
+
+          <!-- PANEL COORDINADOR: CONFIG REUNIONES -->
+          <div id="panelCoordinadorConfig" class="panel" style="display:none;">
+            <div class="panel-title">
+              <h2>Config. reuniones</h2>
+              <button type="button" class="btn-secondary btn-small"
+                      onclick="volverMenuCoordinador()">
+                ← Menú coordinador
+              </button>
+            </div>
+            <p class="small-text">
+              Configurá por separado día y hora de las reuniones (solo referencia para el programa).
+            </p>
+
+            <h3>Miércoles</h3>
+            <label class="small-text">
+              <input type="checkbox" id="diaMiercoles" /> Hay reunión los miércoles
+            </label>
+            <label for="horaMiercoles">Hora miércoles</label>
+            <input id="horaMiercoles" type="time" />
+
+            <h3 style="margin-top:0.6rem;">Sábado</h3>
+            <label class="small-text">
+              <input type="checkbox" id="diaSabado" /> Hay reunión los sábados
+            </label>
+            <label for="horaSabado">Hora sábado</label>
+            <input id="horaSabado" type="time" />
+
+            <button type="button" onclick="guardarConfigReuniones()">Guardar configuración</button>
+            <div id="estadoConfig" class="estado"></div>
+
+            <div style="margin-top:0.5rem;">
+              <span class="small-text">Resumen:</span>
+              <div id="resumenConfigReuniones" class="small-text"></div>
+            </div>
+          </div>
+
+          <!-- PANEL COORDINADOR: PROGRAMA MENSUAL -->
+          <div id="panelCoordinadorPrograma" class="panel" style="display:none;">
+            <div class="panel-title">
+              <div>
+                <h2>Programa mensual</h2>
+                <div id="tituloProgramaMes" class="small-text"></div>
+              </div>
+              <button type="button" class="btn-secondary btn-small"
                       onclick="volverMenuCoordinador()">
                 ← Menú coordinador
               </button>
@@ -395,26 +470,33 @@
 
             <h3 style="margin-top:0.5rem;">Agregar asignación</h3>
             <div class="small-text">
-              Seleccioná fecha, hora, rol y acomodador. Se guarda en la nube y se muestra en el programa.
+              Seleccioná fecha, hora, rol y acomodador. Se guarda en la nube y se muestra abajo.
             </div>
 
-            <label for="asigFecha">Fecha</label>
-            <input type="date" id="asigFecha" />
-
-            <label for="asigHora">Hora</label>
-            <input type="time" id="asigHora" />
-
-            <label for="asigRol">Rol</label>
-            <select id="asigRol">
-              <option value="">Seleccione rol</option>
-              <option value="Entrada">Entrada</option>
-              <option value="Auditorio">Auditorio</option>
-            </select>
-
-            <label for="asigAcomodador">Acomodador</label>
-            <select id="asigAcomodador">
-              <option value="">Seleccione</option>
-            </select>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="asigFecha">Fecha</label>
+                <input type="date" id="asigFecha" />
+              </div>
+              <div class="form-field">
+                <label for="asigHora">Hora</label>
+                <input type="time" id="asigHora" />
+              </div>
+              <div class="form-field">
+                <label for="asigRol">Rol</label>
+                <select id="asigRol">
+                  <option value="">Seleccione</option>
+                  <option value="Entrada">Entrada</option>
+                  <option value="Auditorio">Auditorio</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="asigAcomodador">Acomodador</label>
+                <select id="asigAcomodador">
+                  <option value="">Seleccione</option>
+                </select>
+              </div>
+            </div>
 
             <button type="button" onclick="guardarAsignacion()">Guardar asignación</button>
             <div id="estadoAsignacion" class="estado"></div>
@@ -435,8 +517,18 @@
             <div id="sinAsignacionesMes" class="empty-text" style="display:none;">
               No hay asignaciones cargadas para este mes.
             </div>
+          </div>
 
-            <h3 style="margin-top:0.7rem;">Pedidos de reemplazo</h3>
+          <!-- PANEL COORDINADOR: REEMPLAZOS -->
+          <div id="panelCoordinadorReemplazos" class="panel" style="display:none;">
+            <div class="panel-title">
+              <h2>Pedidos de reemplazo</h2>
+              <button type="button" class="btn-secondary btn-small"
+                      onclick="volverMenuCoordinador()">
+                ← Menú coordinador
+              </button>
+            </div>
+
             <table>
               <thead>
                 <tr>
@@ -454,52 +546,51 @@
             </div>
           </div>
 
-          <!-- Panel Acomodador -->
-          <div id="panelAcomodador" class="panel" style="display:none;">
+          <!-- PANEL ACOMODADOR: MIS ASIGNACIONES -->
+          <div id="panelAcomodadorAsignaciones" class="panel" style="display:none;">
             <div class="panel-title">
-              <h2>Acomodador</h2>
-              <button type="button" class="btn-secondary" style="font-size:0.75rem; padding:0.25rem 0.5rem;"
+              <h2>Mis asignaciones</h2>
+              <button type="button" class="btn-secondary btn-small"
                       onclick="volverMenuAcomodador()">
                 ← Menú acomodador
               </button>
             </div>
-            <div class="tabs">
-              <button class="tab-btn active" id="tabMisAsig" onclick="cambiarTabAcomodador('asig')">
-                Mis asignaciones
-              </button>
-              <button class="tab-btn" id="tabReemplazo" onclick="cambiarTabAcomodador('reemplazo')">
-                Necesito reemplazo
+            <div id="listaAsignacionesAcomodador" class="empty-text">
+              Cargando asignaciones...
+            </div>
+            <div class="small-text" style="margin-top:0.3rem;">
+              Si la app está abierta y aceptaste notificaciones, el día de tu asignación te llega un recordatorio a la hora indicada.
+            </div>
+          </div>
+
+          <!-- PANEL ACOMODADOR: NECESITO REEMPLAZO -->
+          <div id="panelAcomodadorReemplazo" class="panel" style="display:none;">
+            <div class="panel-title">
+              <h2>Necesito reemplazo</h2>
+              <button type="button" class="btn-secondary btn-small"
+                      onclick="volverMenuAcomodador()">
+                ← Menú acomodador
               </button>
             </div>
 
-            <!-- Mis asignaciones -->
-            <div id="tabAcomodadorAsignaciones">
-              <div id="listaAsignacionesAcomodador" class="empty-text">
-                Cargando asignaciones...
-              </div>
-              <div class="small-text" style="margin-top:0.3rem;">
-                Si tu app está abierta y permitiste notificaciones, el día de tu asignación te llega un recordatorio a la hora indicada.
-              </div>
+            <p class="small-text">
+              Elegí en la lista para cuál asignación querés pedir reemplazo.
+            </p>
+            <div id="listaReemplazoOpciones" class="empty-text">
+              No tenés asignaciones próximas para pedir reemplazo.
             </div>
 
-            <!-- Necesito reemplazo -->
-            <div id="tabAcomodadorReemplazo" style="display:none;">
-              <h3>Pedido de reemplazo</h3>
-              <label for="reempFecha">Fecha de la asignación</label>
-              <input type="date" id="reempFecha" />
-
-              <button type="button" onclick="buscarAsignacionParaReemplazo()">Buscar mi asignación</button>
-
-              <div id="detalleReemplazo" class="empty-text" style="margin-top:0.4rem;">
-                Seleccioná la fecha y buscá tu asignación.
-              </div>
-
-              <button type="button" id="btnConfirmarReemplazo" style="display:none;" onclick="confirmarReemplazo()">
-                Enviar pedido de reemplazo
-              </button>
-
-              <div id="estadoReemplazo" class="estado"></div>
+            <div id="detalleReemplazo" class="empty-text" style="margin-top:0.4rem;">
+              Ninguna asignación seleccionada todavía.
             </div>
+
+            <button type="button" id="btnConfirmarReemplazo"
+                    style="display:none;"
+                    onclick="confirmarReemplazo()">
+              Enviar pedido de reemplazo
+            </button>
+
+            <div id="estadoReemplazo" class="estado"></div>
           </div>
         </div>
       </div>
@@ -507,10 +598,29 @@
   </div>
 
   <script>
+    // --- Utilidades ---
+    const diasSemanaCortos = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+    const mesesNombre = [
+      "enero","febrero","marzo","abril","mayo","junio",
+      "julio","agosto","septiembre","octubre","noviembre","diciembre"
+    ];
+
+    function formatearFechaConDia(fechaStr) {
+      if (!fechaStr) return "";
+      const partes = fechaStr.split("-");
+      if (partes.length !== 3) return fechaStr;
+      const date = new Date(fechaStr + "T00:00:00");
+      const dia = diasSemanaCortos[date.getDay()];
+      const dd = partes[2];
+      const mm = partes[1];
+      return `${dia} ${dd}/${mm}`;
+    }
+
     // --- Firebase ---
     let db = null;
     let firebaseHabilitado = false;
     let asignacionesTodas = [];
+    let asignacionesAcomodador = [];
     let timersNotificaciones = [];
 
     try {
@@ -538,11 +648,13 @@
         estadoEl.textContent = "No se pudo conectar a Firebase. Modo local.";
       }
 
-      // Mes actual por defecto en el programa
       const mesInput = document.getElementById("mesPrograma");
-      const hoy = new Date();
-      const mesStr = hoy.toISOString().slice(0, 7); // YYYY-MM
-      if (mesInput) mesInput.value = mesStr;
+      if (mesInput) {
+        const hoy = new Date();
+        const mesStr = hoy.toISOString().slice(0, 7);
+        mesInput.value = mesStr;
+      }
+      actualizarTituloProgramaMes();
     });
 
     // --- Usuario actual ---
@@ -577,7 +689,6 @@
         usuarioNombre = "Coordinador";
         mostrarAppCoordinador();
       } else {
-        // Acomodador: buscar en colección 'acomodadores'
         if (!firebaseHabilitado || !db) {
           alert("No se pudo conectar a la nube. No se puede validar el PIN.");
           return;
@@ -609,18 +720,16 @@
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("appSection").style.display = "block";
 
-      // Mostrar solo menú coordinador al inicio
       document.getElementById("menuCoordinador").style.display = "block";
       document.getElementById("menuAcomodador").style.display = "none";
-      document.getElementById("panelCoordinadorLateral").style.display = "block";
-      document.getElementById("panelCoordinadorPrincipal").style.display = "none";
-      document.getElementById("panelAcomodador").style.display = "none";
+
+      ocultarPanelesCoordinador();
+      ocultarPanelesAcomodador();
 
       document.getElementById("infoUsuario").textContent = "Coordinador (PIN 999)";
       document.getElementById("infoExtraUsuario").textContent =
         "Puede gestionar acomodadores, configurar reuniones y cargar el programa mensual.";
 
-      // mostrar botón salir
       const btnSalir = document.getElementById("btnSalir");
       if (btnSalir) btnSalir.style.display = "inline-block";
 
@@ -634,19 +743,16 @@
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("appSection").style.display = "block";
 
-      // Mostrar menú acomodador al inicio
       document.getElementById("menuCoordinador").style.display = "none";
       document.getElementById("menuAcomodador").style.display = "block";
-      document.getElementById("panelCoordinadorLateral").style.display = "none";
-      document.getElementById("panelCoordinadorPrincipal").style.display = "none";
-      document.getElementById("panelAcomodador").style.display = "none";
 
-      document.getElementById("infoUsuario").textContent =
-        usuarioNombre + " | PIN " + usuarioPin;
+      ocultarPanelesCoordinador();
+      ocultarPanelesAcomodador();
+
+      document.getElementById("infoUsuario").textContent = "Acomodador: " + usuarioNombre;
       document.getElementById("infoExtraUsuario").textContent =
-        "Elegí una opción en el menú. Luego podés volver aquí cuando quieras.";
+        "Elegí una opción en el menú. No se muestra tu PIN por seguridad visual.";
 
-      // botón salir visible
       const btnSalir = document.getElementById("btnSalir");
       if (btnSalir) btnSalir.style.display = "inline-block";
 
@@ -654,39 +760,64 @@
       solicitarPermisoNotificaciones();
     }
 
-    // --- Menús y navegación ---
-    function abrirSeccionCoordinador(seccion) {
-      document.getElementById("menuCoordinador").style.display = "none";
+    function ocultarPanelesCoordinador() {
+      document.getElementById("panelCoordinadorAcomodadores").style.display = "none";
+      document.getElementById("panelCoordinadorConfig").style.display = "none";
+      document.getElementById("panelCoordinadorPrograma").style.display = "none";
+      document.getElementById("panelCoordinadorReemplazos").style.display = "none";
+    }
 
-      if (seccion === "programa") {
-        document.getElementById("panelCoordinadorPrincipal").style.display = "block";
+    function ocultarPanelesAcomodador() {
+      document.getElementById("panelAcomodadorAsignaciones").style.display = "none";
+      document.getElementById("panelAcomodadorReemplazo").style.display = "none";
+    }
+
+    // Navegación coordinador
+    function abrirSeccionCoordinador(seccion) {
+      ocultarPanelesCoordinador();
+
+      if (seccion === "acomodadores") {
+        document.getElementById("panelCoordinadorAcomodadores").style.display = "block";
+      } else if (seccion === "config") {
+        document.getElementById("panelCoordinadorConfig").style.display = "block";
+      } else if (seccion === "programa") {
+        document.getElementById("panelCoordinadorPrograma").style.display = "block";
+        actualizarTituloProgramaMes();
+        renderProgramaMensual();
+      } else if (seccion === "reemplazos") {
+        document.getElementById("panelCoordinadorReemplazos").style.display = "block";
       }
     }
 
     function volverMenuCoordinador() {
-      document.getElementById("panelCoordinadorPrincipal").style.display = "none";
+      ocultarPanelesCoordinador();
       document.getElementById("menuCoordinador").style.display = "block";
     }
 
+    // Navegación acomodador
     function abrirSeccionAcomodador(seccion) {
+      ocultarPanelesAcomodador();
       document.getElementById("menuAcomodador").style.display = "none";
-      document.getElementById("panelAcomodador").style.display = "block";
-      cambiarTabAcomodador(seccion);
+
+      if (seccion === "asig") {
+        document.getElementById("panelAcomodadorAsignaciones").style.display = "block";
+      } else if (seccion === "reemplazo") {
+        document.getElementById("panelAcomodadorReemplazo").style.display = "block";
+      }
     }
 
     function volverMenuAcomodador() {
-      document.getElementById("panelAcomodador").style.display = "none";
+      ocultarPanelesAcomodador();
       document.getElementById("menuAcomodador").style.display = "block";
     }
 
     function cerrarSesion() {
-      // limpiar variables
       usuarioRol = null;
       usuarioPin = null;
       usuarioNombre = null;
       asignacionSeleccionadaParaReemplazo = null;
+      asignacionesAcomodador = [];
 
-      // limpiar entrada
       document.getElementById("pinInput").value = "";
       const radios = document.querySelectorAll('input[name="rol"]');
       radios.forEach(r => (r.checked = false));
@@ -694,85 +825,19 @@
       document.getElementById("infoUsuario").textContent = "";
       document.getElementById("infoExtraUsuario").textContent = "";
 
-      // ocultar todo menos el login
       document.getElementById("appSection").style.display = "none";
       document.getElementById("loginSection").style.display = "block";
 
-      document.getElementById("panelCoordinadorLateral").style.display = "none";
-      document.getElementById("panelCoordinadorPrincipal").style.display = "none";
-      document.getElementById("panelAcomodador").style.display = "none";
       document.getElementById("menuCoordinador").style.display = "none";
       document.getElementById("menuAcomodador").style.display = "none";
+      ocultarPanelesCoordinador();
+      ocultarPanelesAcomodador();
 
-      // ocultar botón salir
       const btnSalir = document.getElementById("btnSalir");
       if (btnSalir) btnSalir.style.display = "none";
 
-      // cancelar notificaciones programadas
       timersNotificaciones.forEach(id => clearTimeout(id));
       timersNotificaciones = [];
-    }
-
-    // --- Tabs admin (coordinador) ---
-    function cambiarTabAdmin(tab) {
-      const btnAcom = document.getElementById("tabAcom");
-      const btnConfig = document.getElementById("tabConfig");
-      const divAcom = document.getElementById("tabAdminAcom");
-      const divConfig = document.getElementById("tabAdminConfig");
-
-      if (tab === "acom") {
-        btnAcom.classList.add("active");
-        btnConfig.classList.remove("active");
-        divAcom.style.display = "block";
-        divConfig.style.display = "none";
-      } else {
-        btnAcom.classList.remove("active");
-        btnConfig.classList.add("active");
-        divAcom.style.display = "none";
-        divConfig.style.display = "block";
-      }
-    }
-
-    // --- Tabs acomodador ---
-    function cambiarTabAcomodador(tab) {
-      const btnAsig = document.getElementById("tabMisAsig");
-      const btnReemp = document.getElementById("tabReemplazo");
-      const tabAsig = document.getElementById("tabAcomodadorAsignaciones");
-      const tabReemp = document.getElementById("tabAcomodadorReemplazo");
-
-      if (tab === "asig") {
-        btnAsig.classList.add("active");
-        btnReemp.classList.remove("active");
-        tabAsig.style.display = "block";
-        tabReemp.style.display = "none";
-      } else {
-        btnAsig.classList.remove("active");
-        btnReemp.classList.add("active");
-        tabAsig.style.display = "none";
-        tabReemp.style.display = "block";
-      }
-    }
-
-    // --- Probar conexión Firebase ---
-    function probarFirebase() {
-      if (!firebaseHabilitado || !db) {
-        alert("Firebase no está habilitado.");
-        return;
-      }
-      db.collection("pruebas")
-        .add({
-          mensaje: "Hola desde AcomodaApp",
-          fecha: new Date().toISOString()
-        })
-        .then(() => {
-          document.getElementById("resultadoFirebase").textContent =
-            "✅ Se guardó un documento de prueba en 'pruebas'.";
-        })
-        .catch((error) => {
-          console.error("Error prueba Firebase:", error);
-          document.getElementById("resultadoFirebase").textContent =
-            "❌ Error al guardar el documento de prueba.";
-        });
     }
 
     // --- Acomodadores (Coordinador) ---
@@ -811,16 +876,13 @@
             const tdAcc = document.createElement("td");
             const btnDel = document.createElement("button");
             btnDel.textContent = "✕";
-            btnDel.className = "btn-danger";
-            btnDel.style.fontSize = "0.7rem";
-            btnDel.style.padding = "0.2rem 0.4rem";
+            btnDel.className = "btn-danger btn-small";
             btnDel.onclick = () => eliminarAcomodador(doc.id);
             tdAcc.appendChild(btnDel);
             tr.appendChild(tdAcc);
 
             tbody.appendChild(tr);
 
-            // Opción para el select
             const opt = document.createElement("option");
             opt.value = data.pin;
             opt.textContent = data.nombre + " (PIN " + data.pin + ")";
@@ -848,7 +910,6 @@
         return;
       }
 
-      // Verificar que el PIN no se repita
       db.collection("acomodadores")
         .where("pin", "==", pin)
         .get()
@@ -898,8 +959,9 @@
         .get()
         .then((doc) => {
           const diaMi = document.getElementById("diaMiercoles");
+          const horaMi = document.getElementById("horaMiercoles");
           const diaSa = document.getElementById("diaSabado");
-          const horaR = document.getElementById("horaReunion");
+          const horaSa = document.getElementById("horaSabado");
           const resumen = document.getElementById("resumenConfigReuniones");
 
           if (!doc.exists) {
@@ -909,17 +971,17 @@
           const data = doc.data();
           diaMi.checked = !!data.miercoles;
           diaSa.checked = !!data.sabado;
-          if (data.hora) horaR.value = data.hora;
+          if (data.horaMiercoles) horaMi.value = data.horaMiercoles;
+          if (data.horaSabado) horaSa.value = data.horaSabado;
 
-          let texto = "";
-          const dias = [];
-          if (data.miercoles) dias.push("Miércoles");
-          if (data.sabado) dias.push("Sábado");
-          if (dias.length) {
-            texto += "Días: " + dias.join(", ") + ". ";
+          let partes = [];
+          if (data.miercoles) {
+            partes.push("Miércoles" + (data.horaMiercoles ? " " + data.horaMiercoles : ""));
           }
-          if (data.hora) texto += "Hora: " + data.hora;
-          resumen.textContent = texto || "Sin configuración guardada.";
+          if (data.sabado) {
+            partes.push("Sábado" + (data.horaSabado ? " " + data.horaSabado : ""));
+          }
+          resumen.textContent = partes.length ? partes.join(" | ") : "Sin configuración guardada.";
         })
         .catch((error) => {
           console.error("Error cargando config reuniones:", error);
@@ -928,8 +990,9 @@
 
     function guardarConfigReuniones() {
       const diaMi = document.getElementById("diaMiercoles").checked;
+      const horaMi = document.getElementById("horaMiercoles").value;
       const diaSa = document.getElementById("diaSabado").checked;
-      const horaR = document.getElementById("horaReunion").value;
+      const horaSa = document.getElementById("horaSabado").value;
       const estadoEl = document.getElementById("estadoConfig");
 
       estadoEl.textContent = "";
@@ -946,8 +1009,9 @@
         .set(
           {
             miercoles: diaMi,
+            horaMiercoles: diaMi ? (horaMi || null) : null,
             sabado: diaSa,
-            hora: horaR || null
+            horaSabado: diaSa ? (horaSa || null) : null
           },
           { merge: true }
         )
@@ -986,7 +1050,6 @@
         return;
       }
 
-      // Buscar nombre del acomodador por PIN
       db.collection("acomodadores")
         .where("pin", "==", pinSeleccionado)
         .limit(1)
@@ -1029,10 +1092,31 @@
         });
     }
 
+    function actualizarTituloProgramaMes() {
+      const mesInput = document.getElementById("mesPrograma");
+      const titulo = document.getElementById("tituloProgramaMes");
+      if (!mesInput || !titulo) return;
+      const mes = mesInput.value;
+      if (!mes) {
+        titulo.textContent = "";
+        return;
+      }
+      const partes = mes.split("-");
+      if (partes.length !== 2) {
+        titulo.textContent = "";
+        return;
+      }
+      const year = partes[0];
+      const m = parseInt(partes[1], 10);
+      const nombreMes = mesesNombre[m - 1] || "";
+      titulo.textContent = `Programa de ${nombreMes} ${year}`;
+    }
+
     function renderProgramaMensual() {
       const mesInput = document.getElementById("mesPrograma");
       const tbody = document.getElementById("tablaProgramaMensual");
       const sinEl = document.getElementById("sinAsignacionesMes");
+      const hoyStr = new Date().toISOString().slice(0,10);
 
       tbody.innerHTML = "";
       if (!mesInput) return;
@@ -1054,13 +1138,20 @@
         sinEl.style.display = "none";
       }
 
-      asignFiltradas.sort((a, b) => (a.fecha || "").localeCompare(b.fecha || ""));
+      asignFiltradas.sort((a, b) => {
+        const fa = (a.fecha || "") + " " + (a.hora || "");
+        const fb = (b.fecha || "") + " " + (b.hora || "");
+        return fa.localeCompare(fb);
+      });
 
       asignFiltradas.forEach((data) => {
         const tr = document.createElement("tr");
+        if (data.fecha === hoyStr) {
+          tr.classList.add("tr-hoy");
+        }
 
         const tdFecha = document.createElement("td");
-        tdFecha.textContent = data.fecha || "";
+        tdFecha.textContent = formatearFechaConDia(data.fecha || "");
         tr.appendChild(tdFecha);
 
         const tdHora = document.createElement("td");
@@ -1069,6 +1160,8 @@
 
         const tdRol = document.createElement("td");
         tdRol.textContent = data.rol || "";
+        if (data.rol === "Entrada") tdRol.classList.add("rol-entrada");
+        if (data.rol === "Auditorio") tdRol.classList.add("rol-auditorio");
         tr.appendChild(tdRol);
 
         const tdNombre = document.createElement("td");
@@ -1095,79 +1188,140 @@
         .where("pin", "==", pin)
         .onSnapshot((snapshot) => {
           const cont = document.getElementById("listaAsignacionesAcomodador");
+          asignacionesAcomodador = [];
 
           if (snapshot.empty) {
             cont.textContent = "No tenés asignaciones cargadas todavía.";
+            document.getElementById("listaReemplazoOpciones").textContent =
+              "No tenés asignaciones próximas para pedir reemplazo.";
             return;
           }
 
-          const asignaciones = [];
-          let html = "<ul style='padding-left: 1rem; margin:0;'>";
           snapshot.forEach((doc) => {
-            const data = doc.data();
-            asignaciones.push(data);
-            html += `<li>${data.fecha || ""} ${data.hora || ""} - ${data.rol || ""}</li>`;
+            asignacionesAcomodador.push(doc.data());
           });
-          html += "</ul>";
-          cont.innerHTML = html;
 
-          programarNotificacionesAsignaciones(asignaciones);
+          renderMisAsignaciones();
+          renderOpcionesReemplazo();
+          programarNotificacionesAsignaciones(asignacionesAcomodador);
         });
     }
 
+    function renderMisAsignaciones() {
+      const cont = document.getElementById("listaAsignacionesAcomodador");
+      if (!cont) return;
+
+      if (!asignacionesAcomodador.length) {
+        cont.textContent = "No tenés asignaciones cargadas.";
+        return;
+      }
+
+      const ahora = new Date();
+      const asigs = [...asignacionesAcomodador];
+
+      asigs.sort((a, b) => {
+        const fa = (a.fecha || "") + " " + (a.hora || "");
+        const fb = (b.fecha || "") + " " + (b.hora || "");
+        return fa.localeCompare(fb);
+      });
+
+      let html = "";
+      let proximaTexto = "";
+      let proximaEncontrada = false;
+
+      asigs.forEach((a) => {
+        const fhStr = (a.fecha || "") + "T" + (a.hora || "00:00") + ":00";
+        const fechaObj = new Date(fhStr);
+        const esFuturo = fechaObj >= ahora;
+        const fechaForm = formatearFechaConDia(a.fecha || "");
+        const rol = a.rol || "";
+
+        let clases = "card-asig";
+        if (esFuturo && !proximaEncontrada) {
+          clases += " card-asig-proxima";
+          proximaEncontrada = true;
+          proximaTexto = `Tu próxima asignación: ${fechaForm} ${a.hora || ""} - ${rol}`;
+        } else if (!esFuturo) {
+          clases += " card-asig-pasada";
+        }
+
+        html += `
+          <div class="${clases}">
+            <div class="card-asig-titulo">${fechaForm} ${a.hora || ""}</div>
+            <div class="card-asig-rol">Rol: ${rol}</div>
+          </div>
+        `;
+      });
+
+      if (proximaTexto) {
+        cont.innerHTML = `<div class="proxima-label">${proximaTexto}</div>` + html;
+      } else {
+        cont.innerHTML = html;
+      }
+    }
+
     // --- Reemplazos (Acomodador) ---
-    function buscarAsignacionParaReemplazo() {
-      const fecha = document.getElementById("reempFecha").value;
+    function renderOpcionesReemplazo() {
+      const cont = document.getElementById("listaReemplazoOpciones");
+      if (!cont) return;
+
+      const hoyStr = new Date().toISOString().slice(0,10);
+      const asigs = [...asignacionesAcomodador].filter(a => (a.fecha || "") >= hoyStr);
+
+      if (!asigs.length) {
+        cont.textContent = "No tenés asignaciones próximas para pedir reemplazo.";
+        return;
+      }
+
+      asigs.sort((a, b) => {
+        const fa = (a.fecha || "") + " " + (a.hora || "");
+        const fb = (b.fecha || "") + " " + (b.hora || "");
+        return fa.localeCompare(fb);
+      });
+
+      let html = "";
+      asigs.forEach((a, idx) => {
+        const fechaForm = formatearFechaConDia(a.fecha || "");
+        const rol = a.rol || "";
+        html += `
+          <div class="card-reemp">
+            <div class="card-reemp-info">
+              <div><strong>${fechaForm}</strong> ${a.hora || ""}</div>
+              <div>Rol: ${rol}</div>
+            </div>
+            <button type="button" class="btn-secondary btn-small"
+                    onclick="seleccionarReemplazo(${idx})">
+              Pedir reemplazo
+            </button>
+          </div>
+        `;
+      });
+
+      cont.innerHTML = html;
+    }
+
+    function seleccionarReemplazo(idx) {
+      const hoyStr = new Date().toISOString().slice(0,10);
+      const asigs = [...asignacionesAcomodador].filter(a => (a.fecha || "") >= hoyStr);
+
+      if (idx < 0 || idx >= asigs.length) return;
+
+      asignacionSeleccionadaParaReemplazo = asigs[idx];
       const detalle = document.getElementById("detalleReemplazo");
       const btn = document.getElementById("btnConfirmarReemplazo");
-      const estado = document.getElementById("estadoReemplazo");
 
-      detalle.textContent = "";
-      btn.style.display = "none";
+      const a = asignacionSeleccionadaParaReemplazo;
+      const fechaForm = formatearFechaConDia(a.fecha || "");
+      detalle.textContent =
+        "Asignación seleccionada: " +
+        fechaForm + " " + (a.hora || "") +
+        " - " + (a.rol || "") +
+        (a.nombre ? " (" + a.nombre + ")" : "");
+
+      btn.style.display = "inline-block";
+      const estado = document.getElementById("estadoReemplazo");
       estado.textContent = "";
       estado.className = "estado";
-
-      if (!fecha) {
-        detalle.textContent = "Seleccione una fecha.";
-        return;
-      }
-      if (!firebaseHabilitado || !db) {
-        detalle.textContent = "No se pudo conectar a la nube.";
-        return;
-      }
-
-      db.collection("asignaciones")
-        .where("pin", "==", usuarioPin)
-        .where("fecha", "==", fecha)
-        .get()
-        .then((snapshot) => {
-          if (snapshot.empty) {
-            detalle.textContent = "No tenés asignación en esa fecha.";
-            asignacionSeleccionadaParaReemplazo = null;
-            return;
-          }
-          const doc = snapshot.docs[0];
-          const data = doc.data();
-          asignacionSeleccionadaParaReemplazo = {
-            id: doc.id,
-            ...data
-          };
-          detalle.textContent =
-            "Asignación: " +
-            (data.fecha || "") +
-            " " +
-            (data.hora || "") +
-            " - " +
-            (data.rol || "") +
-            " (" +
-            (data.nombre || "") +
-            ")";
-          btn.style.display = "inline-block";
-        })
-        .catch((error) => {
-          console.error("Error buscando asignación:", error);
-          detalle.textContent = "Error al buscar la asignación.";
-        });
     }
 
     function confirmarReemplazo() {
@@ -1233,7 +1387,7 @@
             const tr = document.createElement("tr");
 
             const tdFecha = document.createElement("td");
-            tdFecha.textContent = data.fecha || "";
+            tdFecha.textContent = formatearFechaConDia(data.fecha || "");
             tr.appendChild(tdFecha);
 
             const tdHora = document.createElement("td");
@@ -1242,6 +1396,8 @@
 
             const tdRol = document.createElement("td");
             tdRol.textContent = data.rol || "";
+            if (data.rol === "Entrada") tdRol.classList.add("rol-entrada");
+            if (data.rol === "Auditorio") tdRol.classList.add("rol-auditorio");
             tr.appendChild(tdRol);
 
             const tdNombre = document.createElement("td");
@@ -1257,7 +1413,7 @@
         });
     }
 
-    // --- Notificaciones locales (opción 1) ---
+    // --- Notificaciones locales ---
     function solicitarPermisoNotificaciones() {
       if (!("Notification" in window)) {
         console.log("Este navegador no soporta notificaciones.");
