@@ -4,849 +4,282 @@
   <meta charset="UTF-8" />
   <title>Acomoda App</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Firebase (solo se usa si luego completás firebaseConfig) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    html, body {
-      height: 100%;
+      background-color: #f4f4f7;
+      color: #222;
     }
     body {
-      background: radial-gradient(circle at top, #e5f0ff 0, #f4f6fb 45%, #edf0ff 100%);
-      color: #111827;
+      margin: 0;
+      padding: 0;
       display: flex;
+      min-height: 100vh;
+      align-items: center;
       justify-content: center;
-      align-items: stretch;
-    }
-    .app-shell {
-      max-width: 480px;
-      width: 100%;
-      margin: 8px;
-      background: rgba(255, 255, 255, 0.96);
-      border-radius: 24px;
-      box-shadow: 0 12px 30px rgba(15,23,42,0.2);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-    header {
-      padding: 16px 16px 10px;
-      background: linear-gradient(90deg, #1b4b82, #2563eb);
-      color: white;
-      text-align: center;
-    }
-    header h1 {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-    header small {
-      display: block;
-      margin-top: 2px;
-      font-size: 12px;
-      opacity: 0.9;
-    }
-    main {
-      flex: 1;
-      padding: 12px;
-      overflow-y: auto;
     }
     .card {
-      background: white;
-      border-radius: 18px;
-      padding: 12px 12px 10px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(15,23,42,0.08);
-    }
-    .card-header {
-      font-weight: 600;
-      font-size: 15px;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .card-header .pill {
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: #e0edff;
-      color: #1d4ed8;
-    }
-    label {
-      font-size: 13px;
-      font-weight: 500;
-      margin-bottom: 2px;
-    }
-    input[type="text"],
-    input[type="password"],
-    input[type="month"],
-    select {
+      background: #fff;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      max-width: 420px;
       width: 100%;
-      border-radius: 10px;
-      border: 1px solid #d1d5db;
-      padding: 7px 9px;
-      font-size: 14px;
-      background: #f9fafb;
     }
-    input:focus, select:focus {
-      outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 1px rgba(37,99,235,0.4);
-      background: #ffffff;
-    }
-    button {
-      border: none;
-      border-radius: 999px;
-      padding: 8px 16px;
-      font-size: 14px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #1b4b82;
-      color: white;
-      margin-top: 6px;
-    }
-    button.secondary {
-      background: #e5e7eb;
-      color: #111827;
-    }
-    button.danger {
-      background: #b91c1c;
-      color: white;
-    }
-    button:active {
-      transform: scale(0.97);
-    }
-    .field-group {
-      margin-bottom: 8px;
-      display: flex;
-      flex-direction: column;
-    }
-    .row {
-      display: flex;
-      gap: 8px;
-    }
-    .row > * {
-      flex: 1;
-    }
-    .status {
-      font-size: 12px;
-      color: #4b5563;
-      margin-top: 4px;
-    }
-    .tabs {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 10px;
-    }
-    .tab-btn {
-      flex: 1;
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 13px;
-      border: 1px solid #d1d5db;
-      background: #eef2ff;
-      cursor: pointer;
-    }
-    .tab-btn.active {
-      background: #1d4ed8;
-      color: white;
-      border-color: #1d4ed8;
-      font-weight: 600;
-    }
-    .tab-section {
-      display: none;
-    }
-    .tab-section.active {
-      display: block;
-    }
-    .badge-role {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      background: #e0f2fe;
-      color: #0369a1;
-      margin-left: 4px;
-    }
-    .badge-user {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 11px;
-      background: #fef3c7;
-      color: #92400e;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
-      margin-top: 6px;
-    }
-    th, td {
-      border: 1px solid #e5e7eb;
-      padding: 4px 6px;
+    h1 {
+      margin-top: 0;
+      font-size: 1.4rem;
       text-align: center;
     }
-    th {
-      background: #eff6ff;
+    h2 {
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      text-align: center;
+    }
+    .sub {
+      font-size: 0.9rem;
+      color: #555;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    label {
+      font-size: 0.9rem;
+      display: block;
+      margin: 0.4rem 0 0.2rem;
+    }
+    input[type="password"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 0.55rem 0.6rem;
+      border-radius: 0.4rem;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+    .rol-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      justify-content: center;
+    }
+    .rol-row label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin: 0;
+      font-size: 0.9rem;
+    }
+    button {
+      width: 100%;
+      margin-top: 0.9rem;
+      padding: 0.65rem;
+      font-size: 0.95rem;
+      border-radius: 0.5rem;
+      border: none;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
       font-weight: 600;
     }
-    .login-section, .app-section {
-      display: none;
+    button:active {
+      transform: scale(0.98);
     }
-    .login-section.active, .app-section.active {
-      display: block;
+    .small-btn {
+      width: auto;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      background: #6b7280;
     }
-    .pill-role-coord {
-      background: #fef3c7;
-      color: #92400e;
+    .estado {
+      margin-top: 0.6rem;
+      font-size: 0.8rem;
+      text-align: center;
     }
-    .pill-role-aco {
-      background: #dcfce7;
-      color: #166534;
+    .estado.ok {
+      color: #16a34a;
     }
-    .small-text {
-      font-size: 11px;
-      color: #6b7280;
-      margin-top: 2px;
+    .estado.err {
+      color: #b91c1c;
+    }
+    .app-section {
+      margin-top: 1rem;
+      border-top: 1px solid #e5e7eb;
+      padding-top: 0.8rem;
+      font-size: 0.9rem;
+    }
+    .chip {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: #e5e7eb;
+      font-size: 0.8rem;
+      margin-bottom: 0.3rem;
+    }
+    #resultadoFirebase {
+      margin-top: 0.45rem;
+      font-size: 0.8rem;
+      text-align: center;
     }
   </style>
+
+  <!-- Firebase compat -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div class="app-shell">
-    <header>
-      <h1>ACOMODA APP</h1>
-      <small>Control de asignaciones</small>
-    </header>
-    <main>
-      <!-- LOGIN -->
-      <section id="login-section" class="login-section active">
-        <div class="card">
-          <div class="card-header">
-            Ingreso
-            <span class="pill pill-role-coord">Coordinador</span>
-            <span class="pill pill-role-aco">Acomodador</span>
-          </div>
-          <div class="field-group">
-            <label for="rol-select">Rol</label>
-            <select id="rol-select">
-              <option value="coordinador">Coordinador</option>
-              <option value="acomodador">Acomodador</option>
-            </select>
-          </div>
-          <div class="field-group">
-            <label for="pin-input">PIN</label>
-            <input type="password" id="pin-input" placeholder="Ingrese PIN" />
-            <div id="login-status" class="status"></div>
-            <div class="small-text">
-              El PIN del coordinador es privado. Los PIN de acomodadores se cargan en la pestaña "Acomodadores".
-            </div>
-          </div>
-          <button id="btn-login">Entrar</button>
-        </div>
-      </section>
+  <div class="card">
+    <h1>ACOMODA APP</h1>
+    <div class="sub">Control de asignaciones y recordatorios</div>
 
-      <!-- APP PRINCIPAL -->
-      <section id="app-section" class="app-section">
-        <div class="card" id="sesion-info">
-          <div class="card-header">
-            Sesión
-            <span id="sesion-rol-pill" class="pill"></span>
-          </div>
-          <div id="sesion-detalle" class="status"></div>
-          <button id="btn-logout" class="secondary" style="margin-top:6px;">Cerrar sesión</button>
-        </div>
+    <!-- Login / Ingreso -->
+    <div id="loginSection">
+      <h2>Ingreso</h2>
 
-        <!-- Vista Coordinador -->
-        <section id="vista-coordinador" style="display:none;">
-          <div class="tabs">
-            <button class="tab-btn active" data-tab="tab-acomodadores">Acomodadores</button>
-            <button class="tab-btn" data-tab="tab-calendario">Calendario</button>
-          </div>
+      <div class="rol-row">
+        <label>
+          <input type="radio" name="rol" value="coordinador" />
+          Coordinador
+        </label>
+        <label>
+          <input type="radio" name="rol" value="acomodador" />
+          Acomodador
+        </label>
+      </div>
 
-          <!-- Tab Acomodadores -->
-          <div id="tab-acomodadores" class="tab-section active">
-            <div class="card">
-              <div class="card-header">
-                Acomodadores
-                <span class="pill">Listado y PIN</span>
-              </div>
-              <div class="field-group">
-                <label for="ac-nombre">Nombre</label>
-                <input type="text" id="ac-nombre" placeholder="Ej: Juan Pérez" />
-              </div>
-              <div class="field-group">
-                <label for="ac-pin">PIN (para que ingrese a su cuenta)</label>
-                <input type="password" id="ac-pin" placeholder="Ej: 1234" />
-              </div>
-              <button id="btn-agregar-acomodador">Agregar acomodador</button>
-              <div id="estado-acomodadores" class="status"></div>
-            </div>
+      <label for="pinInput">PIN</label>
+      <input id="pinInput" type="password" placeholder="Ingrese su PIN" />
 
-            <div class="card">
-              <div class="card-header">Listado actual</div>
-              <div id="lista-acomodadores" class="status">Sin acomodadores cargados.</div>
-            </div>
-          </div>
+      <button onclick="entrar()">Entrar</button>
 
-          <!-- Tab Calendario -->
-          <div id="tab-calendario" class="tab-section">
-            <div class="card">
-              <div class="card-header">
-                Configuración de reuniones
-                <span class="pill">Días y horario</span>
-              </div>
-              <div class="row">
-                <div class="field-group">
-                  <label for="dia-medio">Día entre semana</label>
-                  <select id="dia-medio">
-                    <option value="3">Miércoles</option>
-                    <option value="2">Martes</option>
-                    <option value="4">Jueves</option>
-                    <option value="5">Viernes</option>
-                  </select>
-                </div>
-                <div class="field-group">
-                  <label for="hora-medio">Hora entre semana</label>
-                  <input type="text" id="hora-medio" placeholder="Ej: 19:00" />
-                </div>
-              </div>
-              <div class="row">
-                <div class="field-group">
-                  <label for="dia-fin">Día fin de semana</label>
-                  <select id="dia-fin">
-                    <option value="6">Sábado</option>
-                    <option value="0">Domingo</option>
-                  </select>
-                </div>
-                <div class="field-group">
-                  <label for="hora-fin">Hora fin de semana</label>
-                  <input type="text" id="hora-fin" placeholder="Ej: 18:00" />
-                </div>
-              </div>
-            </div>
+      <div id="estadoConexion" class="estado"></div>
 
-            <div class="card">
-              <div class="card-header">
-                Programa mensual
-                <span class="pill">Nombre del día</span>
-              </div>
-              <div class="field-group">
-                <label for="mes-cal">Mes</label>
-                <input type="month" id="mes-cal" />
-                <div class="small-text">Elegí el mes y generá las reuniones.</div>
-              </div>
-              <button id="btn-generar-reuniones" class="secondary">Generar reuniones del mes</button>
-              <div id="estado-calendario" class="status" style="margin-top:4px;"></div>
+      <!-- Botón para probar Firebase (solo para vos) -->
+      <div style="text-align:center; margin-top:0.5rem;">
+        <button class="small-btn" type="button" onclick="probarFirebase()">
+          Probar Firebase
+        </button>
+        <div id="resultadoFirebase"></div>
+      </div>
+    </div>
 
-              <div id="tabla-calendario-wrapper" style="margin-top:8px; display:none;">
-                <table id="tabla-calendario">
-                  <thead>
-                    <tr>
-                      <th>Fecha</th>
-                      <th>Día</th>
-                      <th>Hora</th>
-                      <th>Entrada</th>
-                      <th>Auditorio</th>
-                    </tr>
-                  </thead>
-                  <tbody></tbody>
-                </table>
-                <button id="btn-guardar-calendario" style="margin-top:6px;">Guardar programa</button>
-              </div>
-            </div>
-          </div>
-        </section>
+    <!-- Sección principal de la app, se muestra luego de entrar -->
+    <div id="appSection" style="display:none;">
+      <h2>Panel</h2>
+      <div class="chip" id="infoUsuario"></div>
 
-        <!-- Vista Acomodador -->
-        <section id="vista-acomodador" style="display:none;">
-          <div class="card">
-            <div class="card-header">
-              Mis asignaciones
-              <span class="pill">Próximas semanas</span>
-            </div>
-            <div id="lista-asignaciones-acom" class="status">
-              No se encontraron asignaciones para este acomodador.
-            </div>
-          </div>
-        </section>
-      </section>
-    </main>
+      <div class="app-section">
+        <p>
+          Aquí después vamos a mostrar:
+        </p>
+        <ul>
+          <li>Programa mensual de asignaciones.</li>
+          <li>Asignaciones de cada acomodador.</li>
+          <li>Sincronización con Firebase (para ver cambios en tiempo real).</li>
+        </ul>
+        <p style="font-size:0.8rem; color:#6b7280;">
+          Por ahora, lo importante es que Firebase esté funcionando. 😊
+        </p>
+      </div>
+    </div>
   </div>
 
   <script>
-    // --- utilidades ---
-    function guardarLS(clave, valor) {
-      localStorage.setItem(clave, JSON.stringify(valor));
-    }
-    function leerLS(clave, defecto) {
-      const raw = localStorage.getItem(clave);
-      if (!raw) return defecto;
-      try { return JSON.parse(raw); } catch (e) { return defecto; }
-    }
-    function hoyISO() {
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const dd = String(d.getDate()).padStart(2,"0");
-      return y+"-"+m+"-"+dd;
-    }
-    function formatearFecha(fechaISO) {
-      if (!fechaISO) return "";
-      const d = new Date(fechaISO+"T00:00:00");
-      if (isNaN(d.getTime())) return fechaISO;
-      const dd = String(d.getDate()).padStart(2,"0");
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const y = d.getFullYear();
-      return dd+"/"+m+"/"+y;
-    }
-    const nombresDias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-
-    // --- Firebase opcional ---
+    // --- Configuración Firebase (nube) ---
     let db = null;
     let firebaseHabilitado = false;
+
     try {
       const firebaseConfig = {
-  apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
-  authDomain: "acomoda-app2.firebaseapp.com",
-  projectId: "acomoda-app2",
-  storageBucket: "acomoda-app2.firebasestorage.app",
-  messagingSenderId: "453109433788",
-  appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
-};
-        // el resto de propiedades (storageBucket, messagingSenderId, appId) no son obligatorias para Firestore
+        apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
+        authDomain: "acomoda-app2.firebaseapp.com",
+        projectId: "acomoda-app2",
+        storageBucket: "acomoda-app2.firebasestorage.app",
+        messagingSenderId: "453109433788",
+        appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
       };
-      if (firebaseConfig.apiKey !== "TU_API_KEY") {
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        firebaseHabilitado = true;
-        console.log("Firebase habilitado (modo nube).");
-      } else {
-        console.log("FirebaseConfig sin completar, funcionando en modo localStorage.");
-      }
+
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+      firebaseHabilitado = true;
+      console.log("✅ Firebase habilitado (modo nube).");
     } catch (e) {
-      console.log("Error inicializando Firebase, modo localStorage:", e);
+      console.log("❌ Error inicializando Firebase, se usará solo localStorage:", e);
     }
 
-    // --- estado ---
-    let acomodadores = [];
-    let programa = [];
-    let sesionActual = null;
+    // Mostrar estado de conexión en la pantalla
+    window.addEventListener("load", () => {
+      const estadoEl = document.getElementById("estadoConexion");
+      if (firebaseHabilitado) {
+        estadoEl.textContent = "Conectado a Firebase (modo nube).";
+        estadoEl.classList.add("ok");
+      } else {
+        estadoEl.textContent = "No se pudo conectar a Firebase. Modo local.";
+        estadoEl.classList.add("err");
+      }
+    });
 
-    // --- elementos login/sesión ---
-    const loginSection = document.getElementById("login-section");
-    const appSection   = document.getElementById("app-section");
-    const rolSelect    = document.getElementById("rol-select");
-    const pinInput     = document.getElementById("pin-input");
-    const loginBtn     = document.getElementById("btn-login");
-    const loginStatus  = document.getElementById("login-status");
+    // --- Lógica de ingreso ---
+    const PIN_COORDINADOR = "999"; // NO se muestra en la pantalla
 
-    const sesionRolPill = document.getElementById("sesion-rol-pill");
-    const sesionDetalle = document.getElementById("sesion-detalle");
-    const btnLogout     = document.getElementById("btn-logout");
+    function entrar() {
+      const rolEl = document.querySelector('input[name="rol"]:checked');
+      const pin = document.getElementById("pinInput").value.trim();
 
-    const vistaCoord = document.getElementById("vista-coordinador");
-    const vistaAcom  = document.getElementById("vista-acomodador");
-
-    // --- tabs ---
-    const tabButtons = document.querySelectorAll(".tab-btn");
-    const tabSections = document.querySelectorAll(".tab-section");
-
-    // --- acomodadores ---
-    const acNombreInput = document.getElementById("ac-nombre");
-    const acPinInput    = document.getElementById("ac-pin");
-    const btnAgregarAc  = document.getElementById("btn-agregar-acomodador");
-    const estadoAcs     = document.getElementById("estado-acomodadores");
-    const listaAcsDiv   = document.getElementById("lista-acomodadores");
-
-    // --- calendario ---
-    const diaMedioSel = document.getElementById("dia-medio");
-    const horaMedioIn = document.getElementById("hora-medio");
-    const diaFinSel   = document.getElementById("dia-fin");
-    const horaFinIn   = document.getElementById("hora-fin");
-    const mesCalInput = document.getElementById("mes-cal");
-    const btnGenerarReu = document.getElementById("btn-generar-reuniones");
-    const estadoCal   = document.getElementById("estado-calendario");
-    const tablaCalWrapper = document.getElementById("tabla-calendario-wrapper");
-    const tablaCalBody = document.querySelector("#tabla-calendario tbody");
-    const btnGuardarCal = document.getElementById("btn-guardar-calendario");
-
-    // --- vista acomodador ---
-    const listaAsigAcom = document.getElementById("lista-asignaciones-acom");
-
-    // --- sesión ---
-    function actualizarVistaSesion() {
-      if (!sesionActual) {
-        loginSection.classList.add("active");
-        appSection.classList.remove("active");
-        vistaCoord.style.display = "none";
-        vistaAcom.style.display = "none";
+      if (!rolEl) {
+        alert("Seleccione si es Coordinador o Acomodador.");
         return;
       }
-      loginSection.classList.remove("active");
-      appSection.classList.add("active");
-      if (sesionActual.rol === "coordinador") {
-        vistaCoord.style.display = "block";
-        vistaAcom.style.display = "none";
-        sesionRolPill.textContent = "Coordinador";
-        sesionRolPill.className = "pill pill-role-coord";
-        sesionDetalle.textContent = "Ingreso como coordinador.";
-      } else {
-        vistaCoord.style.display = "none";
-        vistaAcom.style.display = "block";
-        sesionRolPill.textContent = "Acomodador";
-        sesionRolPill.className = "pill pill-role-aco";
-        sesionDetalle.textContent = "Ingreso como acomodador: " + sesionActual.nombre;
-        renderAsignacionesAcomodador();
-      }
-    }
-
-    loginBtn.addEventListener("click", () => {
-      const rol = rolSelect.value;
-      const pin = (pinInput.value || "").trim();
-      loginStatus.textContent = "";
       if (!pin) {
-        loginStatus.textContent = "Ingresá el PIN.";
+        alert("Ingrese su PIN.");
         return;
       }
+
+      const rol = rolEl.value;
+
       if (rol === "coordinador") {
-        if (pin === "999") {
-          sesionActual = { rol: "coordinador" };
-          pinInput.value = "";
-          actualizarVistaSesion();
-        } else {
-          loginStatus.textContent = "PIN de coordinador incorrecto.";
-        }
-      } else {
-        const ac = acomodadores.find(a => a.pin === pin);
-        if (!ac) {
-          loginStatus.textContent = "PIN de acomodador no encontrado.";
+        if (pin !== PIN_COORDINADOR) {
+          alert("PIN de coordinador incorrecto.");
           return;
         }
-        sesionActual = { rol: "acomodador", id: ac.id, nombre: ac.nombre };
-        pinInput.value = "";
-        actualizarVistaSesion();
-      }
-    });
-
-    btnLogout.addEventListener("click", () => {
-      sesionActual = null;
-      actualizarVistaSesion();
-    });
-
-    // --- tabs ---
-    tabButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        const tabId = btn.dataset.tab;
-        tabButtons.forEach(b => b.classList.toggle("active", b === btn));
-        tabSections.forEach(sec => sec.classList.toggle("active", sec.id === tabId));
-      });
-    });
-
-    // --- acomodadores ---
-    function renderAcomodadores() {
-      if (!acomodadores.length) {
-        listaAcsDiv.textContent = "Sin acomodadores cargados.";
-        return;
-      }
-      const frag = document.createDocumentFragment();
-      acomodadores.forEach(ac => {
-        const fila = document.createElement("div");
-        fila.style.display = "flex";
-        fila.style.justifyContent = "space-between";
-        fila.style.alignItems = "center";
-        fila.style.padding = "4px 0";
-        fila.style.borderBottom = "1px solid #e5e7eb";
-
-        const txt = document.createElement("div");
-        txt.style.fontSize = "13px";
-        txt.innerHTML = `<strong>${ac.nombre}</strong> <span class="badge-user">PIN: ${ac.pin}</span>`;
-
-        const btnDel = document.createElement("button");
-        btnDel.textContent = "Quitar";
-        btnDel.className = "danger";
-        btnDel.style.fontSize = "11px";
-        btnDel.style.padding = "3px 8px";
-        btnDel.addEventListener("click", () => {
-          if (firebaseHabilitado && db) {
-            db.collection("acomodadores").doc(ac.id).delete().catch(err => {
-              console.error("Error al borrar acomodador en Firebase", err);
-            });
-          } else {
-            acomodadores = acomodadores.filter(a => a.id !== ac.id);
-            guardarLS("acomoda_acomodadores", acomodadores);
-            renderAcomodadores();
-          }
-        });
-
-        fila.appendChild(txt);
-        fila.appendChild(btnDel);
-        frag.appendChild(fila);
-      });
-      listaAcsDiv.innerHTML = "";
-      listaAcsDiv.appendChild(frag);
-    }
-
-    btnAgregarAc.addEventListener("click", () => {
-      const nombre = (acNombreInput.value || "").trim();
-      const pin    = (acPinInput.value || "").trim();
-      if (!nombre || !pin) {
-        estadoAcs.textContent = "Completá nombre y PIN.";
-        return;
-      }
-      if (acomodadores.some(a => a.pin === pin)) {
-        estadoAcs.textContent = "Ya existe un acomodador con ese PIN.";
-        return;
-      }
-
-      if (firebaseHabilitado && db) {
-        db.collection("acomodadores").add({ nombre, pin })
-          .then(() => {
-            acNombreInput.value = "";
-            acPinInput.value = "";
-            estadoAcs.textContent = "Acomodador agregado en la nube.";
-          })
-          .catch(err => {
-            console.error("Error al guardar en Firebase", err);
-            estadoAcs.textContent = "Error al guardar en Firebase. Revisá la consola.";
-          });
       } else {
-        const nuevo = { id: Date.now().toString(), nombre, pin };
-        acomodadores.push(nuevo);
-        guardarLS("acomoda_acomodadores", acomodadores);
-        acNombreInput.value = "";
-        acPinInput.value = "";
-        estadoAcs.textContent = "Acomodador agregado (modo local).";
-        renderAcomodadores();
+        // Acomodador: más adelante podemos validar contra una lista en Firestore/localStorage
       }
-    });
 
-    // --- calendario ---
-    function obtenerFechasReuniones(mesISO, diaSemanaMedio, diaSemanaFin) {
-      const partes = mesISO.split("-");
-      if (partes.length !== 2) return [];
-      const anio = parseInt(partes[0], 10);
-      const mes  = parseInt(partes[1], 10) - 1;
-      if (isNaN(anio) || isNaN(mes)) return [];
-      const fechas = [];
-      const d = new Date(anio, mes, 1);
-      while (d.getMonth() === mes) {
-        const dow = d.getDay();
-        if (dow === diaSemanaMedio || dow === diaSemanaFin) {
-          const iso = d.toISOString().slice(0,10);
-          fechas.push({ fecha: iso, dow });
-        }
-        d.setDate(d.getDate() + 1);
-      }
-      return fechas;
+      // Si llegó hasta acá, el PIN es válido
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("appSection").style.display = "block";
+
+      const info = document.getElementById("infoUsuario");
+      info.textContent =
+        (rol === "coordinador" ? "Coordinador" : "Acomodador") +
+        " | PIN " +
+        pin;
     }
 
-    function renderTablaCalendario(fechas, diaSemanaMedio, diaSemanaFin, horaMedio, horaFin) {
-      tablaCalBody.innerHTML = "";
-      if (!fechas.length) {
-        tablaCalWrapper.style.display = "none";
+    // --- Prueba de Firebase ---
+    function probarFirebase() {
+      if (!firebaseHabilitado || !db) {
+        alert("Firebase no está habilitado. Sigue en modo local.");
         return;
       }
-      fechas.sort((a,b) => a.fecha.localeCompare(b.fecha));
-      fechas.forEach(item => {
-        const tr = document.createElement("tr");
 
-        const tdFecha = document.createElement("td");
-        tdFecha.textContent = formatearFecha(item.fecha);
-        tr.appendChild(tdFecha);
-
-        const tdDia = document.createElement("td");
-        tdDia.textContent = nombresDias[item.dow];
-        tr.appendChild(tdDia);
-
-        const tdHora = document.createElement("td");
-        const hora = (item.dow === diaSemanaMedio) ? horaMedio : horaFin;
-        tdHora.textContent = hora || "";
-        tr.appendChild(tdHora);
-
-        const tdEntrada = document.createElement("td");
-        const selEntrada = document.createElement("select");
-        const optV = document.createElement("option");
-        optV.value = "";
-        optV.textContent = "-";
-        selEntrada.appendChild(optV);
-        acomodadores.forEach(ac => {
-          const opt = document.createElement("option");
-          opt.value = ac.id;
-          opt.textContent = ac.nombre;
-          selEntrada.appendChild(opt);
+      db.collection("pruebas")
+        .add({
+          mensaje: "Hola desde AcomodaApp",
+          fecha: new Date().toISOString()
+        })
+        .then(() => {
+          document.getElementById("resultadoFirebase").textContent =
+            "✅ Firebase guardó un documento en la colección 'pruebas'.";
+        })
+        .catch((error) => {
+          console.error("Error guardando en Firebase:", error);
+          document.getElementById("resultadoFirebase").textContent =
+            "❌ Error al guardar en Firebase. Mirá la consola.";
         });
-        tdEntrada.appendChild(selEntrada);
-        tr.appendChild(tdEntrada);
-
-        const tdAud = document.createElement("td");
-        const selAud = document.createElement("select");
-        const optV2 = document.createElement("option");
-        optV2.value = "";
-        optV2.textContent = "-";
-        selAud.appendChild(optV2);
-        acomodadores.forEach(ac => {
-          const opt = document.createElement("option");
-          opt.value = ac.id;
-          opt.textContent = ac.nombre;
-          selAud.appendChild(opt);
-        });
-        tdAud.appendChild(selAud);
-        tr.appendChild(tdAud);
-
-        tr.dataset.fecha = item.fecha;
-        tr.dataset.dow = item.dow;
-
-        tablaCalBody.appendChild(tr);
-      });
-      tablaCalWrapper.style.display = "block";
     }
-
-    btnGenerarReu.addEventListener("click", () => {
-      const mesISO = mesCalInput.value;
-      if (!mesISO) {
-        estadoCal.textContent = "Elegí un mes.";
-        return;
-      }
-      if (!acomodadores.length) {
-        estadoCal.textContent = "Primero cargá acomodadores.";
-        return;
-      }
-      const diaMedio = parseInt(diaMedioSel.value, 10);
-      const diaFin   = parseInt(diaFinSel.value, 10);
-      const horaMed  = (horaMedioIn.value || "").trim();
-      const horaFin  = (horaFinIn.value || "").trim();
-
-      const fechas = obtenerFechasReuniones(mesISO, diaMedio, diaFin);
-      if (!fechas.length) {
-        estadoCal.textContent = "No se encontraron reuniones para ese mes.";
-        tablaCalWrapper.style.display = "none";
-        return;
-      }
-      renderTablaCalendario(fechas, diaMedio, diaFin, horaMed, horaFin);
-      estadoCal.textContent = "Reuniones generadas. Asigná Entrada y Auditorio.";
-    });
-
-    btnGuardarCal.addEventListener("click", () => {
-      const nuevas = [];
-      const filas = Array.from(tablaCalBody.querySelectorAll("tr"));
-      filas.forEach(tr => {
-        const fecha = tr.dataset.fecha;
-        const dow   = parseInt(tr.dataset.dow, 10);
-        const hora  = tr.children[2].textContent || "";
-        const selEntrada = tr.children[3].querySelector("select");
-        const selAud     = tr.children[4].querySelector("select");
-        const entradaId  = selEntrada.value || null;
-        const auditorioId = selAud.value || null;
-        nuevas.push({ fecha, dow, hora, entradaId, auditorioId });
-      });
-
-      if (firebaseHabilitado && db) {
-        // Guardamos todo el programa en la colección "programa"
-        db.collection("programa").get().then(snap => {
-          const batch = db.batch();
-          snap.forEach(doc => batch.delete(doc.ref));
-          nuevas.forEach(row => {
-            const ref = db.collection("programa").doc();
-            batch.set(ref, row);
-          });
-          return batch.commit();
-        }).then(() => {
-          estadoCal.textContent = "Programa mensual guardado en Firebase.";
-        }).catch(err => {
-          console.error("Error guardando programa en Firebase", err);
-          estadoCal.textContent = "Error al guardar programa en Firebase.";
-        });
-      } else {
-        programa = nuevas;
-        guardarLS("acomoda_programa", programa);
-        estadoCal.textContent = "Programa mensual guardado (modo local).";
-      }
-    });
-
-    // --- vista acomodador ---
-    function renderAsignacionesAcomodador() {
-      if (!sesionActual || sesionActual.rol !== "acomodador") return;
-      if (!programa.length) {
-        listaAsigAcom.textContent = "No hay programa cargado.";
-        return;
-      }
-      const hoy = hoyISO();
-      const futuras = programa
-        .filter(item =>
-          (item.entradaId === sesionActual.id || item.auditorioId === sesionActual.id) &&
-          item.fecha >= hoy
-        )
-        .sort((a,b) => a.fecha.localeCompare(b.fecha));
-      if (!futuras.length) {
-        listaAsigAcom.textContent = "No se encontraron asignaciones futuras para este acomodador.";
-        return;
-      }
-      const frag = document.createDocumentFragment();
-      futuras.forEach(a => {
-        const div = document.createElement("div");
-        div.style.padding = "4px 0";
-        div.style.borderBottom = "1px solid #e5e7eb";
-        const rol = (a.entradaId === sesionActual.id) ? "Entrada" : "Auditorio";
-        div.innerHTML =
-          `<strong>${formatearFecha(a.fecha)}</strong> · ${nombresDias[a.dow]} · ${a.hora || ""} ` +
-          `<span class="badge-role">${rol}</span>`;
-        frag.appendChild(div);
-      });
-      listaAsigAcom.innerHTML = "";
-      listaAsigAcom.appendChild(frag);
-    }
-
-    // --- init ---
-    function init() {
-      if (firebaseHabilitado && db) {
-        // Escuchamos acomodadores en tiempo real
-        db.collection("acomodadores").orderBy("nombre").onSnapshot(snap => {
-          acomodadores = snap.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          renderAcomodadores();
-        }, err => {
-          console.error("Error escuchando acomodadores:", err);
-        });
-
-        // Escuchamos programa en tiempo real
-        db.collection("programa").onSnapshot(snap => {
-          programa = snap.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          if (sesionActual && sesionActual.rol === "acomodador") {
-            renderAsignacionesAcomodador();
-          }
-        }, err => {
-          console.error("Error escuchando programa:", err);
-        });
-      } else {
-        // Modo local
-        acomodadores = leerLS("acomoda_acomodadores", []);
-        programa = leerLS("acomoda_programa", []);
-        renderAcomodadores();
-      }
-
-      if (!horaMedioIn.value) horaMedioIn.value = "19:00";
-      if (!horaFinIn.value)   horaFinIn.value   = "18:00";
-      if (!mesCalInput.value) mesCalInput.value = hoyISO().slice(0,7);
-      actualizarVistaSesion();
-    }
-    init();
   </script>
 </body>
 </html>
