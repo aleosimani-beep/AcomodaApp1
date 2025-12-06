@@ -23,7 +23,7 @@
       padding: 1.5rem;
       border-radius: 0.75rem;
       box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-      max-width: 420px;
+      max-width: 520px;
       width: 100%;
     }
     h1 {
@@ -36,6 +36,10 @@
       margin-bottom: 0.75rem;
       text-align: center;
     }
+    h3 {
+      font-size: 1rem;
+      margin: 0.6rem 0;
+    }
     .sub {
       font-size: 0.9rem;
       color: #555;
@@ -43,18 +47,20 @@
       margin-bottom: 1rem;
     }
     label {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       display: block;
-      margin: 0.4rem 0 0.2rem;
+      margin: 0.35rem 0 0.2rem;
     }
     input[type="password"],
     input[type="text"],
+    input[type="date"],
+    input[type="time"],
     select {
       width: 100%;
-      padding: 0.55rem 0.6rem;
+      padding: 0.5rem 0.6rem;
       border-radius: 0.4rem;
       border: 1px solid #ccc;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       box-sizing: border-box;
     }
     .rol-row {
@@ -107,7 +113,7 @@
       margin-top: 1rem;
       border-top: 1px solid #e5e7eb;
       padding-top: 0.8rem;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
     }
     .chip {
       display: inline-block;
@@ -122,6 +128,44 @@
       font-size: 0.8rem;
       text-align: center;
     }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 0.3rem;
+      text-align: left;
+    }
+    th {
+      background: #f3f4f6;
+    }
+    .empty-text {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.4rem;
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 0.4rem;
+      font-size: 0.8rem;
+      border-radius: 0.5rem;
+      border: 1px solid #d1d5db;
+      background: #e5e7eb;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+    }
   </style>
 
   <!-- Firebase compat -->
@@ -131,7 +175,7 @@
 <body>
   <div class="card">
     <h1>ACOMODA APP</h1>
-    <div class="sub">Control de asignaciones y recordatorios</div>
+    <div class="sub">Control de asignaciones, reemplazos y recordatorios</div>
 
     <!-- Login / Ingreso -->
     <div id="loginSection">
@@ -164,23 +208,108 @@
       </div>
     </div>
 
-    <!-- Sección principal de la app, se muestra luego de entrar -->
+    <!-- Sección principal de la app -->
     <div id="appSection" style="display:none;">
       <h2>Panel</h2>
       <div class="chip" id="infoUsuario"></div>
 
-      <div class="app-section">
-        <p>
-          Aquí después vamos a mostrar:
-        </p>
-        <ul>
-          <li>Programa mensual de asignaciones.</li>
-          <li>Asignaciones de cada acomodador.</li>
-          <li>Sincronización con Firebase (para ver cambios en tiempo real).</li>
-        </ul>
-        <p style="font-size:0.8rem; color:#6b7280;">
-          Por ahora, lo importante es que Firebase esté funcionando. 😊
-        </p>
+      <!-- Panel Coordinador -->
+      <div id="panelCoordinador" class="app-section" style="display:none;">
+        <h3>Coordinador: cargar asignación</h3>
+
+        <label for="asigFecha">Fecha</label>
+        <input type="date" id="asigFecha" />
+
+        <label for="asigHora">Hora</label>
+        <input type="time" id="asigHora" />
+
+        <label for="asigRol">Rol</label>
+        <select id="asigRol">
+          <option value="">Seleccione rol</option>
+          <option value="Entrada">Entrada</option>
+          <option value="Auditorio">Auditorio</option>
+        </select>
+
+        <label for="asigNombre">Nombre del acomodador</label>
+        <input type="text" id="asigNombre" placeholder="Ej: Pedro" />
+
+        <label for="asigPin">PIN del acomodador</label>
+        <input type="text" id="asigPin" placeholder="PIN que usa el acomodador para entrar" />
+
+        <button type="button" onclick="guardarAsignacion()">Guardar asignación</button>
+        <div id="estadoAsignacion" class="estado"></div>
+
+        <h3>Asignaciones cargadas</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Rol</th>
+              <th>Nombre</th>
+              <th>PIN</th>
+            </tr>
+          </thead>
+          <tbody id="tablaAsignacionesCoordinador"></tbody>
+        </table>
+        <div id="sinAsignacionesCoordinador" class="empty-text" style="display:none;">
+          No hay asignaciones cargadas todavía.
+        </div>
+
+        <h3 style="margin-top:1rem;">Pedidos de reemplazo</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Hora</th>
+              <th>Rol</th>
+              <th>Nombre</th>
+              <th>PIN</th>
+            </tr>
+          </thead>
+          <tbody id="tablaReemplazos"></tbody>
+        </table>
+        <div id="sinReemplazos" class="empty-text" style="display:none;">
+          No hay pedidos de reemplazo.
+        </div>
+      </div>
+
+      <!-- Panel Acomodador -->
+      <div id="panelAcomodador" class="app-section" style="display:none;">
+        <div class="tabs">
+          <button class="tab-btn active" id="tabMisAsig" onclick="cambiarTabAcomodador('asig')">
+            Mis asignaciones
+          </button>
+          <button class="tab-btn" id="tabReemplazo" onclick="cambiarTabAcomodador('reemplazo')">
+            Necesito reemplazo
+          </button>
+        </div>
+
+        <!-- Tab Mis asignaciones -->
+        <div id="tabAcomodadorAsignaciones">
+          <div id="listaAsignacionesAcomodador" class="empty-text">
+            Cargando asignaciones...
+          </div>
+        </div>
+
+        <!-- Tab Necesito reemplazo -->
+        <div id="tabAcomodadorReemplazo" style="display:none;">
+          <h3>Pedido de reemplazo</h3>
+          <label for="reempFecha">Fecha de la asignación</label>
+          <input type="date" id="reempFecha" />
+
+          <button type="button" onclick="buscarAsignacionParaReemplazo()">Buscar mi asignación</button>
+
+          <div id="detalleReemplazo" class="empty-text" style="margin-top:0.5rem;">
+            Seleccioná la fecha y buscá tu asignación.
+          </div>
+
+          <button type="button" id="btnConfirmarReemplazo" style="display:none;" onclick="confirmarReemplazo()">
+            Enviar pedido de reemplazo
+          </button>
+
+          <div id="estadoReemplazo" class="estado"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -208,7 +337,7 @@
       console.log("❌ Error inicializando Firebase, se usará solo localStorage:", e);
     }
 
-    // Mostrar estado de conexión en la pantalla
+    // Estado de conexión
     window.addEventListener("load", () => {
       const estadoEl = document.getElementById("estadoConexion");
       if (firebaseHabilitado) {
@@ -220,8 +349,12 @@
       }
     });
 
-    // --- Lógica de ingreso ---
-    const PIN_COORDINADOR = "999"; // NO se muestra en la pantalla
+    // --- Usuario actual ---
+    const PIN_COORDINADOR = "999";
+    let usuarioRol = null;
+    let usuarioPin = null;
+    let asignacionSeleccionadaParaReemplazo = null;
+    let timersNotificaciones = [];
 
     function entrar() {
       const rolEl = document.querySelector('input[name="rol"]:checked');
@@ -243,11 +376,11 @@
           alert("PIN de coordinador incorrecto.");
           return;
         }
-      } else {
-        // Acomodador: más adelante podemos validar contra una lista en Firestore/localStorage
       }
 
-      // Si llegó hasta acá, el PIN es válido
+      usuarioRol = rol;
+      usuarioPin = pin;
+
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("appSection").style.display = "block";
 
@@ -256,9 +389,41 @@
         (rol === "coordinador" ? "Coordinador" : "Acomodador") +
         " | PIN " +
         pin;
+
+      if (rol === "coordinador") {
+        document.getElementById("panelCoordinador").style.display = "block";
+        document.getElementById("panelAcomodador").style.display = "none";
+        escucharAsignacionesCoordinador();
+        escucharReemplazosCoordinador();
+      } else {
+        document.getElementById("panelCoordinador").style.display = "none";
+        document.getElementById("panelAcomodador").style.display = "block";
+        escucharAsignacionesAcomodador(pin);
+        solicitarPermisoNotificaciones();
+      }
     }
 
-    // --- Prueba de Firebase ---
+    // --- Tabs acomodador ---
+    function cambiarTabAcomodador(tab) {
+      const btnAsig = document.getElementById("tabMisAsig");
+      const btnReemp = document.getElementById("tabReemplazo");
+      const tabAsig = document.getElementById("tabAcomodadorAsignaciones");
+      const tabReemp = document.getElementById("tabAcomodadorReemplazo");
+
+      if (tab === "asig") {
+        btnAsig.classList.add("active");
+        btnReemp.classList.remove("active");
+        tabAsig.style.display = "block";
+        tabReemp.style.display = "none";
+      } else {
+        btnAsig.classList.remove("active");
+        btnReemp.classList.add("active");
+        tabAsig.style.display = "none";
+        tabReemp.style.display = "block";
+      }
+    }
+
+    // --- Prueba Firebase ---
     function probarFirebase() {
       if (!firebaseHabilitado || !db) {
         alert("Firebase no está habilitado. Sigue en modo local.");
@@ -279,6 +444,332 @@
           document.getElementById("resultadoFirebase").textContent =
             "❌ Error al guardar en Firebase. Mirá la consola.";
         });
+    }
+
+    // --- Guardar asignación (Coordinador) ---
+    function guardarAsignacion() {
+      if (!firebaseHabilitado || !db) {
+        alert("Firebase no está habilitado. No se puede guardar en la nube.");
+        return;
+      }
+
+      const fecha = document.getElementById("asigFecha").value;
+      const hora = document.getElementById("asigHora").value;
+      const rol = document.getElementById("asigRol").value;
+      const nombre = document.getElementById("asigNombre").value.trim();
+      const pinAcomodador = document.getElementById("asigPin").value.trim();
+
+      if (!fecha || !hora || !rol || !nombre || !pinAcomodador) {
+        alert("Complete todos los campos de la asignación.");
+        return;
+      }
+
+      const estadoEl = document.getElementById("estadoAsignacion");
+      estadoEl.textContent = "Guardando...";
+      estadoEl.classList.remove("ok", "err");
+
+      db.collection("asignaciones")
+        .add({
+          fecha: fecha,
+          hora: hora,
+          rol: rol,
+          nombre: nombre,
+          pin: pinAcomodador,
+          creadoEn: new Date().toISOString()
+        })
+        .then(() => {
+          estadoEl.textContent = "✅ Asignación guardada.";
+          estadoEl.classList.add("ok");
+        })
+        .catch((error) => {
+          console.error("Error guardando asignación:", error);
+          estadoEl.textContent = "❌ Error al guardar la asignación.";
+          estadoEl.classList.add("err");
+        });
+    }
+
+    // --- Escuchar asignaciones (Coordinador ve todas) ---
+    function escucharAsignacionesCoordinador() {
+      if (!firebaseHabilitado || !db) return;
+
+      db.collection("asignaciones")
+        .orderBy("fecha")
+        .onSnapshot((snapshot) => {
+          const tbody = document.getElementById("tablaAsignacionesCoordinador");
+          const sinEl = document.getElementById("sinAsignacionesCoordinador");
+          tbody.innerHTML = "";
+
+          if (snapshot.empty) {
+            sinEl.style.display = "block";
+            return;
+          } else {
+            sinEl.style.display = "none";
+          }
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const tr = document.createElement("tr");
+
+            const tdFecha = document.createElement("td");
+            tdFecha.textContent = data.fecha || "";
+            tr.appendChild(tdFecha);
+
+            const tdHora = document.createElement("td");
+            tdHora.textContent = data.hora || "";
+            tr.appendChild(tdHora);
+
+            const tdRol = document.createElement("td");
+            tdRol.textContent = data.rol || "";
+            tr.appendChild(tdRol);
+
+            const tdNombre = document.createElement("td");
+            tdNombre.textContent = data.nombre || "";
+            tr.appendChild(tdNombre);
+
+            const tdPin = document.createElement("td");
+            tdPin.textContent = data.pin || "";
+            tr.appendChild(tdPin);
+
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    // --- Escuchar asignaciones (Acomodador ve solo las suyas) ---
+    function escucharAsignacionesAcomodador(pin) {
+      if (!firebaseHabilitado || !db) {
+        document.getElementById("listaAsignacionesAcomodador").textContent =
+          "No se pudo conectar a la nube. Modo local.";
+        return;
+      }
+
+      db.collection("asignaciones")
+        .where("pin", "==", pin)
+        .orderBy("fecha")
+        .onSnapshot((snapshot) => {
+          const cont = document.getElementById("listaAsignacionesAcomodador");
+
+          if (snapshot.empty) {
+            cont.textContent = "No tenés asignaciones cargadas todavía.";
+            return;
+          }
+
+          let html = "<ul style='padding-left: 1rem; margin:0;'>";
+          const asignaciones = [];
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            asignaciones.push(data);
+            html += `<li>${data.fecha || ""} ${data.hora || ""} - ${data.rol || ""} (${data.nombre || ""})</li>`;
+          });
+          html += "</ul>";
+          cont.innerHTML = html;
+
+          // Programar notificaciones locales para hoy
+          programarNotificacionesAsignaciones(asignaciones);
+        });
+    }
+
+    // --- Necesito reemplazo: buscar asignación por fecha ---
+    function buscarAsignacionParaReemplazo() {
+      const fecha = document.getElementById("reempFecha").value;
+      const detalle = document.getElementById("detalleReemplazo");
+      const btn = document.getElementById("btnConfirmarReemplazo");
+      const estado = document.getElementById("estadoReemplazo");
+
+      detalle.textContent = "";
+      btn.style.display = "none";
+      estado.textContent = "";
+      estado.classList.remove("ok", "err");
+
+      if (!fecha) {
+        detalle.textContent = "Seleccione una fecha.";
+        return;
+      }
+
+      if (!firebaseHabilitado || !db) {
+        detalle.textContent = "No se pudo conectar a la nube.";
+        return;
+      }
+
+      db.collection("asignaciones")
+        .where("pin", "==", usuarioPin)
+        .where("fecha", "==", fecha)
+        .get()
+        .then((snapshot) => {
+          if (snapshot.empty) {
+            detalle.textContent = "No tenés asignación en esa fecha.";
+            asignacionSeleccionadaParaReemplazo = null;
+            return;
+          }
+
+          // Tomamos la primera (si hubiera más, se podría extender)
+          const doc = snapshot.docs[0];
+          const data = doc.data();
+          asignacionSeleccionadaParaReemplazo = {
+            id: doc.id,
+            ...data
+          };
+
+          detalle.textContent =
+            "Asignación encontrada: " +
+            (data.fecha || "") +
+            " " +
+            (data.hora || "") +
+            " - " +
+            (data.rol || "") +
+            " (" +
+            (data.nombre || "") +
+            ")";
+
+          btn.style.display = "block";
+        })
+        .catch((error) => {
+          console.error("Error buscando asignación para reemplazo:", error);
+          detalle.textContent = "Error al buscar la asignación.";
+        });
+    }
+
+    // --- Confirmar pedido de reemplazo ---
+    function confirmarReemplazo() {
+      const estado = document.getElementById("estadoReemplazo");
+      estado.textContent = "";
+      estado.classList.remove("ok", "err");
+
+      if (!asignacionSeleccionadaParaReemplazo) {
+        estado.textContent = "No hay asignación seleccionada.";
+        estado.classList.add("err");
+        return;
+      }
+
+      if (!firebaseHabilitado || !db) {
+        estado.textContent = "No se pudo conectar a la nube.";
+        estado.classList.add("err");
+        return;
+      }
+
+      const data = asignacionSeleccionadaParaReemplazo;
+
+      estado.textContent = "Enviando pedido...";
+      db.collection("reemplazos")
+        .add({
+          fecha: data.fecha,
+          hora: data.hora,
+          rol: data.rol,
+          nombre: data.nombre,
+          pin: data.pin,
+          creadoEn: new Date().toISOString(),
+          estado: "pendiente"
+        })
+        .then(() => {
+          estado.textContent = "✅ Pedido de reemplazo enviado.";
+          estado.classList.add("ok");
+        })
+        .catch((error) => {
+          console.error("Error guardando pedido de reemplazo:", error);
+          estado.textContent = "❌ Error al guardar el pedido.";
+          estado.classList.add("err");
+        });
+    }
+
+    // --- Coordinador: ver pedidos de reemplazo ---
+    function escucharReemplazosCoordinador() {
+      if (!firebaseHabilitado || !db) return;
+
+      db.collection("reemplazos")
+        .orderBy("fecha")
+        .onSnapshot((snapshot) => {
+          const tbody = document.getElementById("tablaReemplazos");
+          const sinEl = document.getElementById("sinReemplazos");
+          tbody.innerHTML = "";
+
+          if (snapshot.empty) {
+            sinEl.style.display = "block";
+            return;
+          } else {
+            sinEl.style.display = "none";
+          }
+
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const tr = document.createElement("tr");
+
+            const tdFecha = document.createElement("td");
+            tdFecha.textContent = data.fecha || "";
+            tr.appendChild(tdFecha);
+
+            const tdHora = document.createElement("td");
+            tdHora.textContent = data.hora || "";
+            tr.appendChild(tdHora);
+
+            const tdRol = document.createElement("td");
+            tdRol.textContent = data.rol || "";
+            tr.appendChild(tdRol);
+
+            const tdNombre = document.createElement("td");
+            tdNombre.textContent = data.nombre || "";
+            tr.appendChild(tdNombre);
+
+            const tdPin = document.createElement("td");
+            tdPin.textContent = data.pin || "";
+            tr.appendChild(tdPin);
+
+            tbody.appendChild(tr);
+          });
+        });
+    }
+
+    // --- Notificaciones locales el mismo día de la asignación ---
+    function solicitarPermisoNotificaciones() {
+      if (!("Notification" in window)) {
+        console.log("Este navegador no soporta notificaciones.");
+        return;
+      }
+
+      if (Notification.permission === "default") {
+        Notification.requestPermission().then((perm) => {
+          console.log("Permiso notificaciones:", perm);
+        });
+      }
+    }
+
+    function programarNotificacionesAsignaciones(asignaciones) {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") return;
+
+      // Limpiar timers anteriores
+      timersNotificaciones.forEach((id) => clearTimeout(id));
+      timersNotificaciones = [];
+
+      const hoy = new Date();
+      const hoyStr = hoy.toISOString().slice(0, 10); // YYYY-MM-DD
+
+      asignaciones.forEach((asig) => {
+        if (asig.fecha !== hoyStr) return;
+        if (!asig.hora) return;
+
+        const partes = asig.hora.split(":");
+        if (partes.length < 2) return;
+
+        const hora = parseInt(partes[0], 10);
+        const minuto = parseInt(partes[1], 10);
+
+        const fechaNoti = new Date();
+        fechaNoti.setHours(hora, minuto, 0, 0);
+
+        const diff = fechaNoti.getTime() - Date.now();
+        if (diff <= 0) return; // ya pasó
+
+        // Solo programamos si es dentro de las próximas 24 horas
+        if (diff > 24 * 60 * 60 * 1000) return;
+
+        const timerId = setTimeout(() => {
+          new Notification("Recordatorio de asignación", {
+            body: `${asig.hora} - ${asig.rol} (${asig.nombre})`,
+          });
+        }, diff);
+
+        timersNotificaciones.push(timerId);
+      });
     }
   </script>
 </body>
