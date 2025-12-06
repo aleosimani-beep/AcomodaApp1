@@ -199,7 +199,13 @@
       margin-top: 0.4rem;
     }
     .tr-hoy {
-      background: #dbeafe;
+      background: #dbeafe !important;
+    }
+    .fila-miercoles {
+      background: #fef9c3;
+    }
+    .fila-sabado {
+      background: #dcfce7;
     }
     .rol-entrada {
       color: #2563eb;
@@ -373,6 +379,9 @@
               <button type="button" onclick="abrirSeccionAcomodador('reemplazo')">
                 Necesito reemplazo
               </button>
+              <button type="button" onclick="abrirSeccionAcomodador('programa')">
+                Ver programa mensual
+              </button>
             </div>
           </div>
 
@@ -506,10 +515,10 @@
               <thead>
                 <tr>
                   <th>Fecha</th>
-                  <th>Hora</th>
-                  <th>Rol</th>
-                  <th>Acomodador</th>
-                  <th>PIN</th>
+                  <th>Acomodador 1</th>
+                  <th>Asignación</th>
+                  <th>Acomodador 2</th>
+                  <th>Asignación</th>
                 </tr>
               </thead>
               <tbody id="tablaProgramaMensual"></tbody>
@@ -592,6 +601,38 @@
 
             <div id="estadoReemplazo" class="estado"></div>
           </div>
+
+          <!-- PANEL ACOMODADOR: PROGRAMA MENSUAL -->
+          <div id="panelAcomodadorPrograma" class="panel" style="display:none;">
+            <div class="panel-title">
+              <h2>Programa mensual</h2>
+              <button type="button" class="btn-secondary btn-small"
+                      onclick="volverMenuAcomodador()">
+                ← Menú acomodador
+              </button>
+            </div>
+
+            <label for="mesProgramaAcom">Mes</label>
+            <input id="mesProgramaAcom" type="month" onchange="renderProgramaMensualAcomodador()" />
+
+            <h3 style="margin-top:0.5rem;">Asignaciones del mes</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Acomodador 1</th>
+                  <th>Asignación</th>
+                  <th>Acomodador 2</th>
+                  <th>Asignación</th>
+                </tr>
+              </thead>
+              <tbody id="tablaProgramaMensualAcom"></tbody>
+            </table>
+            <div id="sinAsignacionesMesAcom" class="empty-text" style="display:none;">
+              No hay asignaciones cargadas para este mes.
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -600,6 +641,9 @@
   <script>
     // --- Utilidades ---
     const diasSemanaCortos = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+    const diasSemanaLargo = [
+      "Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"
+    ];
     const mesesNombre = [
       "enero","febrero","marzo","abril","mayo","junio",
       "julio","agosto","septiembre","octubre","noviembre","diciembre"
@@ -607,13 +651,21 @@
 
     function formatearFechaConDia(fechaStr) {
       if (!fechaStr) return "";
-      const partes = fechaStr.split("-");
-      if (partes.length !== 3) return fechaStr;
       const date = new Date(fechaStr + "T00:00:00");
+      if (isNaN(date)) return fechaStr;
       const dia = diasSemanaCortos[date.getDay()];
-      const dd = partes[2];
-      const mm = partes[1];
+      const dd = String(date.getDate()).padStart(2,"0");
+      const mm = String(date.getMonth() + 1).padStart(2,"0");
       return `${dia} ${dd}/${mm}`;
+    }
+
+    function formatearFechaPlanilla(fechaStr) {
+      if (!fechaStr) return "";
+      const date = new Date(fechaStr + "T00:00:00");
+      if (isNaN(date)) return fechaStr;
+      const diaNombre = diasSemanaLargo[date.getDay()];
+      const num = date.getDate();
+      return `${diaNombre} ${num}`;
     }
 
     // --- Firebase ---
@@ -648,12 +700,15 @@
         estadoEl.textContent = "No se pudo conectar a Firebase. Modo local.";
       }
 
+      const hoy = new Date();
+      const mesStr = hoy.toISOString().slice(0, 7);
+
       const mesInput = document.getElementById("mesPrograma");
-      if (mesInput) {
-        const hoy = new Date();
-        const mesStr = hoy.toISOString().slice(0, 7);
-        mesInput.value = mesStr;
-      }
+      if (mesInput) mesInput.value = mesStr;
+
+      const mesInputAcom = document.getElementById("mesProgramaAcom");
+      if (mesInputAcom) mesInputAcom.value = mesStr;
+
       actualizarTituloProgramaMes();
     });
 
@@ -734,7 +789,7 @@
       if (btnSalir) btnSalir.style.display = "inline-block";
 
       escucharAcomodadores();
-      escucharAsignacionesCoordinador();
+      escucharAsignacionesGlobal();
       escucharReemplazosCoordinador();
       cargarConfigReuniones();
     }
@@ -756,6 +811,7 @@
       const btnSalir = document.getElementById("btnSalir");
       if (btnSalir) btnSalir.style.display = "inline-block";
 
+      escucharAsignacionesGlobal();
       escucharAsignacionesAcomodador(usuarioPin);
       solicitarPermisoNotificaciones();
     }
@@ -770,6 +826,7 @@
     function ocultarPanelesAcomodador() {
       document.getElementById("panelAcomodadorAsignaciones").style.display = "none";
       document.getElementById("panelAcomodadorReemplazo").style.display = "none";
+      document.getElementById("panelAcomodadorPrograma").style.display = "none";
     }
 
     // Navegación coordinador
@@ -803,6 +860,9 @@
         document.getElementById("panelAcomodadorAsignaciones").style.display = "block";
       } else if (seccion === "reemplazo") {
         document.getElementById("panelAcomodadorReemplazo").style.display = "block";
+      } else if (seccion === "programa") {
+        document.getElementById("panelAcomodadorPrograma").style.display = "block";
+        renderProgramaMensualAcomodador();
       }
     }
 
@@ -1027,7 +1087,7 @@
         });
     }
 
-    // --- Asignaciones (Coordinador) ---
+    // --- Asignaciones ---
     function guardarAsignacion() {
       const fecha = document.getElementById("asigFecha").value;
       const hora = document.getElementById("asigHora").value;
@@ -1078,7 +1138,7 @@
         });
     }
 
-    function escucharAsignacionesCoordinador() {
+    function escucharAsignacionesGlobal() {
       if (!firebaseHabilitado || !db) return;
 
       db.collection("asignaciones")
@@ -1089,7 +1149,30 @@
             asignacionesTodas.push({ id: doc.id, ...doc.data() });
           });
           renderProgramaMensual();
+          renderProgramaMensualAcomodador();
         });
+    }
+
+    function obtenerGruposPorFecha(asignaciones, mes) {
+      if (!mes) return [];
+      const grupos = {};
+      asignaciones.forEach((a) => {
+        const fecha = a.fecha || "";
+        if (!fecha.startsWith(mes)) return;
+        if (!grupos[fecha]) {
+          grupos[fecha] = {
+            fecha,
+            entrada: [],
+            auditorio: []
+          };
+        }
+        if (a.rol === "Entrada") {
+          grupos[fecha].entrada.push(a);
+        } else if (a.rol === "Auditorio") {
+          grupos[fecha].auditorio.push(a);
+        }
+      });
+      return Object.keys(grupos).sort().map((k) => grupos[k]);
     }
 
     function actualizarTituloProgramaMes() {
@@ -1116,67 +1199,59 @@
       const mesInput = document.getElementById("mesPrograma");
       const tbody = document.getElementById("tablaProgramaMensual");
       const sinEl = document.getElementById("sinAsignacionesMes");
+      if (!mesInput || !tbody || !sinEl) return;
+
+      const mes = mesInput.value;
       const hoyStr = new Date().toISOString().slice(0,10);
 
       tbody.innerHTML = "";
-      if (!mesInput) return;
 
-      const mes = mesInput.value; // YYYY-MM
-      if (!mes) {
-        sinEl.style.display = "block";
-        return;
-      }
+      const grupos = obtenerGruposPorFecha(asignacionesTodas, mes);
 
-      const asignFiltradas = asignacionesTodas.filter((a) =>
-        (a.fecha || "").startsWith(mes)
-      );
-
-      if (!asignFiltradas.length) {
+      if (!grupos.length) {
         sinEl.style.display = "block";
         return;
       } else {
         sinEl.style.display = "none";
       }
 
-      asignFiltradas.sort((a, b) => {
-        const fa = (a.fecha || "") + " " + (a.hora || "");
-        const fb = (b.fecha || "") + " " + (b.hora || "");
-        return fa.localeCompare(fb);
-      });
-
-      asignFiltradas.forEach((data) => {
+      grupos.forEach((g) => {
         const tr = document.createElement("tr");
-        if (data.fecha === hoyStr) {
-          tr.classList.add("tr-hoy");
-        }
+
+        const d = new Date(g.fecha + "T00:00:00");
+        const dow = d.getDay();
+        if (dow === 3) tr.classList.add("fila-miercoles");
+        if (dow === 6) tr.classList.add("fila-sabado");
+        if (g.fecha === hoyStr) tr.classList.add("tr-hoy");
+
+        const entradaNombres = g.entrada.map(x => x.nombre || "").join(", ");
+        const auditorioNombres = g.auditorio.map(x => x.nombre || "").join(", ");
 
         const tdFecha = document.createElement("td");
-        tdFecha.textContent = formatearFechaConDia(data.fecha || "");
+        tdFecha.textContent = formatearFechaPlanilla(g.fecha);
         tr.appendChild(tdFecha);
 
-        const tdHora = document.createElement("td");
-        tdHora.textContent = data.hora || "";
-        tr.appendChild(tdHora);
+        const tdAcom1 = document.createElement("td");
+        tdAcom1.textContent = entradaNombres || "";
+        tr.appendChild(tdAcom1);
 
-        const tdRol = document.createElement("td");
-        tdRol.textContent = data.rol || "";
-        if (data.rol === "Entrada") tdRol.classList.add("rol-entrada");
-        if (data.rol === "Auditorio") tdRol.classList.add("rol-auditorio");
-        tr.appendChild(tdRol);
+        const tdRol1 = document.createElement("td");
+        tdRol1.textContent = entradaNombres ? "Entrada" : "";
+        tr.appendChild(tdRol1);
 
-        const tdNombre = document.createElement("td");
-        tdNombre.textContent = data.nombre || "";
-        tr.appendChild(tdNombre);
+        const tdAcom2 = document.createElement("td");
+        tdAcom2.textContent = auditorioNombres || "";
+        tr.appendChild(tdAcom2);
 
-        const tdPin = document.createElement("td");
-        tdPin.textContent = data.pin || "";
-        tr.appendChild(tdPin);
+        const tdRol2 = document.createElement("td");
+        tdRol2.textContent = auditorioNombres ? "Auditorio" : "";
+        tr.appendChild(tdRol2);
 
         tbody.appendChild(tr);
       });
     }
 
-    // --- Asignaciones (Acomodador) ---
+    // --- Asignaciones (Acomodador) individuales ---
     function escucharAsignacionesAcomodador(pin) {
       if (!firebaseHabilitado || !db) {
         document.getElementById("listaAsignacionesAcomodador").textContent =
@@ -1258,6 +1333,63 @@
       } else {
         cont.innerHTML = html;
       }
+    }
+
+    // --- Programa mensual para Acomodador ---
+    function renderProgramaMensualAcomodador() {
+      const mesInput = document.getElementById("mesProgramaAcom");
+      const tbody = document.getElementById("tablaProgramaMensualAcom");
+      const sinEl = document.getElementById("sinAsignacionesMesAcom");
+      if (!mesInput || !tbody || !sinEl) return;
+
+      const mes = mesInput.value;
+      const hoyStr = new Date().toISOString().slice(0,10);
+
+      tbody.innerHTML = "";
+
+      const grupos = obtenerGruposPorFecha(asignacionesTodas, mes);
+
+      if (!grupos.length) {
+        sinEl.style.display = "block";
+        return;
+      } else {
+        sinEl.style.display = "none";
+      }
+
+      grupos.forEach((g) => {
+        const tr = document.createElement("tr");
+
+        const d = new Date(g.fecha + "T00:00:00");
+        const dow = d.getDay();
+        if (dow === 3) tr.classList.add("fila-miercoles");
+        if (dow === 6) tr.classList.add("fila-sabado");
+        if (g.fecha === hoyStr) tr.classList.add("tr-hoy");
+
+        const entradaNombres = g.entrada.map(x => x.nombre || "").join(", ");
+        const auditorioNombres = g.auditorio.map(x => x.nombre || "").join(", ");
+
+        const tdFecha = document.createElement("td");
+        tdFecha.textContent = formatearFechaPlanilla(g.fecha);
+        tr.appendChild(tdFecha);
+
+        const tdAcom1 = document.createElement("td");
+        tdAcom1.textContent = entradaNombres || "";
+        tr.appendChild(tdAcom1);
+
+        const tdRol1 = document.createElement("td");
+        tdRol1.textContent = entradaNombres ? "Entrada" : "";
+        tr.appendChild(tdRol1);
+
+        const tdAcom2 = document.createElement("td");
+        tdAcom2.textContent = auditorioNombres || "";
+        tr.appendChild(tdAcom2);
+
+        const tdRol2 = document.createElement("td");
+        tdRol2.textContent = auditorioNombres ? "Auditorio" : "";
+        tr.appendChild(tdRol2);
+
+        tbody.appendChild(tr);
+      });
     }
 
     // --- Reemplazos (Acomodador) ---
