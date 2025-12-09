@@ -279,6 +279,89 @@
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-messaging-compat.js"></script>
+  <script>
+// --- NOTIFICACIONES PUSH (FCM) - Firebase 11 compat ---
+
+let messaging = null;
+
+try {
+  // Usa el Firebase ya inicializado en tus otros scripts
+  messaging = firebase.messaging();
+
+  // Tu clave VAPID pública (Web Push)
+  messaging.usePublicVapidKey(
+    "BNYBuK1z0RizF8gZ4EHObTJWTpDvx3CBzkzn29MA0wl1EEklBwBz3x4MZjEiJ__Aow8Ay9kRaZlq9PWgfV5SODA"
+  );
+
+  // Registrar el Service Worker (ruta relativa para GitHub Pages)
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("firebase-messaging-sw.js")
+      .then(function (registration) {
+        console.log("Service Worker de FCM registrado:", registration);
+      })
+      .catch(function (err) {
+        console.error("Error registrando el Service Worker de FCM:", err);
+      });
+  }
+} catch (e) {
+  console.error("Error iniciando Firebase Messaging:", e);
+}
+
+// Pedir permiso y obtener token FCM
+function activarNotificaciones() {
+  if (!messaging) {
+    alert("Notificaciones no disponibles en este navegador.");
+    return;
+  }
+
+  Notification.requestPermission().then(function (permission) {
+    if (permission === "granted") {
+      console.log("Permiso de notificaciones concedido ✅");
+
+      messaging.getToken().then(function (currentToken) {
+        if (currentToken) {
+          console.log("Token FCM:", currentToken);
+
+          // OPCIONAL: guardar token en Firestore
+          /*
+          const db = firebase.firestore();
+          db.collection("tokens").doc(currentToken).set({
+            token: currentToken,
+            fecha: new Date(),
+            tipoUsuario: "acomodador" // o "coordinador"
+          }).then(() => {
+            console.log("Token guardado en Firestore");
+          });
+          */
+        } else {
+          console.log("No se pudo obtener token FCM.");
+        }
+      }).catch(function (err) {
+        console.error("Error obteniendo token FCM:", err);
+      });
+    } else {
+      console.log("Permiso de notificaciones denegado.");
+    }
+  });
+}
+
+// Mensajes cuando la app está abierta (foreground)
+if (messaging) {
+  messaging.onMessage(function (payload) {
+    console.log("Mensaje recibido (foreground):", payload);
+
+    const titulo = payload.notification?.title || "Acomoda App";
+    const opciones = {
+      body: payload.notification?.body || "",
+    };
+
+    if (Notification.permission === "granted") {
+      new Notification(titulo, opciones);
+    }
+  });
+}
+</script>
+
 </head>
 <body>
   <div class="card">
