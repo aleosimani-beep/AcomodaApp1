@@ -304,19 +304,60 @@ try {
 }
 
 // Pedir permiso y obtener token FCM
+// Botón "Activar notificaciones"
 function activarNotificaciones() {
-  if (!messaging) {
-    alert("Notificaciones no disponibles en este navegador.");
+  // 1) Verificar que Firebase Messaging está disponible
+  const soportaMessaging =
+    firebase.messaging &&
+    firebase.messaging.isSupported &&
+    firebase.messaging.isSupported();
+
+  if (!soportaMessaging) {
+    alert("Notificaciones no disponibles en este navegador (necesita HTTPS y soporte de FCM).");
+    console.warn("activarNotificaciones: messaging no soportado.");
     return;
   }
 
-  Notification.requestPermission().then(function (permission) {
-    if (permission === "granted") {
-      console.log("Permiso de notificaciones concedido ✅");
+  const messaging = firebase.messaging();
 
-      messaging.getToken().then(function (currentToken) {
-        if (currentToken) {
-          console.log("Token FCM:", currentToken);
+  // 2) Pedir permiso de notificaciones al usuario
+  Notification.requestPermission().then(function (permission) {
+    if (permission !== "granted") {
+      console.log("Permiso de notificaciones denegado.");
+      return;
+    }
+
+    console.log("Permiso de notificaciones concedido ✅");
+
+    // 3) Registrar el Service Worker en la RAÍZ del dominio
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/firebase-messaging-sw.js")
+        .then(function (registration) {
+          console.log("Service Worker de FCM registrado para notificaciones:", registration);
+
+          // 4) Pedir el token usando ESTA registration
+          return messaging.getToken({
+            vapidKey: "BNYBuK1z0RizF8gZ4EHObTJWTpDvx3CBzkzn29MA0wl1EEklBwBz3x4MZjEiJ__Aow8Ay9kRaZlq9PWgfV5SODA",
+            serviceWorkerRegistration: registration
+          });
+        })
+        .then(function (currentToken) {
+          if (currentToken) {
+            console.log("Token FCM:", currentToken);
+            // acá después podemos guardarlo en Firestore si queremos
+          } else {
+            console.log("No se pudo obtener token FCM.");
+          }
+        })
+        .catch(function (err) {
+          console.error("Error obteniendo token FCM:", err);
+        });
+    } else {
+      console.warn("Este navegador no soporta Service Workers.");
+      alert("Tu navegador no soporta notificaciones push.");
+    }
+  });
+}
 
           // OPCIONAL: guardar token en Firestore
           /*
