@@ -773,6 +773,86 @@ if (messaging) {
       firebase.initializeApp(firebaseConfig);
       db = firebase.firestore();
       firebaseHabilitado = true;
+      // --- NOTIFICACIONES PUSH (FCM) - Firebase 11 compat ---
+let messaging = null;
+
+try {
+  const soportaMessaging =
+    firebase.messaging &&
+    firebase.messaging.isSupported &&
+    firebase.messaging.isSupported();
+
+  console.log("¿Messaging soportado en este navegador?:", soportaMessaging);
+
+  if (soportaMessaging) {
+    messaging = firebase.messaging();
+    console.log("Firebase Messaging inicializado ✅");
+
+    // Tu clave VAPID púbica
+    messaging.usePublicVapidKey(
+      "BNYBuK1z0RizF8gZ4EHObTJWTpDvx3CBzkzn29MA0wl1EEklBwBz3x4MZjEiJ__Aow8Ay9kRaZlq9PWgfV5SODA"
+    );
+
+    // Registrar el Service Worker (ruta relativa para GitHub Pages)
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("firebase-messaging-sw.js")
+        .then(function (registration) {
+          console.log("Service Worker de FCM registrado:", registration);
+        })
+        .catch(function (err) {
+          console.error("Error registrando el Service Worker de FCM:", err);
+        });
+    }
+  } else {
+    console.warn("Firebase Messaging NO está soportado en este navegador.");
+  }
+} catch (e) {
+  console.error("Error iniciando Firebase Messaging:", e);
+}
+
+// Botón "Activar notificaciones"
+function activarNotificaciones() {
+  if (!messaging) {
+    alert("Notificaciones no disponibles en este navegador o Firebase no está habilitado.");
+    console.warn("activarNotificaciones: messaging es null.");
+    return;
+  }
+
+  Notification.requestPermission().then(function (permission) {
+    if (permission === "granted") {
+      console.log("Permiso de notificaciones concedido ✅");
+
+      messaging.getToken().then(function (currentToken) {
+        if (currentToken) {
+          console.log("Token FCM:", currentToken);
+        } else {
+          console.log("No se pudo obtener token FCM.");
+        }
+      }).catch(function (err) {
+        console.error("Error obteniendo token FCM:", err);
+      });
+    } else {
+      console.log("Permiso de notificaciones denegado.");
+    }
+  });
+}
+
+// Mensajes cuando la app está abierta (foreground)
+if (messaging) {
+  messaging.onMessage(function (payload) {
+    console.log("Mensaje recibido (foreground):", payload);
+
+    const titulo = payload.notification?.title || "Acomoda App";
+    const opciones = {
+      body: payload.notification?.body || "",
+    };
+
+    if (Notification.permission === "granted") {
+      new Notification(titulo, opciones);
+    }
+  });
+}
+
       console.log("✅ Firebase habilitado (modo nube).");
     } catch (e) {
       console.log("❌ Error inicializando Firebase:", e);
