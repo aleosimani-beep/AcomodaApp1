@@ -294,11 +294,7 @@ try {
   );
 
   // Registrar el Service Worker (ruta relativa para GitHub Pages)
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("firebase-messaging-sw.js")
-      .then(function (registration) {
-        console.log("Service Worker de FCM registrado:", registration);
-      })
+  
       .catch(function (err) {
         console.error("Error registrando el Service Worker de FCM:", err);
       });
