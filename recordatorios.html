@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Acomoda App – Recordatorios de hoy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --deep: #1A237E;
+      --light: #7E57C2;
+      --bg: #f5f7fb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, var(--deep), var(--light));
+      color: white;
+      min-height: 100vh;
+    }
+    header {
+      padding: 16px;
+      text-align: center;
+    }
+    main {
+      padding: 16px;
+    }
+    .card {
+      background: white;
+      color: var(--deep);
+      border-radius: 12px;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+    h1, h2, h3 {
+      margin-top: 0;
+    }
+    .fecha-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .fecha-row input[type="date"] {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    th {
+      background: #f0f2ff;
+    }
+    .btn {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+    }
+    .btn-wa {
+      background: #25D366;
+      color: white;
+    }
+    .btn-secondary {
+      background: #ececff;
+      color: var(--deep);
+    }
+    .top-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .muted {
+      font-size: 12px;
+      color: #666;
+      margin-top: 4px;
+    }
+    @media (max-width: 480px) {
+      .fecha-row { flex-direction: column; align-items: flex-start; }
+      table { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Acomoda App</h1>
+    <div>Recordatorios de hoy (WhatsApp)</div>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Asignaciones del día</h2>
+
+      <!-- Selector de fecha (por defecto hoy) -->
+      <div class="fecha-row">
+        <label for="fecha">
+          Fecha:
+        </label>
+        <input type="date" id="fecha" />
+        <button class="btn btn-secondary" onclick="cargarAsignacionesDelDia()">
+          Ver asignaciones
+        </button>
+      </div>
+
+      <!-- Botones para grupo -->
+      <div class="top-buttons">
+        <button class="btn btn-secondary" onclick="copiarParaGrupo()">
+          Copiar mensaje para grupo de WhatsApp
+        </button>
+      </div>
+      <div class="muted">
+        La app arma el mensaje. Vos solo lo pegás en el grupo de WhatsApp.
+      </div>
+
+      <!-- Tabla de asignaciones -->
+      <table id="tablaAsignaciones">
+        <thead>
+          <tr>
+            <th>Rol</th>
+            <th>Nombre</th>
+            <th>WhatsApp</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyAsignaciones">
+          <!-- Filas generadas por JavaScript -->
+        </tbody>
+      </table>
+
+      <div id="mensajeSinAsignaciones" class="muted" style="display:none;">
+        No hay asignaciones cargadas para esta fecha.
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // =========================
+    // DATOS DE EJEMPLO
+    // =========================
+    // Acá definís tus acomodadores y sus números de WhatsApp (formato internacional, sin +)
+    // Ejemplo Argentina: 54 + código de área + número, sin espacios ni guiones.
+    const acomodadores = {
+      jose:   { nombre: "José",   telefono: "5493511111111" },
+      mauro:  { nombre: "Mauro",  telefono: "5493512222222" },
+      carlos: { nombre: "Carlos", telefono: "5493513333333" }
+      // Agregá más si querés (clave única: {nombre, telefono})
+    };
+
+    // Programa de asignaciones por fecha (ejemplo)
+    // Clave: fecha en formato YYYY-MM-DD
+    const programa = {
+      // Ejemplo para probar: cambiá la fecha a la de hoy cuando lo uses
+      "2025-12-11": {
+        hora: "19:00",
+        entrada:  "jose",
+        auditorio:"mauro",
+        apoyo:    "carlos"
+      }
+      // Podés agregar más días:
+      // "2025-12-12": { hora:"19:00", entrada:"mauro", auditorio:"carlos", apoyo:"jose" }
+    };
+
+    // =========================
+    // INICIO: setear fecha hoy
+    // =========================
+    function fechaHoyISO() {
+      const hoy = new Date();
+      const año = hoy.getFullYear();
+      const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+      const dia = String(hoy.getDate()).padStart(2, "0");
+      return `${año}-${mes}-${dia}`;
+    }
+
+    function iniciar() {
+      const inputFecha = document.getElementById("fecha");
+      inputFecha.value = fechaHoyISO();
+      cargarAsignacionesDelDia();
+    }
+
+    window.onload = iniciar;
+
+    // =========================
+    // Cargar las asignaciones de la fecha elegida
+    // =========================
+    function cargarAsignacionesDelDia() {
+      const fecha = document.getElementById("fecha").value;
+      const tbody = document.getElementById("tbodyAsignaciones");
+      const mensajeSin = document.getElementById("mensajeSinAsignaciones");
+
+      tbody.innerHTML = "";
+
+      const asignaciones = programa[fecha];
+
+      if (!asignaciones) {
+        mensajeSin.style.display = "block";
+        return;
+      } else {
+        mensajeSin.style.display = "none";
+      }
+
+      // Lista de roles que queremos mostrar
+      const roles = ["entrada", "auditorio", "apoyo"];
+
+      roles.forEach((rol) => {
+        const claveAcomodador = asignaciones[rol];
+        if (!claveAcomodador) return;
+
+        const acom = acomodadores[claveAcomodador];
+        if (!acom) return;
+
+        const tr = document.createElement("tr");
+
+        const tdRol = document.createElement("td");
+        tdRol.textContent = capitalizar(rol);
+        tr.appendChild(tdRol);
+
+        const tdNombre = document.createElement("td");
+        tdNombre.textContent = acom.nombre;
+        tr.appendChild(tdNombre);
+
+        const tdBoton = document.createElement("td");
+        const btn = document.createElement("button");
+        btn.className = "btn btn-wa";
+        btn.textContent = "WhatsApp";
+        btn.onclick = () => {
+          enviarWhatsAppIndividual(acom.nombre, acom.telefono, rol, asignaciones.hora);
+        };
+        tdBoton.appendChild(btn);
+        tr.appendChild(tdBoton);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // =========================
+    // Enviar WhatsApp individual
+    // =========================
+    function enviarWhatsAppIndividual(nombre, telefono, rol, hora) {
+      if (!telefono) {
+        alert("Este acomodador no tiene número de WhatsApp configurado.");
+        return;
+      }
+      const texto = `Hola ${nombre}, hoy tenés asignación: ${rol.toUpperCase()} a las ${hora} hs en la congregación.`;
+      const url = `https://wa.me/${telefono}?text=${encodeURIComponent(texto)}`;
+      window.open(url, "_blank");
+    }
+
+    // =========================
+    // Copiar mensaje para grupo
+    // =========================
+    function copiarParaGrupo() {
+      const fecha = document.getElementById("fecha").value;
+      const asignaciones = programa[fecha];
+
+      if (!asignaciones) {
+        alert("No hay asignaciones para esta fecha.");
+        return;
+      }
+
+      const partes = [];
+      partes.push("Recordatorio de asignaciones de hoy:");
+      const hora = asignaciones.hora || "—";
+
+      if (asignaciones.entrada && acomodadores[asignaciones.entrada]) {
+        partes.push(`Entrada: ${acomodadores[asignaciones.entrada].nombre} – ${hora} hs`);
+      }
+      if (asignaciones.auditorio && acomodadores[asignaciones.auditorio]) {
+        partes.push(`Auditorio: ${acomodadores[asignaciones.auditorio].nombre} – ${hora} hs`);
+      }
+      if (asignaciones.apoyo && acomodadores[asignaciones.apoyo]) {
+        partes.push(`Acomodador de apoyo: ${acomodadores[asignaciones.apoyo].nombre} – ${hora} hs`);
+      }
+
+      const texto = partes.join("\n");
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(texto)
+          .then(() => alert("Mensaje copiado. Pegalo en el grupo de WhatsApp."))
+          .catch(() => copiarPorPrompt(texto));
+      } else {
+        copiarPorPrompt(texto);
+      }
+    }
+
+    function copiarPorPrompt(texto) {
+      prompt("Copiá este texto y pegalo en el grupo de WhatsApp:", texto);
+    }
+
+    function capitalizar(cadena) {
+      return cadena.charAt(0).toUpperCase() + cadena.slice(1);
+    }
+  </script>
+</body>
+</html>
