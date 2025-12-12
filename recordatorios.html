@@ -150,33 +150,45 @@
 
   <script>
     // =========================
-    // DATOS DE EJEMPLO
+    // 1) Programa de asignaciones
     // =========================
-    // Acá definís tus acomodadores y sus números de WhatsApp (formato internacional, sin +)
-    // Ejemplo Argentina: 54 + código de área + número, sin espacios ni guiones.
-    const acomodadores = {
-      jose:   { nombre: "José",   telefono: "5493511111111" },
-      mauro:  { nombre: "Mauro",  telefono: "5493512222222" },
-      carlos: { nombre: "Carlos", telefono: "5493513333333" }
-      // Agregá más si querés (clave única: {nombre, telefono})
-    };
-
-    // Programa de asignaciones por fecha (ejemplo)
-    // Clave: fecha en formato YYYY-MM-DD
+    // 🔹 IMPORTANTE:
+    // Los nombres acá deben escribirse igual que en la tabla de teléfonos
+    // de la app principal (Adrián, Agustín, Darío, etc.).
     const programa = {
-      // Ejemplo para probar: cambiá la fecha a la de hoy cuando lo uses
-      "2025-12-11": {
+      // EJEMPLOS: cambiá las fechas y nombres por los reales
+      "2025-12-13": {
         hora: "19:00",
-        entrada:  "jose",
-        auditorio:"mauro",
-        apoyo:    "carlos"
+        entrada:  "Adrián",
+        auditorio:"Darío",
+        apoyo:    "Pedro"
+      },
+      "2025-12-16": {
+        hora: "19:00",
+        entrada:  "Agustín",
+        auditorio:"Matías",
+        apoyo:    "Darío"
       }
-      // Podés agregar más días:
-      // "2025-12-12": { hora:"19:00", entrada:"mauro", auditorio:"carlos", apoyo:"jose" }
+      // Agregá más fechas así:
+      // "YYYY-MM-DD": { hora:"HH:MM", entrada:"Nombre", auditorio:"Nombre", apoyo:"Nombre" }
     };
 
     // =========================
-    // INICIO: setear fecha hoy
+    // 2) Leer teléfonos desde localStorage (Acomoda App)
+    // =========================
+    function obtenerTelefonos() {
+      try {
+        const raw = localStorage.getItem("telefonosAcomodadores");
+        if (!raw) return {};
+        return JSON.parse(raw);  // { "Adrián": "549...", "Darío": "549..." }
+      } catch (e) {
+        console.error("Error leyendo telefonosAcomodadores:", e);
+        return {};
+      }
+    }
+
+    // =========================
+    // 3) Fecha de hoy
     // =========================
     function fechaHoyISO() {
       const hoy = new Date();
@@ -195,7 +207,7 @@
     window.onload = iniciar;
 
     // =========================
-    // Cargar las asignaciones de la fecha elegida
+    // 4) Cargar asignaciones de la fecha elegida
     // =========================
     function cargarAsignacionesDelDia() {
       const fecha = document.getElementById("fecha").value;
@@ -213,15 +225,14 @@
         mensajeSin.style.display = "none";
       }
 
-      // Lista de roles que queremos mostrar
+      const telefonos = obtenerTelefonos();
       const roles = ["entrada", "auditorio", "apoyo"];
 
       roles.forEach((rol) => {
-        const claveAcomodador = asignaciones[rol];
-        if (!claveAcomodador) return;
+        const nombre = asignaciones[rol];
+        if (!nombre) return;
 
-        const acom = acomodadores[claveAcomodador];
-        if (!acom) return;
+        const tel = telefonos[nombre] || "";
 
         const tr = document.createElement("tr");
 
@@ -230,16 +241,18 @@
         tr.appendChild(tdRol);
 
         const tdNombre = document.createElement("td");
-        tdNombre.textContent = acom.nombre;
+        tdNombre.textContent = nombre;
         tr.appendChild(tdNombre);
 
         const tdBoton = document.createElement("td");
         const btn = document.createElement("button");
         btn.className = "btn btn-wa";
         btn.textContent = "WhatsApp";
+
         btn.onclick = () => {
-          enviarWhatsAppIndividual(acom.nombre, acom.telefono, rol, asignaciones.hora);
+          enviarWhatsAppIndividual(nombre, tel, rol, asignaciones.hora);
         };
+
         tdBoton.appendChild(btn);
         tr.appendChild(tdBoton);
 
@@ -248,11 +261,11 @@
     }
 
     // =========================
-    // Enviar WhatsApp individual
+    // 5) WhatsApp individual
     // =========================
     function enviarWhatsAppIndividual(nombre, telefono, rol, hora) {
       if (!telefono) {
-        alert("Este acomodador no tiene número de WhatsApp configurado.");
+        alert(`No hay teléfono cargado para ${nombre}. Cargalo en el panel Acomodadores de la app.`);
         return;
       }
       const texto = `Hola ${nombre}, hoy tenés asignación: ${rol.toUpperCase()} a las ${hora} hs en la congregación.`;
@@ -261,7 +274,7 @@
     }
 
     // =========================
-    // Copiar mensaje para grupo
+    // 6) Mensaje para grupo de WhatsApp
     // =========================
     function copiarParaGrupo() {
       const fecha = document.getElementById("fecha").value;
@@ -276,14 +289,14 @@
       partes.push("Recordatorio de asignaciones de hoy:");
       const hora = asignaciones.hora || "—";
 
-      if (asignaciones.entrada && acomodadores[asignaciones.entrada]) {
-        partes.push(`Entrada: ${acomodadores[asignaciones.entrada].nombre} – ${hora} hs`);
+      if (asignaciones.entrada) {
+        partes.push(`Entrada: ${asignaciones.entrada} – ${hora} hs`);
       }
-      if (asignaciones.auditorio && acomodadores[asignaciones.auditorio]) {
-        partes.push(`Auditorio: ${acomodadores[asignaciones.auditorio].nombre} – ${hora} hs`);
+      if (asignaciones.auditorio) {
+        partes.push(`Auditorio: ${asignaciones.auditorio} – ${hora} hs`);
       }
-      if (asignaciones.apoyo && acomodadores[asignaciones.apoyo]) {
-        partes.push(`Acomodador de apoyo: ${acomodadores[asignaciones.apoyo].nombre} – ${hora} hs`);
+      if (asignaciones.apoyo) {
+        partes.push(`Acomodador de apoyo: ${asignaciones.apoyo} – ${hora} hs`);
       }
 
       const texto = partes.join("\n");
