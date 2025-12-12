@@ -461,31 +461,37 @@ if (messaging) {
 
         <!-- Columna derecha: menús + paneles -->
         <div>
-          <!-- MENÚ COORDINADOR -->
-          <div id="menuCoordinador" class="panel" style="display:none;">
-            <div class="panel-title">
-              <h2>Menú coordinador</h2>
-            </div>
-            <p class="small-text">
-              Elegí una sección.
-            </p>
-            <div class="menu-buttons">
-              <button type="button" onclick="abrirSeccionCoordinador('acomodadores')">
-                Acomodadores
-              </button>
-              <button type="button" onclick="abrirSeccionCoordinador('config')">
-                Config. reuniones
-              </button>
-              <button type="button" onclick="abrirSeccionCoordinador('programa')">
-               <!-- 🔔 Botón nuevo de notificaciones -->
-  <button onclick="activarNotificaciones()">🔔 Activar notificaciones</button>
-                Programa mensual
-              </button>
-              <button type="button" onclick="abrirSeccionCoordinador('reemplazos')">
-                Pedidos de reemplazo
-              </button>
-            </div>
-          </div>
+         <!-- MENÚ COORDINADOR -->
+<div id="menuCoordinador" class="panel" style="display:none;">
+  <div class="panel-title">
+    <h2>Menú coordinador</h2>
+  </div>
+  <p class="small-text">
+    Elegí una sección.
+  </p>
+  <div class="menu-buttons">
+    <button type="button" onclick="abrirSeccionCoordinador('acomodadores')">
+      Acomodadores
+    </button>
+
+    <button type="button" onclick="abrirSeccionCoordinador('config')">
+      Config. reuniones
+    </button>
+
+    <button type="button" onclick="abrirSeccionCoordinador('programa')">
+      Programa mensual
+    </button>
+
+    <button type="button" onclick="abrirSeccionCoordinador('reemplazos')">
+      Pedidos de reemplazo
+    </button>
+
+    <!-- 🔔 Nuevo botón: Recordatorios de hoy por WhatsApp -->
+    <button type="button" onclick="window.location.href='recordatorios.html'">
+      🔔 Recordatorios de hoy (WhatsApp)
+    </button>
+  </div>
+</div>
 
           <!-- MENÚ ACOMODADOR -->
           <div id="menuAcomodador" class="panel" style="display:none;">
