@@ -125,7 +125,7 @@
         </button>
       </div>
       <div class="muted">
-        La app arma el mensaje. Vos solo lo pegás en el grupo de WhatsApp.
+        La app lee el programa real y arma el mensaje. Vos solo lo pegás en el grupo de WhatsApp.
       </div>
 
       <!-- Tabla de asignaciones -->
@@ -148,48 +148,42 @@
     </div>
   </main>
 
-  <script>
-    // =========================
-    // 1) Programa de asignaciones
-    // =========================
-    // 🔹 IMPORTANTE:
-    // Los nombres acá deben escribirse igual que en la tabla de teléfonos
-    // de la app principal (Adrián, Agustín, Darío, etc.).
-    const programa = {
-      // EJEMPLOS: cambiá las fechas y nombres por los reales
-      "2025-12-13": {
-        hora: "19:00",
-        entrada:  "Adrián",
-        auditorio:"Darío",
-        apoyo:    "Pedro"
-      },
-      "2025-12-16": {
-        hora: "19:00",
-        entrada:  "Agustín",
-        auditorio:"Matías",
-        apoyo:    "Darío"
-      }
-      // Agregá más fechas así:
-      // "YYYY-MM-DD": { hora:"HH:MM", entrada:"Nombre", auditorio:"Nombre", apoyo:"Nombre" }
-    };
+  <!-- Firebase v8 (compat con tu app actual) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-    // =========================
-    // 2) Leer teléfonos desde localStorage (Acomoda App)
-    // =========================
+  <script>
+    // --- Firebase ---
+    let db = null;
+    let asignacionesDiaActual = [];
+
+    function initFirebase() {
+      if (db) return; // ya inicializado
+      const firebaseConfig = {
+        apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
+        authDomain: "acomoda-app2.firebaseapp.com",
+        projectId: "acomoda-app2",
+        storageBucket: "acomoda-app2.firebasestorage.app",
+        messagingSenderId: "453109433788",
+        appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
+      };
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.firestore();
+    }
+
+    // --- Teléfonos desde la app principal (localStorage) ---
     function obtenerTelefonos() {
       try {
         const raw = localStorage.getItem("telefonosAcomodadores");
         if (!raw) return {};
-        return JSON.parse(raw);  // { "Adrián": "549...", "Darío": "549..." }
+        return JSON.parse(raw); // { "Darío": "549...", "Pedro": "549..." }
       } catch (e) {
         console.error("Error leyendo telefonosAcomodadores:", e);
         return {};
       }
     }
 
-    // =========================
-    // 3) Fecha de hoy
-    // =========================
+    // --- Fecha de hoy ---
     function fechaHoyISO() {
       const hoy = new Date();
       const año = hoy.getFullYear();
@@ -206,63 +200,73 @@
 
     window.onload = iniciar;
 
-    // =========================
-    // 4) Cargar asignaciones de la fecha elegida
-    // =========================
-    function cargarAsignacionesDelDia() {
+    // --- Cargar asignaciones del día desde Firebase ---
+    async function cargarAsignacionesDelDia() {
+      initFirebase();
       const fecha = document.getElementById("fecha").value;
       const tbody = document.getElementById("tbodyAsignaciones");
       const mensajeSin = document.getElementById("mensajeSinAsignaciones");
-
       tbody.innerHTML = "";
+      asignacionesDiaActual = [];
 
-      const asignaciones = programa[fecha];
-
-      if (!asignaciones) {
+      if (!db) {
+        alert("No se pudo conectar a la nube.");
         mensajeSin.style.display = "block";
         return;
-      } else {
-        mensajeSin.style.display = "none";
       }
 
-      const telefonos = obtenerTelefonos();
-      const roles = ["entrada", "auditorio", "apoyo"];
+      try {
+        const snap = await db.collection("asignaciones")
+          .where("fecha", "==", fecha)
+          .orderBy("hora")
+          .get();
 
-      roles.forEach((rol) => {
-        const nombre = asignaciones[rol];
-        if (!nombre) return;
+        if (snap.empty) {
+          mensajeSin.style.display = "block";
+          return;
+        } else {
+          mensajeSin.style.display = "none";
+        }
 
-        const tel = telefonos[nombre] || "";
+        const telefonos = obtenerTelefonos();
 
-        const tr = document.createElement("tr");
+        snap.forEach((doc) => {
+          const data = doc.data(); // {fecha, hora, rol, nombre, pin...}
+          asignacionesDiaActual.push(data);
 
-        const tdRol = document.createElement("td");
-        tdRol.textContent = capitalizar(rol);
-        tr.appendChild(tdRol);
+          const rol = data.rol || "";
+          const nombre = data.nombre || "";
+          const hora = data.hora || "";
+          const tel = telefonos[nombre] || "";
 
-        const tdNombre = document.createElement("td");
-        tdNombre.textContent = nombre;
-        tr.appendChild(tdNombre);
+          const tr = document.createElement("tr");
 
-        const tdBoton = document.createElement("td");
-        const btn = document.createElement("button");
-        btn.className = "btn btn-wa";
-        btn.textContent = "WhatsApp";
+          const tdRol = document.createElement("td");
+          tdRol.textContent = rol;
+          tr.appendChild(tdRol);
 
-        btn.onclick = () => {
-          enviarWhatsAppIndividual(nombre, tel, rol, asignaciones.hora);
-        };
+          const tdNombre = document.createElement("td");
+          tdNombre.textContent = nombre;
+          tr.appendChild(tdNombre);
 
-        tdBoton.appendChild(btn);
-        tr.appendChild(tdBoton);
+          const tdBoton = document.createElement("td");
+          const btn = document.createElement("button");
+          btn.className = "btn btn-wa";
+          btn.textContent = "WhatsApp";
+          btn.onclick = () => enviarWhatsAppIndividual(nombre, tel, rol, hora);
+          tdBoton.appendChild(btn);
+          tr.appendChild(tdBoton);
 
-        tbody.appendChild(tr);
-      });
+          tbody.appendChild(tr);
+        });
+
+      } catch (e) {
+        console.error("Error leyendo asignaciones del día:", e);
+        mensajeSin.style.display = "block";
+      }
     }
 
-    // =========================
-    // 5) WhatsApp individual
-    // =========================
+    // --- WhatsApp individual ---
     function enviarWhatsAppIndividual(nombre, telefono, rol, hora) {
       if (!telefono) {
         alert(`No hay teléfono cargado para ${nombre}. Cargalo en el panel Acomodadores de la app.`);
@@ -273,31 +277,22 @@
       window.open(url, "_blank");
     }
 
-    // =========================
-    // 6) Mensaje para grupo de WhatsApp
-    // =========================
+    // --- Mensaje para grupo ---
     function copiarParaGrupo() {
-      const fecha = document.getElementById("fecha").value;
-      const asignaciones = programa[fecha];
-
-      if (!asignaciones) {
+      if (!asignacionesDiaActual.length) {
         alert("No hay asignaciones para esta fecha.");
         return;
       }
 
       const partes = [];
       partes.push("Recordatorio de asignaciones de hoy:");
-      const hora = asignaciones.hora || "—";
 
-      if (asignaciones.entrada) {
-        partes.push(`Entrada: ${asignaciones.entrada} – ${hora} hs`);
-      }
-      if (asignaciones.auditorio) {
-        partes.push(`Auditorio: ${asignaciones.auditorio} – ${hora} hs`);
-      }
-      if (asignaciones.apoyo) {
-        partes.push(`Acomodador de apoyo: ${asignaciones.apoyo} – ${hora} hs`);
-      }
+      asignacionesDiaActual.forEach((a) => {
+        const rol = a.rol || "";
+        const nombre = a.nombre || "";
+        const hora = a.hora || "";
+        partes.push(`${rol}: ${nombre} – ${hora} hs`);
+      });
 
       const texto = partes.join("\n");
 
@@ -312,10 +307,6 @@
 
     function copiarPorPrompt(texto) {
       prompt("Copiá este texto y pegalo en el grupo de WhatsApp:", texto);
-    }
-
-    function capitalizar(cadena) {
-      return cadena.charAt(0).toUpperCase() + cadena.slice(1);
     }
   </script>
 </body>
