@@ -811,6 +811,87 @@ if (messaging) {
       const mm = String(date.getMonth() + 1).padStart(2,"0");
       return `${dia} ${dd}/${mm}`;
     }
+// Lista base de acomodadores para la tabla de teléfonos.
+// Podés adaptar esta lista a los nombres que ya usás en la app.
+const listaAcomodadoresBase = [
+  "Adrián",
+  "Agustín",
+  "Matías",
+  "Darío",
+  "Pedro",
+  "Rodrigo",
+  "Damián",
+  "Sebastián",
+  "Javier",
+  "Iván",
+  "Raúl"
+];
+
+// Cargar teléfonos desde localStorage o crear objeto vacío
+function obtenerTelefonosGuardados() {
+  try {
+    const raw = localStorage.getItem("telefonosAcomodadores");
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch (e) {
+    console.error("Error leyendo telefonosAcomodadores:", e);
+    return {};
+  }
+}
+
+// Guardar teléfonos en localStorage
+function guardarTelefonosAcomodadores() {
+  const tbody = document.getElementById("tbodyTelefonos");
+  if (!tbody) return;
+
+  const filas = tbody.querySelectorAll("tr");
+  const datos = {};
+
+  filas.forEach((fila) => {
+    const nombre = fila.querySelector("td input[data-tipo='nombre']").value.trim();
+    const tel = fila.querySelector("td input[data-tipo='telefono']").value.trim();
+    if (nombre) {
+      datos[nombre] = tel; // puede ser vacío si no cargaste
+    }
+  });
+
+  localStorage.setItem("telefonosAcomodadores", JSON.stringify(datos));
+  alert("Teléfonos de acomodadores guardados.");
+}
+
+// Rellenar la tabla con nombres y teléfonos guardados
+function inicializarTablaTelefonos() {
+  const tbody = document.getElementById("tbodyTelefonos");
+  if (!tbody) return;
+
+  const guardados = obtenerTelefonosGuardados();
+
+  tbody.innerHTML = "";
+
+  listaAcomodadoresBase.forEach((nombre) => {
+    const tr = document.createElement("tr");
+
+    const tdNombre = document.createElement("td");
+    const inputNombre = document.createElement("input");
+    inputNombre.type = "text";
+    inputNombre.value = nombre;
+    inputNombre.dataset.tipo = "nombre";
+    tdNombre.appendChild(inputNombre);
+
+    const tdTelefono = document.createElement("td");
+    const inputTel = document.createElement("input");
+    inputTel.type = "text";
+    inputTel.placeholder = "549351....";
+    inputTel.value = guardados[nombre] || "";
+    inputTel.dataset.tipo = "telefono";
+    tdTelefono.appendChild(inputTel);
+
+    tr.appendChild(tdNombre);
+    tr.appendChild(tdTelefono);
+
+    tbody.appendChild(tr);
+  });
+}
 
     function formatearFechaPlanilla(fechaStr) {
       if (!fechaStr) return "";
