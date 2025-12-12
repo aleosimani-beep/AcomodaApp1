@@ -522,6 +522,30 @@ if (messaging) {
                       onclick="volverMenuCoordinador()">
                 ← Menú coordinador
               </button>
+              <!-- SECCIÓN TELÉFONOS ACOMODADORES -->
+<div class="subpanel">
+  <h3>Teléfonos de acomodadores (WhatsApp)</h3>
+  <p class="small-text">
+    Cargá o actualizá los teléfonos. Se guardan en esta computadora / celular.
+  </p>
+
+  <table id="tablaTelefonos" class="tabla-simple">
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Teléfono (ej: 5493512641299)</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyTelefonos">
+      <!-- Filas generadas por JavaScript -->
+    </tbody>
+  </table>
+
+  <button type="button" onclick="guardarTelefonosAcomodadores()">
+    💾 Guardar teléfonos
+  </button>
+</div>
+
             </div>
 
             <h3>Lista</h3>
