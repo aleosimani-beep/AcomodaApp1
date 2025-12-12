@@ -1143,22 +1143,27 @@ if (messaging) {
       document.getElementById("panelAcomodadorPrograma").style.display = "none";
     }
 
-    // Navegación coordinador
-    function abrirSeccionCoordinador(seccion) {
-      ocultarPanelesCoordinador();
+   // Navegación coordinador
+function abrirSeccionCoordinador(seccion) {
+  ocultarPanelesCoordinador();
 
-      if (seccion === "acomodadores") {
-        document.getElementById("panelCoordinadorAcomodadores").style.display = "block";
-      } else if (seccion === "config") {
-        document.getElementById("panelCoordinadorConfig").style.display = "block";
-      } else if (seccion === "programa") {
-        document.getElementById("panelCoordinadorPrograma").style.display = "block";
-        actualizarTituloProgramaMes();
-        renderProgramaMensual();
-      } else if (seccion === "reemplazos") {
-        document.getElementById("panelCoordinadorReemplazos").style.display = "block";
-      }
-    }
+  if (seccion === "acomodadores") {
+    document.getElementById("panelCoordinadorAcomodadores").style.display = "block";
+    // 👉 cuando entro a Acomodadores, lleno la tabla de teléfonos
+    inicializarTablaTelefonos();
+
+  } else if (seccion === "config") {
+    document.getElementById("panelCoordinadorConfig").style.display = "block";
+
+  } else if (seccion === "programa") {
+    document.getElementById("panelCoordinadorPrograma").style.display = "block";
+    actualizarTituloProgramaMes();
+    renderProgramaMensual();
+
+  } else if (seccion === "reemplazos") {
+    document.getElementById("panelCoordinadorReemplazos").style.display = "block";
+  }
+}
 
     function volverMenuCoordinador() {
       ocultarPanelesCoordinador();
