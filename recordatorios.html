@@ -5,85 +5,36 @@
   <title>Acomoda App – Recordatorios de hoy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --deep: #1A237E;
-      --light: #7E57C2;
+    :root { --deep:#1A237E; --light:#7E57C2; }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0; font-family:Arial,Helvetica,sans-serif;
+      background:linear-gradient(180deg,var(--deep),var(--light));
+      color:white; min-height:100vh;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(180deg, var(--deep), var(--light));
-      color: white;
-      min-height: 100vh;
+    header{ padding:16px; text-align:center; }
+    main{ padding:16px; }
+    .card{
+      background:white; color:var(--deep);
+      border-radius:12px; max-width:760px; margin:0 auto;
+      padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.25);
     }
-    header { padding: 16px; text-align: center; }
-    main { padding: 16px; }
-    .card {
-      background: white;
-      color: var(--deep);
-      border-radius: 12px;
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-    }
-    h1, h2 { margin-top: 0; }
-    .fecha-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .fecha-row input[type="date"] {
-      padding: 6px 10px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-    }
-    .btn {
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-size: 13px;
-    }
-    .btn-wa { background: #25D366; color: white; }
-    .btn-secondary { background: #ececff; color: var(--deep); }
-    .top-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
-    .muted { font-size: 12px; color: #666; margin-top: 6px; }
-    .error { color: #b91c1c; font-size: 13px; margin-top: 6px; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    th, td {
-      padding: 8px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-    }
-    th { background: #f0f2ff; }
-    .pill {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 999px;
-      background: #eef2ff;
-      color: var(--deep);
-      font-size: 12px;
-      margin-left: 6px;
-    }
-    @media (max-width: 480px) {
-      .fecha-row { flex-direction: column; align-items: flex-start; }
-      table { font-size: 13px; }
+    h1,h2{ margin-top:0; }
+    .fecha-row{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:10px; }
+    .fecha-row input[type="date"]{ padding:6px 10px; border-radius:8px; border:1px solid #ddd; font-size:14px; }
+    .btn{ padding:6px 12px; border-radius:8px; border:none; cursor:pointer; font-size:13px; }
+    .btn-wa{ background:#25D366; color:white; }
+    .btn-secondary{ background:#ececff; color:var(--deep); }
+    .top-buttons{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; margin-bottom:8px; }
+    .muted{ font-size:12px; color:#666; margin-top:6px; }
+    .error{ color:#b91c1c; font-size:13px; margin-top:6px; }
+    table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+    th,td{ padding:8px; border-bottom:1px solid #eee; text-align:left; }
+    th{ background:#f0f2ff; }
+    .pill{ display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:var(--deep); font-size:12px; margin-left:6px; }
+    @media (max-width:480px){
+      .fecha-row{ flex-direction:column; align-items:flex-start; }
+      table{ font-size:13px; }
     }
   </style>
 </head>
@@ -100,15 +51,11 @@
       <div class="fecha-row">
         <label for="fecha">Elegir fecha:</label>
         <input type="date" id="fecha" />
-        <button class="btn btn-secondary" onclick="cargarAsignacionesDelDia()">
-          Ver asignaciones
-        </button>
+        <button class="btn btn-secondary" onclick="cargarAsignacionesDelDia()">Ver asignaciones</button>
       </div>
 
       <div class="top-buttons">
-        <button class="btn btn-secondary" onclick="copiarParaGrupo()">
-          Copiar mensaje para grupo de WhatsApp
-        </button>
+        <button class="btn btn-secondary" onclick="copiarParaGrupo()">Copiar mensaje para grupo de WhatsApp</button>
       </div>
 
       <div class="muted" id="subtituloBusqueda"></div>
@@ -160,7 +107,7 @@
       try {
         const raw = localStorage.getItem("telefonosAcomodadores");
         if (!raw) return {};
-        return JSON.parse(raw); // { "Darío": "549...", "Pedro": "549..." }
+        return JSON.parse(raw);
       } catch (e) {
         console.error("Error leyendo telefonosAcomodadores:", e);
         return {};
@@ -176,15 +123,17 @@
       return `${año}-${mes}-${dia}`;
     }
 
-    // Esto replica tu formato guardado en Firebase: "Miércoles 13"
-    function formatearFechaComoApp(fechaISO) {
-      const dias = [
-        "Domingo","Lunes","Martes",
-        "Miércoles","Jueves","Viernes","Sábado"
-      ];
+    // Con tilde (Miércoles, Sábado)
+    function formatearFechaConTilde(fechaISO) {
+      const dias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
       const d = new Date(fechaISO + "T00:00:00");
       if (isNaN(d)) return "";
       return dias[d.getDay()] + " " + d.getDate();
+    }
+
+    // Sin tildes (Miercoles, Sabado)
+    function quitarTildes(txt) {
+      return (txt || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
     function iniciar() {
@@ -193,12 +142,25 @@
     }
     window.onload = iniciar;
 
+    async function queryAsignacionesPorFechaTexto(fechaTexto) {
+      const snap = await db.collection("asignaciones")
+        .where("fecha", "==", fechaTexto)
+        .get();
+
+      const arr = [];
+      snap.forEach(doc => arr.push(doc.data()));
+      return arr;
+    }
+
     // ========= Cargar asignaciones del día =========
     async function cargarAsignacionesDelDia() {
       initFirebase();
 
       const fechaISO = document.getElementById("fecha").value;
-      const fechaTexto = formatearFechaComoApp(fechaISO);
+
+      // Generamos ambas variantes
+      const fechaConTilde = formatearFechaConTilde(fechaISO);     // "Sábado 13"
+      const fechaSinTilde = quitarTildes(fechaConTilde);          // "Sabado 13"
 
       const tbody = document.getElementById("tbodyAsignaciones");
       const sinEl = document.getElementById("mensajeSinAsignaciones");
@@ -211,7 +173,7 @@
       errEl.textContent = "";
       asignacionesDiaActual = [];
 
-      subt.textContent = `Buscando en Firebase: fecha = "${fechaTexto}"`;
+      subt.textContent = `Buscando en Firebase: "${fechaSinTilde}" y "${fechaConTilde}"`;
 
       if (!db) {
         errEl.textContent = "No se pudo conectar a Firebase (db no inicializada).";
@@ -221,25 +183,25 @@
       }
 
       try {
-        // 🔥 IMPORTANTE: busca con el mismo texto que guardás en Firebase ("Miércoles 13")
-        const snap = await db.collection("asignaciones")
-          .where("fecha", "==", fechaTexto)
-          .get();
+        // 1) Intento SIN tilde
+        let resultados = await queryAsignacionesPorFechaTexto(fechaSinTilde);
 
-        if (snap.empty) {
+        // 2) Si no hay, intento CON tilde
+        if (!resultados.length && fechaConTilde !== fechaSinTilde) {
+          resultados = await queryAsignacionesPorFechaTexto(fechaConTilde);
+        }
+
+        if (!resultados.length) {
           sinEl.style.display = "block";
           return;
         }
 
+        asignacionesDiaActual = resultados.slice();
+
+        // Orden por hora
+        asignacionesDiaActual.sort((a,b) => (a.hora || "").localeCompare(b.hora || ""));
+
         const telefonos = obtenerTelefonos();
-
-        snap.forEach((doc) => {
-          const data = doc.data();
-          asignacionesDiaActual.push(data);
-        });
-
-        // Ordenar por hora en el cliente
-        asignacionesDiaActual.sort((a, b) => (a.hora || "").localeCompare(b.hora || ""));
 
         asignacionesDiaActual.forEach((a) => {
           const rol = a.rol || "";
@@ -297,10 +259,8 @@
         alert("No hay asignaciones para esta fecha.");
         return;
       }
-
       const partes = [];
       partes.push("Recordatorio de asignaciones de hoy:");
-
       asignacionesDiaActual.forEach((a) => {
         const rol = a.rol || "";
         const nombre = a.nombre || "";
