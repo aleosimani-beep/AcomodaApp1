@@ -100,11 +100,15 @@
   <script>
     // ================== Volver ==================
     function volverAlMenu() {
-      // Si index.html está en la misma carpeta:
-      window.location.href = "index.html";
-      // Si tu home es / (sin index.html), también podrías usar: window.location.href = "./";
-    }
-
+  // Volver exactamente a la pantalla anterior (tu menú) sin reiniciar la app
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    // Si se abrió recordatorios.html directo (sin historial)
+    window.location.href = "index.html";
+  }
+}
+    
     // ================== Firebase ==================
     let db = null;
     let asignacionesDiaActual = [];
