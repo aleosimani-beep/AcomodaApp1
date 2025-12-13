@@ -35,14 +35,8 @@
       border-bottom: 1px solid #e5e7eb;
       padding-bottom: 0.5rem;
     }
-    h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    .app-subtitle {
-      font-size: 0.85rem;
-      color: #6b7280;
-    }
+    h1 { margin: 0; font-size: 1.5rem; }
+    .app-subtitle { font-size: 0.85rem; color: #6b7280; }
     .badge {
       background: #2563eb;
       color: #f9fafb;
@@ -50,19 +44,10 @@
       padding: 0.25rem 0.7rem;
       font-size: 0.75rem;
     }
-    h2 {
-      font-size: 1.1rem;
-      margin: 0.5rem 0 0.75rem;
-    }
-    h3 {
-      font-size: 1rem;
-      margin: 0.6rem 0;
-    }
-    label {
-      font-size: 0.8rem;
-      display: block;
-      margin: 0.35rem 0 0.15rem;
-    }
+    h2 { font-size: 1.1rem; margin: 0.5rem 0 0.75rem; }
+    h3 { font-size: 1rem; margin: 0.6rem 0; }
+    label { font-size: 0.8rem; display: block; margin: 0.35rem 0 0.15rem; }
+
     input[type="password"],
     input[type="text"],
     input[type="date"],
@@ -77,11 +62,11 @@
       box-sizing: border-box;
       background: #ffffff;
     }
-    input:focus,
-    select:focus {
+    input:focus, select:focus {
       outline: 2px solid #2563eb22;
       border-color: #2563eb;
     }
+
     .rol-row {
       display: flex;
       gap: 0.75rem;
@@ -96,6 +81,7 @@
       font-size: 0.85rem;
       cursor: pointer;
     }
+
     button {
       margin-top: 0.7rem;
       padding: 0.55rem 0.8rem;
@@ -107,47 +93,24 @@
       color: white;
       font-weight: 600;
     }
-    button:active {
-      transform: scale(0.97);
-    }
-    .btn-secondary {
-      background: #6b7280;
-    }
-    .btn-danger {
-      background: #dc2626;
-    }
-    .btn-small {
-      font-size: 0.8rem;
-      padding: 0.3rem 0.6rem;
-    }
-    .estado {
-      margin-top: 0.4rem;
-      font-size: 0.78rem;
-      text-align: left;
-    }
-    .estado.ok {
-      color: #16a34a;
-    }
-    .estado.err {
-      color: #b91c1c;
-    }
-    .estado.info {
-      color: #6b7280;
-    }
-    .small-text {
-      font-size: 0.76rem;
-      color: #6b7280;
-    }
+    button:active { transform: scale(0.97); }
+    .btn-secondary { background: #6b7280; }
+    .btn-danger { background: #dc2626; }
+    .btn-small { font-size: 0.8rem; padding: 0.3rem 0.6rem; }
+
+    .estado { margin-top: 0.4rem; font-size: 0.78rem; text-align: left; }
+    .estado.ok { color: #16a34a; }
+    .estado.err { color: #b91c1c; }
+    .estado.info { color: #6b7280; }
+    .small-text { font-size: 0.76rem; color: #6b7280; }
+
     .layout {
       display: grid;
       grid-template-columns: 1.1fr 1.4fr;
       gap: 1rem;
     }
-    @media (max-width: 780px) {
-      .layout {
-        grid-template-columns: 1fr;
-      }
-    }
+    @media (max-width: 780px) { .layout { grid-template-columns: 1fr; } }
+
     .panel {
       background: #ffffff;
       border-radius: 0.75rem;
@@ -159,6 +122,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
     .chip {
       display: inline-block;
@@ -168,61 +133,23 @@
       font-size: 0.8rem;
       margin-top: 0.2rem;
     }
-    .menu-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      margin-top: 0.4rem;
-    }
-    .menu-buttons button {
-      width: 100%;
-      text-align: left;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.78rem;
-      margin-top: 0.3rem;
-    }
-    th, td {
-      border: 1px solid #e5e7eb;
-      padding: 0.25rem 0.3rem;
-      text-align: left;
-    }
-    th {
-      background: #f3f4f6;
-      font-weight: 600;
-    }
-    .empty-text {
-      font-size: 0.78rem;
-      color: #6b7280;
-      margin-top: 0.4rem;
-    }
-    .tr-hoy {
-      background: #dbeafe !important;
-    }
-    .fila-miercoles {
-      background: #fef9c3;
-    }
-    .fila-sabado {
-      background: #dcfce7;
-    }
-    .rol-entrada {
-      color: #2563eb;
-      font-weight: 600;
-    }
-    .rol-auditorio {
-      color: #059669;
-      font-weight: 600;
-    }
+    .menu-buttons { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem; }
+    .menu-buttons button { width: 100%; text-align: left; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-top: 0.3rem; }
+    th, td { border: 1px solid #e5e7eb; padding: 0.25rem 0.3rem; text-align: left; vertical-align: top; }
+    th { background: #f3f4f6; font-weight: 600; }
+    .empty-text { font-size: 0.78rem; color: #6b7280; margin-top: 0.4rem; }
+
+    .tr-hoy { background: #dbeafe !important; }
+    .fila-miercoles { background: #fef9c3; }
+    .fila-sabado { background: #dcfce7; }
+
+    .rol-entrada { color: #2563eb; font-weight: 600; }
+    .rol-auditorio { color: #059669; font-weight: 600; }
 
     /* Mis asignaciones - tarjetas */
-    .proxima-label {
-      font-size: 0.8rem;
-      color: #2563eb;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
+    .proxima-label { font-size: 0.8rem; color: #2563eb; font-weight: 600; margin-bottom: 0.3rem; }
     .card-asig {
       border-radius: 0.6rem;
       border: 1px solid #e5e7eb;
@@ -230,21 +157,10 @@
       margin-top: 0.35rem;
       background: #f9fafb;
     }
-    .card-asig-proxima {
-      border-color: #2563eb;
-      background: #eff6ff;
-    }
-    .card-asig-pasada {
-      opacity: 0.7;
-    }
-    .card-asig-titulo {
-      font-size: 0.86rem;
-      font-weight: 600;
-      margin-bottom: 0.1rem;
-    }
-    .card-asig-rol {
-      font-size: 0.8rem;
-    }
+    .card-asig-proxima { border-color: #2563eb; background: #eff6ff; }
+    .card-asig-pasada { opacity: 0.7; }
+    .card-asig-titulo { font-size: 0.86rem; font-weight: 600; margin-bottom: 0.1rem; }
+    .card-asig-rol { font-size: 0.8rem; }
 
     /* Reemplazos - tarjetas */
     .card-reemp {
@@ -258,183 +174,44 @@
       align-items: center;
       gap: 0.5rem;
     }
-    .card-reemp-info {
-      font-size: 0.8rem;
-    }
+    .card-reemp-info { font-size: 0.8rem; }
 
     /* Form fila horizontal */
-    .form-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.3rem;
+    .form-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; }
+    .form-field { flex: 1 1 150px; min-width: 0; }
+
+    /* Tabla simple teléfonos */
+    .tabla-simple {
+      width: 100%;
+      max-width: 500px;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
     }
-    .form-field {
-      flex: 1 1 150px;
-      min-width: 0;
-      
-        /* Tabla simple para teléfonos de acomodadores */
-  .tabla-simple {
-    width: 100%;
-    max-width: 500px;
-    border-collapse: collapse;
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-  }
-
-  .tabla-simple th,
-  .tabla-simple td {
-    border-bottom: 1px solid #ddd;
-    padding: 4px 6px;
-  }
-
-  .tabla-simple th {
-    background-color: #f3f4f6;
-    text-align: left;
-  }
-
-  .tabla-simple input {
-    width: 100%;
-    max-width: 180px;
-    padding: 3px 6px;
-    font-size: 0.85rem;
-  }
-
-  /* Subpanel dentro del panel de coordinador */
-  .subpanel {
-    margin-top: 0.75rem;
-    padding: 0.75rem;
-    border-radius: 8px;
-    background-color: #f9fafb;
-    
+    .tabla-simple th, .tabla-simple td {
+      border-bottom: 1px solid #ddd;
+      padding: 4px 6px;
+    }
+    .tabla-simple th { background-color: #f3f4f6; text-align: left; }
+    .tabla-simple input {
+      width: 100%;
+      max-width: 180px;
+      padding: 3px 6px;
+      font-size: 0.85rem;
+    }
+    .subpanel {
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background-color: #f9fafb;
     }
   </style>
 
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-messaging-compat.js"></script>
-  <script>
-// --- NOTIFICACIONES PUSH (FCM) - Firebase 11 compat ---
-
-let messaging = null;
-
-try {
-  // Usa el Firebase ya inicializado en tus otros scripts
-  messaging = firebase.messaging();
-
-  // Tu clave VAPID pública (Web Push)
-  messaging.usePublicVapidKey(
-    "BNYBuK1z0RizF8gZ4EHObTJWTpDvx3CBzkzn29MA0wl1EEklBwBz3x4MZjEiJ__Aow8Ay9kRaZlq9PWgfV5SODA"
-  );
-
-  // Registrar el Service Worker (ruta relativa para GitHub Pages)
-  
-      .catch(function (err) {
-        console.error("Error registrando el Service Worker de FCM:", err);
-      });
-  }
-} catch (e) {
-  console.error("Error iniciando Firebase Messaging:", e);
-}
-
-// Pedir permiso y obtener token FCM
-// Botón "Activar notificaciones"
-function activarNotificaciones() {
-  // 1) Verificar que Firebase Messaging está disponible
-  const soportaMessaging =
-    firebase.messaging &&
-    firebase.messaging.isSupported &&
-    firebase.messaging.isSupported();
-
-  if (!soportaMessaging) {
-    alert("Notificaciones no disponibles en este navegador (necesita HTTPS y soporte de FCM).");
-    console.warn("activarNotificaciones: messaging no soportado.");
-    return;
-  }
-
-  const messaging = firebase.messaging();
-
-  // 2) Pedir permiso de notificaciones al usuario
-  Notification.requestPermission().then(function (permission) {
-    if (permission !== "granted") {
-      console.log("Permiso de notificaciones denegado.");
-      return;
-    }
-
-    console.log("Permiso de notificaciones concedido ✅");
-
-    // 3) Registrar el Service Worker en la RAÍZ del dominio
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/firebase-messaging-sw.js")
-        .then(function (registration) {
-          console.log("Service Worker de FCM registrado para notificaciones:", registration);
-
-          // 4) Pedir el token usando ESTA registration
-          return messaging.getToken({
-            vapidKey: "BNYBuK1z0RizF8gZ4EHObTJWTpDvx3CBzkzn29MA0wl1EEklBwBz3x4MZjEiJ__Aow8Ay9kRaZlq9PWgfV5SODA",
-            serviceWorkerRegistration: registration
-          });
-        })
-        .then(function (currentToken) {
-          if (currentToken) {
-            console.log("Token FCM:", currentToken);
-            // acá después podemos guardarlo en Firestore si queremos
-          } else {
-            console.log("No se pudo obtener token FCM.");
-          }
-        })
-        .catch(function (err) {
-          console.error("Error obteniendo token FCM:", err);
-        });
-    } else {
-      console.warn("Este navegador no soporta Service Workers.");
-      alert("Tu navegador no soporta notificaciones push.");
-    }
-  });
-}
-
-          // OPCIONAL: guardar token en Firestore
-          /*
-          const db = firebase.firestore();
-          db.collection("tokens").doc(currentToken).set({
-            token: currentToken,
-            fecha: new Date(),
-            tipoUsuario: "acomodador" // o "coordinador"
-          }).then(() => {
-            console.log("Token guardado en Firestore");
-          });
-          */
-        } else {
-          console.log("No se pudo obtener token FCM.");
-        }
-      }).catch(function (err) {
-        console.error("Error obteniendo token FCM:", err);
-      });
-    } else {
-      console.log("Permiso de notificaciones denegado.");
-    }
-  });
-}
-
-// Mensajes cuando la app está abierta (foreground)
-if (messaging) {
-  messaging.onMessage(function (payload) {
-    console.log("Mensaje recibido (foreground):", payload);
-
-    const titulo = payload.notification?.title || "Acomoda App";
-    const opciones = {
-      body: payload.notification?.body || "",
-    };
-
-    if (Notification.permission === "granted") {
-      new Notification(titulo, opciones);
-    }
-  });
-}
-</script>
-
 </head>
+
 <body>
   <div class="card">
     <header>
@@ -444,9 +221,7 @@ if (messaging) {
       </div>
       <div style="display:flex; align-items:center; gap:0.5rem;">
         <span class="badge">v6 Firebase</span>
-        <button id="btnSalir" class="btn-secondary btn-small" type="button"
-                style="display:none;"
-                onclick="cerrarSesion()">
+        <button id="btnSalir" class="btn-secondary btn-small" type="button" style="display:none;" onclick="cerrarSesion()">
           Salir
         </button>
       </div>
@@ -462,21 +237,14 @@ if (messaging) {
       </p>
 
       <div class="rol-row">
-        <label>
-          <input type="radio" name="rol" value="coordinador" />
-          Coordinador
-        </label>
-        <label>
-          <input type="radio" name="rol" value="acomodador" />
-          Acomodador
-        </label>
+        <label><input type="radio" name="rol" value="coordinador" /> Coordinador</label>
+        <label><input type="radio" name="rol" value="acomodador" /> Acomodador</label>
       </div>
 
       <label for="pinInput">PIN</label>
       <input id="pinInput" type="password" placeholder="Ingrese su PIN" />
 
       <button onclick="entrar()">Entrar</button>
-
       <div id="estadoConexion" class="estado info"></div>
     </div>
 
@@ -486,66 +254,35 @@ if (messaging) {
         <!-- Columna izquierda: info usuario -->
         <div>
           <div class="panel">
-            <div class="panel-title">
-              <h2>Usuario</h2>
-            </div>
+            <div class="panel-title"><h2>Usuario</h2></div>
             <div id="infoUsuario" class="chip"></div>
             <div id="infoExtraUsuario" class="small-text" style="margin-top:0.25rem;"></div>
           </div>
         </div>
 
-        <!-- Columna derecha: menús + paneles -->
+        <!-- Columna derecha -->
         <div>
-         <!-- MENÚ COORDINADOR -->
-<div id="menuCoordinador" class="panel" style="display:none;">
-  <div class="panel-title">
-    <h2>Menú coordinador</h2>
-  </div>
-  <p class="small-text">
-    Elegí una sección.
-  </p>
-  <div class="menu-buttons">
-    <button type="button" onclick="abrirSeccionCoordinador('acomodadores')">
-      Acomodadores
-    </button>
-
-    <button type="button" onclick="abrirSeccionCoordinador('config')">
-      Config. reuniones
-    </button>
-
-    <button type="button" onclick="abrirSeccionCoordinador('programa')">
-      Programa mensual
-    </button>
-
-    <button type="button" onclick="abrirSeccionCoordinador('reemplazos')">
-      Pedidos de reemplazo
-    </button>
-
-    <!-- 🔔 Nuevo botón: Recordatorios de hoy por WhatsApp -->
-    <button type="button" onclick="window.location.href='recordatorios.html'">
-      🔔 Recordatorios de hoy (WhatsApp)
-    </button>
-  </div>
-</div>
+          <!-- MENÚ COORDINADOR -->
+          <div id="menuCoordinador" class="panel" style="display:none;">
+            <div class="panel-title"><h2>Menú coordinador</h2></div>
+            <p class="small-text">Elegí una sección.</p>
+            <div class="menu-buttons">
+              <button type="button" onclick="abrirSeccionCoordinador('acomodadores')">Acomodadores</button>
+              <button type="button" onclick="abrirSeccionCoordinador('config')">Config. reuniones</button>
+              <button type="button" onclick="abrirSeccionCoordinador('programa')">Programa mensual</button>
+              <button type="button" onclick="abrirSeccionCoordinador('reemplazos')">Pedidos de reemplazo</button>
+              <button type="button" onclick="window.location.href='recordatorios.html'">🔔 Recordatorios de hoy (WhatsApp)</button>
+            </div>
+          </div>
 
           <!-- MENÚ ACOMODADOR -->
           <div id="menuAcomodador" class="panel" style="display:none;">
-            <div class="panel-title">
-              <h2>Menú acomodador</h2>
-            </div>
-            <p class="small-text">
-              Elegí qué querés ver.
-            </p>
+            <div class="panel-title"><h2>Menú acomodador</h2></div>
+            <p class="small-text">Elegí qué querés ver.</p>
             <div class="menu-buttons">
-              <button type="button" onclick="abrirSeccionAcomodador('asig')">
-                Ver mis asignaciones
-              </button>
-              <button type="button" onclick="abrirSeccionAcomodador('reemplazo')">
-                Necesito reemplazo
-              </button>
-              <button type="button" onclick="abrirSeccionAcomodador('programa')">
-                Ver programa mensual
-              </button>
+              <button type="button" onclick="abrirSeccionAcomodador('asig')">Ver mis asignaciones</button>
+              <button type="button" onclick="abrirSeccionAcomodador('reemplazo')">Necesito reemplazo</button>
+              <button type="button" onclick="abrirSeccionAcomodador('programa')">Ver programa mensual</button>
             </div>
           </div>
 
@@ -553,50 +290,25 @@ if (messaging) {
           <div id="panelCoordinadorAcomodadores" class="panel" style="display:none;">
             <div class="panel-title">
               <h2>Acomodadores</h2>
-              <button type="button" class="btn-secondary btn-small"
-                      onclick="volverMenuCoordinador()">
-                ← Menú coordinador
-              </button>
-              <!-- SECCIÓN TELÉFONOS ACOMODADORES -->
-<div class="subpanel">
-  <h3>Teléfonos de acomodadores (WhatsApp)</h3>
-  <p class="small-text">
-    Cargá o actualizá los teléfonos. Se guardan en esta computadora / celular.
-  </p>
+              <button type="button" class="btn-secondary btn-small" onclick="volverMenuCoordinador()">← Menú coordinador</button>
+            </div>
 
-  <table id="tablaTelefonos" class="tabla-simple">
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Teléfono (ej: 5493512641299)</th>
-      </tr>
-    </thead>
-    <tbody id="tbodyTelefonos">
-      <!-- Filas generadas por JavaScript -->
-    </tbody>
-  </table>
-
-  <button type="button" onclick="guardarTelefonosAcomodadores()">
-    💾 Guardar teléfonos
-  </button>
-</div>
-
+            <div class="subpanel">
+              <h3>Teléfonos de acomodadores (WhatsApp)</h3>
+              <p class="small-text">Cargá o actualizá los teléfonos. Se guardan en esta computadora / celular.</p>
+              <table id="tablaTelefonos" class="tabla-simple">
+                <thead><tr><th>Nombre</th><th>Teléfono (ej: 5493512641299)</th></tr></thead>
+                <tbody id="tbodyTelefonos"></tbody>
+              </table>
+              <button type="button" onclick="guardarTelefonosAcomodadores()">💾 Guardar teléfonos</button>
             </div>
 
             <h3>Lista</h3>
             <table>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>PIN</th>
-                  <th></th>
-                </tr>
-              </thead>
+              <thead><tr><th>Nombre</th><th>PIN</th><th></th></tr></thead>
               <tbody id="tablaAcomodadores"></tbody>
             </table>
-            <div id="sinAcomodadores" class="empty-text" style="display:none;">
-              No hay acomodadores cargados.
-            </div>
+            <div id="sinAcomodadores" class="empty-text" style="display:none;">No hay acomodadores cargados.</div>
 
             <h3 style="margin-top:0.7rem;">Agregar acomodador</h3>
             <div class="form-row">
@@ -613,30 +325,21 @@ if (messaging) {
             <div id="estadoAcomodadores" class="estado"></div>
           </div>
 
-          <!-- PANEL COORDINADOR: CONFIG REUNIONES -->
+          <!-- PANEL COORDINADOR: CONFIG -->
           <div id="panelCoordinadorConfig" class="panel" style="display:none;">
             <div class="panel-title">
               <h2>Config. reuniones</h2>
-              <button type="button" class="btn-secondary btn-small"
-                      onclick="volverMenuCoordinador()">
-                ← Menú coordinador
-              </button>
+              <button type="button" class="btn-secondary btn-small" onclick="volverMenuCoordinador()">← Menú coordinador</button>
             </div>
-            <p class="small-text">
-              Configurá por separado día y hora de las reuniones (solo referencia para el programa).
-            </p>
+            <p class="small-text">Configurá por separado día y hora de las reuniones (solo referencia para el programa).</p>
 
             <h3>Miércoles</h3>
-            <label class="small-text">
-              <input type="checkbox" id="diaMiercoles" /> Hay reunión los miércoles
-            </label>
+            <label class="small-text"><input type="checkbox" id="diaMiercoles" /> Hay reunión los miércoles</label>
             <label for="horaMiercoles">Hora miércoles</label>
             <input id="horaMiercoles" type="time" />
 
             <h3 style="margin-top:0.6rem;">Sábado</h3>
-            <label class="small-text">
-              <input type="checkbox" id="diaSabado" /> Hay reunión los sábados
-            </label>
+            <label class="small-text"><input type="checkbox" id="diaSabado" /> Hay reunión los sábados</label>
             <label for="horaSabado">Hora sábado</label>
             <input id="horaSabado" type="time" />
 
@@ -649,36 +352,25 @@ if (messaging) {
             </div>
           </div>
 
-          <!-- PANEL COORDINADOR: PROGRAMA MENSUAL -->
+          <!-- PANEL COORDINADOR: PROGRAMA -->
           <div id="panelCoordinadorPrograma" class="panel" style="display:none;">
             <div class="panel-title">
               <div>
                 <h2>Programa mensual</h2>
                 <div id="tituloProgramaMes" class="small-text"></div>
               </div>
-              <button type="button" class="btn-secondary btn-small"
-                      onclick="volverMenuCoordinador()">
-                ← Menú coordinador
-              </button>
+              <button type="button" class="btn-secondary btn-small" onclick="volverMenuCoordinador()">← Menú coordinador</button>
             </div>
 
             <label for="mesPrograma">Mes</label>
             <input id="mesPrograma" type="month" onchange="renderProgramaMensual()" />
 
             <h3 style="margin-top:0.5rem;">Agregar asignación</h3>
-            <div class="small-text">
-              Seleccioná fecha, hora, rol y acomodador. Se guarda en la nube y se muestra abajo.
-            </div>
+            <div class="small-text">Seleccioná fecha, hora, rol y acomodador. Se guarda en la nube y se muestra abajo.</div>
 
             <div class="form-row">
-              <div class="form-field">
-                <label for="asigFecha">Fecha</label>
-                <input type="date" id="asigFecha" />
-              </div>
-              <div class="form-field">
-                <label for="asigHora">Hora</label>
-                <input type="time" id="asigHora" />
-              </div>
+              <div class="form-field"><label for="asigFecha">Fecha</label><input type="date" id="asigFecha" /></div>
+              <div class="form-field"><label for="asigHora">Hora</label><input type="time" id="asigHora" /></div>
               <div class="form-field">
                 <label for="asigRol">Rol</label>
                 <select id="asigRol">
@@ -689,9 +381,7 @@ if (messaging) {
               </div>
               <div class="form-field">
                 <label for="asigAcomodador">Acomodador</label>
-                <select id="asigAcomodador">
-                  <option value="">Seleccione</option>
-                </select>
+                <select id="asigAcomodador"><option value="">Seleccione</option></select>
               </div>
             </div>
 
@@ -700,104 +390,70 @@ if (messaging) {
 
             <h3 style="margin-top:0.7rem;">Asignaciones del mes</h3>
             <table>
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Acomodador 1</th>
-                  <th>Asignación</th>
-                  <th>Acomodador 2</th>
-                  <th>Asignación</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Fecha</th><th>Acomodador 1</th><th>Asignación</th><th>Acomodador 2</th><th>Asignación</th></tr></thead>
               <tbody id="tablaProgramaMensual"></tbody>
             </table>
-            <div id="sinAsignacionesMes" class="empty-text" style="display:none;">
-              No hay asignaciones cargadas para este mes.
-            </div>
+            <div id="sinAsignacionesMes" class="empty-text" style="display:none;">No hay asignaciones cargadas para este mes.</div>
           </div>
 
           <!-- PANEL COORDINADOR: REEMPLAZOS -->
           <div id="panelCoordinadorReemplazos" class="panel" style="display:none;">
             <div class="panel-title">
               <h2>Pedidos de reemplazo</h2>
-              <button type="button" class="btn-secondary btn-small"
-                      onclick="volverMenuCoordinador()">
-                ← Menú coordinador
-              </button>
+              <button type="button" class="btn-secondary btn-small" onclick="volverMenuCoordinador()">← Menú coordinador</button>
             </div>
+
+            <div class="small-text">Tip: usá <strong>📋 Copiar</strong> y pegalo directo en el grupo.</div>
 
             <table>
               <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Hora</th>
-                  <th>Rol</th>
-                  <th>Nombre</th>
-                  <th>PIN</th>
-                </tr>
+                <tr><th>Fecha</th><th>Hora</th><th>Rol</th><th>Nombre</th><th>PIN</th><th>Acción</th></tr>
               </thead>
               <tbody id="tablaReemplazos"></tbody>
             </table>
-            <div id="sinReemplazos" class="empty-text" style="display:none;">
-              No hay pedidos de reemplazo.
-            </div>
+            <div id="sinReemplazos" class="empty-text" style="display:none;">No hay pedidos de reemplazo.</div>
           </div>
 
           <!-- PANEL ACOMODADOR: MIS ASIGNACIONES -->
           <div id="panelAcomodadorAsignaciones" class="panel" style="display:none;">
             <div class="panel-title">
               <h2>Mis asignaciones</h2>
-              <button type="button" class="btn-secondary btn-small"
-                      onclick="volverMenuAcomodador()">
-                ← Menú acomodador
-              </button>
+              <button type="button" class="btn-secondary btn-small" onclick="volverMenuAcomodador()">← Menú acomodador</button>
             </div>
-            <div id="listaAsignacionesAcomodador" class="empty-text">
-              Cargando asignaciones...
-            </div>
+            <div id="listaAsignacionesAcomodador" class="empty-text">Cargando asignaciones...</div>
             <div class="small-text" style="margin-top:0.3rem;">
               Si la app está abierta y aceptaste notificaciones, el día de tu asignación te llega un recordatorio a la hora indicada.
             </div>
           </div>
 
-          <!-- PANEL ACOMODADOR: NECESITO REEMPLAZO -->
+          <!-- PANEL ACOMODADOR: REEMPLAZO -->
           <div id="panelAcomodadorReemplazo" class="panel" style="display:none;">
             <div class="panel-title">
               <h2>Necesito reemplazo</h2>
-              <button type="button" class="btn-secondary btn-small"
-                      onclick="volverMenuAcomodador()">
-                ← Menú acomodador
-              </button>
+              <button type="button" class="btn-secondary btn-small" onclick="volverMenuAcomodador()">← Menú acomodador</button>
             </div>
 
-            <p class="small-text">
-              Elegí en la lista para cuál asignación querés pedir reemplazo.
-            </p>
-            <div id="listaReemplazoOpciones" class="empty-text">
-              No tenés asignaciones próximas para pedir reemplazo.
-            </div>
+            <p class="small-text">Elegí en la lista para cuál asignación querés pedir reemplazo.</p>
+            <div id="listaReemplazoOpciones" class="empty-text">No tenés asignaciones próximas para pedir reemplazo.</div>
 
-            <div id="detalleReemplazo" class="empty-text" style="margin-top:0.4rem;">
-              Ninguna asignación seleccionada todavía.
-            </div>
+            <div id="detalleReemplazo" class="empty-text" style="margin-top:0.4rem;">Ninguna asignación seleccionada todavía.</div>
 
-            <button type="button" id="btnConfirmarReemplazo"
-                    style="display:none;"
-                    onclick="confirmarReemplazo()">
+            <button type="button" id="btnConfirmarReemplazo" style="display:none;" onclick="confirmarReemplazo()">
               Enviar pedido de reemplazo
             </button>
+
+            <div class="small-text" style="margin-top:0.4rem;">
+              Al enviar, se guardará el pedido y se abrirá WhatsApp para avisar al coordinador.
+            </div>
 
             <div id="estadoReemplazo" class="estado"></div>
           </div>
 
-          <!-- PANEL ACOMODADOR: PROGRAMA MENSUAL -->
+          <!-- PANEL ACOMODADOR: PROGRAMA -->
           <div id="panelAcomodadorPrograma" class="panel" style="display:none;">
             <div class="panel-title">
               <h2>Programa mensual</h2>
-              <button type="button" class="btn-secondary btn-small"
-                      onclick="volverMenuAcomodador()">
-                ← Menú acomodador
-              </button>
+              <button type="button" class="btn-secondary btn-small" onclick="volverMenuAcomodador()">← Menú acomodador</button>
             </div>
 
             <label for="mesProgramaAcom">Mes</label>
@@ -805,20 +461,10 @@ if (messaging) {
 
             <h3 style="margin-top:0.5rem;">Asignaciones del mes</h3>
             <table>
-              <thead>
-                <tr>
-                  <th>Fecha</th>
-                  <th>Acomodador 1</th>
-                  <th>Asignación</th>
-                  <th>Acomodador 2</th>
-                  <th>Asignación</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Fecha</th><th>Acomodador 1</th><th>Asignación</th><th>Acomodador 2</th><th>Asignación</th></tr></thead>
               <tbody id="tablaProgramaMensualAcom"></tbody>
             </table>
-            <div id="sinAsignacionesMesAcom" class="empty-text" style="display:none;">
-              No hay asignaciones cargadas para este mes.
-            </div>
+            <div id="sinAsignacionesMesAcom" class="empty-text" style="display:none;">No hay asignaciones cargadas para este mes.</div>
           </div>
 
         </div>
@@ -827,15 +473,14 @@ if (messaging) {
   </div>
 
   <script>
-  // --- Utilidades ---
+  // ================== CONFIG WHATSAPP (Coordinador) ==================
+  // Tu número (sin +, sin espacios). Ej: 5493517481053
+  const COORDINADOR_WA = "5493517481053";
+
+  // ================== Utilidades ==================
   const diasSemanaCortos = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
-  const diasSemanaLargo = [
-    "Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"
-  ];
-  const mesesNombre = [
-    "enero","febrero","marzo","abril","mayo","junio",
-    "julio","agosto","septiembre","octubre","noviembre","diciembre"
-  ];
+  const diasSemanaLargo = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+  const mesesNombre = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
 
   function formatearFechaConDia(fechaStr) {
     if (!fechaStr) return "";
@@ -847,9 +492,40 @@ if (messaging) {
     return `${dia} ${dd}/${mm}`;
   }
 
-  // --- Teléfonos de acomodadores (guardados localmente) ---
+  function formatearFechaPlanilla(fechaStr) {
+    if (!fechaStr) return "";
+    const date = new Date(fechaStr + "T00:00:00");
+    if (isNaN(date)) return fechaStr;
+    const diaNombre = diasSemanaLargo[date.getDay()];
+    const num = date.getDate();
+    return `${diaNombre} ${num}`;
+  }
 
-  // Cargar teléfonos desde localStorage o crear objeto vacío
+  function buildMensajeReemplazoParaWa(data) {
+    const fechaForm = formatearFechaConDia(data.fecha || "");
+    const hora = data.hora || "";
+    const rol = data.rol || "";
+    const nombre = data.nombre || "Acomodador";
+    return `Hola! Necesito reemplazo.\n\n📌 ${fechaForm} ${hora}\nRol: ${rol}\nSolicita: ${nombre}\n\n¿Quién puede cubrir?`;
+  }
+
+  function abrirWhatsAppANumero(numero, mensaje) {
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, "_blank");
+  }
+
+  async function copiarAlPortapapeles(texto) {
+    try {
+      await navigator.clipboard.writeText(texto);
+      alert("✅ Mensaje copiado. Pegalo en el grupo de WhatsApp.");
+    } catch (e) {
+      prompt("Copiá y pegá este mensaje:", texto);
+    }
+  }
+
+  // ================== Teléfonos de acomodadores (localStorage) ==================
+  let listaAcomodadoresFirebase = [];
+
   function obtenerTelefonosGuardados() {
     try {
       const raw = localStorage.getItem("telefonosAcomodadores");
@@ -861,7 +537,6 @@ if (messaging) {
     }
   }
 
-  // Guardar teléfonos en localStorage
   function guardarTelefonosAcomodadores() {
     const tbody = document.getElementById("tbodyTelefonos");
     if (!tbody) return;
@@ -872,25 +547,20 @@ if (messaging) {
     filas.forEach((fila) => {
       const nombre = fila.querySelector("td input[data-tipo='nombre']").value.trim();
       const tel = fila.querySelector("td input[data-tipo='telefono']").value.trim();
-      if (nombre) {
-        datos[nombre] = tel; // puede ser vacío si no cargaste
-      }
+      if (nombre) datos[nombre] = tel;
     });
 
     localStorage.setItem("telefonosAcomodadores", JSON.stringify(datos));
     alert("Teléfonos de acomodadores guardados.");
   }
 
-  // Rellenar la tabla con nombres y teléfonos guardados
   function inicializarTablaTelefonos() {
     const tbody = document.getElementById("tbodyTelefonos");
     if (!tbody) return;
 
     const guardados = obtenerTelefonosGuardados();
-
     tbody.innerHTML = "";
 
-    // Usar la lista de acomodadores que viene de Firebase
     (listaAcomodadoresFirebase || []).forEach((nombre) => {
       const tr = document.createElement("tr");
 
@@ -911,27 +581,16 @@ if (messaging) {
 
       tr.appendChild(tdNombre);
       tr.appendChild(tdTelefono);
-
       tbody.appendChild(tr);
     });
   }
 
-  function formatearFechaPlanilla(fechaStr) {
-    if (!fechaStr) return "";
-    const date = new Date(fechaStr + "T00:00:00");
-    if (isNaN(date)) return fechaStr;
-    const diaNombre = diasSemanaLargo[date.getDay()];
-    const num = date.getDate();
-    return `${diaNombre} ${num}`;
-  }
-
-  // --- Firebase ---
+  // ================== Firebase ==================
   let db = null;
   let firebaseHabilitado = false;
   let asignacionesTodas = [];
   let asignacionesAcomodador = [];
   let timersNotificaciones = [];
-  let listaAcomodadoresFirebase = []; // <-- lista real desde Firebase
 
   try {
     const firebaseConfig = {
@@ -945,87 +604,6 @@ if (messaging) {
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
     firebaseHabilitado = true;
-
-    // --- NOTIFICACIONES PUSH (FCM) - Firebase 11 compat ---
-    let messaging = null;
-
-    try {
-      const soportaMessaging =
-        firebase.messaging &&
-        firebase.messaging.isSupported &&
-        firebase.messaging.isSupported();
-
-      console.log("¿Messaging soportado en este navegador?:", soportaMessaging);
-
-      if (soportaMessaging) {
-        messaging = firebase.messaging();
-        console.log("Firebase Messaging inicializado ✅");
-
-        // Tu clave VAPID púbica
-        messaging.usePublicVapidKey(
-          "BNYBuK1z0RizF8gZ4EHObTJWTpDvx3CBzkzn29MA0wl1EEklBwBz3x4MZjEiJ__Aow8Ay9kRaZlq9PWgfV5SODA"
-        );
-
-        // Registrar el Service Worker (ruta relativa para GitHub Pages)
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("firebase-messaging-sw.js")
-            .then(function (registration) {
-              console.log("Service Worker de FCM registrado:", registration);
-            })
-            .catch(function (err) {
-              console.error("Error registrando el Service Worker de FCM:", err);
-            });
-        }
-      } else {
-        console.warn("Firebase Messaging NO está soportado en este navegador.");
-      }
-    } catch (e) {
-      console.error("Error iniciando Firebase Messaging:", e);
-    }
-
-    // Botón "Activar notificaciones"
-    function activarNotificaciones() {
-      if (!messaging) {
-        alert("Notificaciones no disponibles en este navegador o Firebase no está habilitado.");
-        console.warn("activarNotificaciones: messaging es null.");
-        return;
-      }
-
-      Notification.requestPermission().then(function (permission) {
-        if (permission === "granted") {
-          console.log("Permiso de notificaciones concedido ✅");
-
-          messaging.getToken().then(function (currentToken) {
-            if (currentToken) {
-              console.log("Token FCM:", currentToken);
-            } else {
-              console.log("No se pudo obtener token FCM.");
-            }
-          }).catch(function (err) {
-            console.error("Error obteniendo token FCM:", err);
-          });
-        } else {
-          console.log("Permiso de notificaciones denegado.");
-        }
-      });
-    }
-
-    // Mensajes cuando la app está abierta (foreground)
-    if (messaging) {
-      messaging.onMessage(function (payload) {
-        console.log("Mensaje recibido (foreground):", payload);
-
-        const titulo = payload.notification?.title || "Acomoda App";
-        const opciones = {
-          body: payload.notification?.body || "",
-        };
-
-        if (Notification.permission === "granted") {
-          new Notification(titulo, opciones);
-        }
-      });
-    }
-
     console.log("✅ Firebase habilitado (modo nube).");
   } catch (e) {
     console.log("❌ Error inicializando Firebase:", e);
@@ -1033,25 +611,19 @@ if (messaging) {
 
   window.addEventListener("load", () => {
     const estadoEl = document.getElementById("estadoConexion");
-    if (firebaseHabilitado) {
-      estadoEl.textContent = "Conectado a Firebase (modo nube).";
-    } else {
-      estadoEl.textContent = "No se pudo conectar a Firebase. Modo local.";
-    }
+    estadoEl.textContent = firebaseHabilitado ? "Conectado a Firebase (modo nube)." : "No se pudo conectar a Firebase. Modo local.";
 
     const hoy = new Date();
     const mesStr = hoy.toISOString().slice(0, 7);
-
     const mesInput = document.getElementById("mesPrograma");
     if (mesInput) mesInput.value = mesStr;
-
     const mesInputAcom = document.getElementById("mesProgramaAcom");
     if (mesInputAcom) mesInputAcom.value = mesStr;
 
     actualizarTituloProgramaMes();
   });
 
-  // --- Usuario actual ---
+  // ================== Usuario actual ==================
   const PIN_COORDINADOR = "999";
   let usuarioRol = null;
   let usuarioPin = null;
@@ -1062,42 +634,23 @@ if (messaging) {
     const rolEl = document.querySelector('input[name="rol"]:checked');
     const pin = document.getElementById("pinInput").value.trim();
 
-    if (!rolEl) {
-      alert("Seleccione si es Coordinador o Acomodador.");
-      return;
-    }
-    if (!pin) {
-      alert("Ingrese su PIN.");
-      return;
-    }
+    if (!rolEl) return alert("Seleccione si es Coordinador o Acomodador.");
+    if (!pin) return alert("Ingrese su PIN.");
 
     const rol = rolEl.value;
 
     if (rol === "coordinador") {
-      if (pin !== PIN_COORDINADOR) {
-        alert("PIN de coordinador incorrecto.");
-        return;
-      }
+      if (pin !== PIN_COORDINADOR) return alert("PIN de coordinador incorrecto.");
       usuarioRol = "coordinador";
       usuarioPin = pin;
       usuarioNombre = "Coordinador";
       mostrarAppCoordinador();
     } else {
-      if (!firebaseHabilitado || !db) {
-        alert("No se pudo conectar a la nube. No se puede validar el PIN.");
-        return;
-      }
-      db.collection("acomodadores")
-        .where("pin", "==", pin)
-        .limit(1)
-        .get()
+      if (!firebaseHabilitado || !db) return alert("No se pudo conectar a la nube. No se puede validar el PIN.");
+      db.collection("acomodadores").where("pin", "==", pin).limit(1).get()
         .then((snapshot) => {
-          if (snapshot.empty) {
-            alert("PIN de acomodador no registrado.");
-            return;
-          }
-          const doc = snapshot.docs[0];
-          const data = doc.data();
+          if (snapshot.empty) return alert("PIN de acomodador no registrado.");
+          const data = snapshot.docs[0].data();
           usuarioRol = "acomodador";
           usuarioPin = pin;
           usuarioNombre = data.nombre || "Acomodador";
@@ -1113,16 +666,13 @@ if (messaging) {
   function mostrarAppCoordinador() {
     document.getElementById("loginSection").style.display = "none";
     document.getElementById("appSection").style.display = "block";
-
     document.getElementById("menuCoordinador").style.display = "block";
     document.getElementById("menuAcomodador").style.display = "none";
-
     ocultarPanelesCoordinador();
     ocultarPanelesAcomodador();
 
     document.getElementById("infoUsuario").textContent = "Coordinador (PIN 999)";
-    document.getElementById("infoExtraUsuario").textContent =
-      "Puede gestionar acomodadores, configurar reuniones y cargar el programa mensual.";
+    document.getElementById("infoExtraUsuario").textContent = "Puede gestionar acomodadores, configurar reuniones y cargar el programa mensual.";
 
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "inline-block";
@@ -1136,16 +686,13 @@ if (messaging) {
   function mostrarAppAcomodador() {
     document.getElementById("loginSection").style.display = "none";
     document.getElementById("appSection").style.display = "block";
-
     document.getElementById("menuCoordinador").style.display = "none";
     document.getElementById("menuAcomodador").style.display = "block";
-
     ocultarPanelesCoordinador();
     ocultarPanelesAcomodador();
 
     document.getElementById("infoUsuario").textContent = "Acomodador: " + usuarioNombre;
-    document.getElementById("infoExtraUsuario").textContent =
-      "Elegí una opción en el menú. No se muestra tu PIN por seguridad visual.";
+    document.getElementById("infoExtraUsuario").textContent = "Elegí una opción en el menú. No se muestra tu PIN por seguridad visual.";
 
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "inline-block";
@@ -1161,185 +708,121 @@ if (messaging) {
     document.getElementById("panelCoordinadorPrograma").style.display = "none";
     document.getElementById("panelCoordinadorReemplazos").style.display = "none";
   }
-
   function ocultarPanelesAcomodador() {
     document.getElementById("panelAcomodadorAsignaciones").style.display = "none";
     document.getElementById("panelAcomodadorReemplazo").style.display = "none";
     document.getElementById("panelAcomodadorPrograma").style.display = "none";
   }
 
-  // Navegación coordinador
   function abrirSeccionCoordinador(seccion) {
     ocultarPanelesCoordinador();
-
     if (seccion === "acomodadores") {
       document.getElementById("panelCoordinadorAcomodadores").style.display = "block";
-      // Cuando entro a Acomodadores, lleno la tabla de teléfonos con los nombres reales
       inicializarTablaTelefonos();
-
     } else if (seccion === "config") {
       document.getElementById("panelCoordinadorConfig").style.display = "block";
-
     } else if (seccion === "programa") {
       document.getElementById("panelCoordinadorPrograma").style.display = "block";
       actualizarTituloProgramaMes();
       renderProgramaMensual();
-
     } else if (seccion === "reemplazos") {
       document.getElementById("panelCoordinadorReemplazos").style.display = "block";
     }
   }
+  function volverMenuCoordinador() { ocultarPanelesCoordinador(); document.getElementById("menuCoordinador").style.display = "block"; }
 
-  function volverMenuCoordinador() {
-    ocultarPanelesCoordinador();
-    document.getElementById("menuCoordinador").style.display = "block";
-  }
-
-  // Navegación acomodador
   function abrirSeccionAcomodador(seccion) {
     ocultarPanelesAcomodador();
     document.getElementById("menuAcomodador").style.display = "none";
-
-    if (seccion === "asig") {
-      document.getElementById("panelAcomodadorAsignaciones").style.display = "block";
-    } else if (seccion === "reemplazo") {
-      document.getElementById("panelAcomodadorReemplazo").style.display = "block";
-    } else if (seccion === "programa") {
+    if (seccion === "asig") document.getElementById("panelAcomodadorAsignaciones").style.display = "block";
+    else if (seccion === "reemplazo") document.getElementById("panelAcomodadorReemplazo").style.display = "block";
+    else if (seccion === "programa") {
       document.getElementById("panelAcomodadorPrograma").style.display = "block";
       renderProgramaMensualAcomodador();
     }
   }
-
-  function volverMenuAcomodador() {
-    ocultarPanelesAcomodador();
-    document.getElementById("menuAcomodador").style.display = "block";
-  }
+  function volverMenuAcomodador() { ocultarPanelesAcomodador(); document.getElementById("menuAcomodador").style.display = "block"; }
 
   function cerrarSesion() {
-    usuarioRol = null;
-    usuarioPin = null;
-    usuarioNombre = null;
-    asignacionSeleccionadaParaReemplazo = null;
-    asignacionesAcomodador = [];
-
+    usuarioRol = null; usuarioPin = null; usuarioNombre = null;
+    asignacionSeleccionadaParaReemplazo = null; asignacionesAcomodador = [];
     document.getElementById("pinInput").value = "";
-    const radios = document.querySelectorAll('input[name="rol"]');
-    radios.forEach(r => (r.checked = false));
-
+    document.querySelectorAll('input[name="rol"]').forEach(r => (r.checked = false));
     document.getElementById("infoUsuario").textContent = "";
     document.getElementById("infoExtraUsuario").textContent = "";
-
     document.getElementById("appSection").style.display = "none";
     document.getElementById("loginSection").style.display = "block";
-
     document.getElementById("menuCoordinador").style.display = "none";
     document.getElementById("menuAcomodador").style.display = "none";
-    ocultarPanelesCoordinador();
-    ocultarPanelesAcomodador();
-
+    ocultarPanelesCoordinador(); ocultarPanelesAcomodador();
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "none";
-
     timersNotificaciones.forEach(id => clearTimeout(id));
     timersNotificaciones = [];
   }
 
-  // --- Acomodadores (Coordinador) ---
+  // ================== Acomodadores (Coordinador) ==================
   function escucharAcomodadores() {
     if (!firebaseHabilitado || !db) return;
 
-    db.collection("acomodadores")
-      .orderBy("nombre")
-      .onSnapshot((snapshot) => {
-        const tbody = document.getElementById("tablaAcomodadores");
-        const sinEl = document.getElementById("sinAcomodadores");
-        const selectAcom = document.getElementById("asigAcomodador");
+    db.collection("acomodadores").orderBy("nombre").onSnapshot((snapshot) => {
+      const tbody = document.getElementById("tablaAcomodadores");
+      const sinEl = document.getElementById("sinAcomodadores");
+      const selectAcom = document.getElementById("asigAcomodador");
 
-        tbody.innerHTML = "";
-        selectAcom.innerHTML = '<option value="">Seleccione</option>';
+      tbody.innerHTML = "";
+      selectAcom.innerHTML = '<option value="">Seleccione</option>';
+      listaAcomodadoresFirebase = [];
 
-        // Reiniciar lista de acomodadores reales
-        listaAcomodadoresFirebase = [];
-
-        if (snapshot.empty) {
-          sinEl.style.display = "block";
-          inicializarTablaTelefonos();
-          return;
-        } else {
-          sinEl.style.display = "none";
-        }
-
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          const nombre = data.nombre || "";
-
-          if (nombre) {
-            listaAcomodadoresFirebase.push(nombre);
-          }
-
-          const tr = document.createElement("tr");
-
-          const tdNombre = document.createElement("td");
-          tdNombre.textContent = nombre;
-          tr.appendChild(tdNombre);
-
-          const tdPin = document.createElement("td");
-          tdPin.textContent = data.pin || "";
-          tr.appendChild(tdPin);
-
-          const tdAcc = document.createElement("td");
-          const btnDel = document.createElement("button");
-          btnDel.textContent = "✕";
-          btnDel.className = "btn-danger btn-small";
-          btnDel.onclick = () => eliminarAcomodador(doc.id);
-          tdAcc.appendChild(btnDel);
-          tr.appendChild(tdAcc);
-
-          tbody.appendChild(tr);
-
-          const opt = document.createElement("option");
-          opt.value = data.pin;
-          opt.textContent = nombre + " (PIN " + data.pin + ")";
-          selectAcom.appendChild(opt);
-        });
-
-        // Actualizar tabla de teléfonos según acomodadores reales
+      if (snapshot.empty) {
+        sinEl.style.display = "block";
         inicializarTablaTelefonos();
+        return;
+      } else {
+        sinEl.style.display = "none";
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const nombre = data.nombre || "";
+        if (nombre) listaAcomodadoresFirebase.push(nombre);
+
+        const tr = document.createElement("tr");
+        const tdNombre = document.createElement("td"); tdNombre.textContent = nombre; tr.appendChild(tdNombre);
+        const tdPin = document.createElement("td"); tdPin.textContent = data.pin || ""; tr.appendChild(tdPin);
+
+        const tdAcc = document.createElement("td");
+        const btnDel = document.createElement("button");
+        btnDel.textContent = "✕";
+        btnDel.className = "btn-danger btn-small";
+        btnDel.onclick = () => eliminarAcomodador(doc.id);
+        tdAcc.appendChild(btnDel);
+        tr.appendChild(tdAcc);
+        tbody.appendChild(tr);
+
+        const opt = document.createElement("option");
+        opt.value = data.pin;
+        opt.textContent = nombre + " (PIN " + data.pin + ")";
+        selectAcom.appendChild(opt);
       });
+
+      inicializarTablaTelefonos();
+    });
   }
 
   function agregarAcomodador() {
     const nombre = document.getElementById("nuevoNombreAcom").value.trim();
     const pin = document.getElementById("nuevoPinAcom").value.trim();
     const estadoEl = document.getElementById("estadoAcomodadores");
+    estadoEl.textContent = ""; estadoEl.className = "estado";
 
-    estadoEl.textContent = "";
-    estadoEl.className = "estado";
+    if (!firebaseHabilitado || !db) { estadoEl.textContent = "No se pudo conectar a la nube."; estadoEl.classList.add("err"); return; }
+    if (!nombre || !pin) { estadoEl.textContent = "Complete nombre y PIN."; estadoEl.classList.add("err"); return; }
 
-    if (!firebaseHabilitado || !db) {
-      estadoEl.textContent = "No se pudo conectar a la nube.";
-      estadoEl.classList.add("err");
-      return;
-    }
-    if (!nombre || !pin) {
-      estadoEl.textContent = "Complete nombre y PIN.";
-      estadoEl.classList.add("err");
-      return;
-    }
-
-    db.collection("acomodadores")
-      .where("pin", "==", pin)
-      .get()
+    db.collection("acomodadores").where("pin", "==", pin).get()
       .then((snap) => {
-        if (!snap.empty) {
-          estadoEl.textContent = "Ya existe un acomodador con ese PIN.";
-          estadoEl.classList.add("err");
-          return;
-        }
-        return db.collection("acomodadores").add({
-          nombre: nombre,
-          pin: pin
-        });
+        if (!snap.empty) { estadoEl.textContent = "Ya existe un acomodador con ese PIN."; estadoEl.classList.add("err"); return; }
+        return db.collection("acomodadores").add({ nombre, pin });
       })
       .then((res) => {
         if (!res) return;
@@ -1358,22 +841,14 @@ if (messaging) {
   function eliminarAcomodador(id) {
     if (!confirm("¿Eliminar este acomodador?")) return;
     if (!firebaseHabilitado || !db) return;
-
-    db.collection("acomodadores")
-      .doc(id)
-      .delete()
-      .catch((error) => {
-        console.error("Error eliminando acomodador:", error);
-      });
+    db.collection("acomodadores").doc(id).delete().catch((error) => console.error("Error eliminando acomodador:", error));
   }
 
-  // --- Config reuniones ---
+  // ================== Config reuniones ==================
   function cargarConfigReuniones() {
     if (!firebaseHabilitado || !db) return;
 
-    db.collection("config")
-      .doc("reuniones")
-      .get()
+    db.collection("config").doc("reuniones").get()
       .then((doc) => {
         const diaMi = document.getElementById("diaMiercoles");
         const horaMi = document.getElementById("horaMiercoles");
@@ -1381,28 +856,19 @@ if (messaging) {
         const horaSa = document.getElementById("horaSabado");
         const resumen = document.getElementById("resumenConfigReuniones");
 
-        if (!doc.exists) {
-          resumen.textContent = "Sin configuración guardada.";
-          return;
-        }
+        if (!doc.exists) { resumen.textContent = "Sin configuración guardada."; return; }
         const data = doc.data();
         diaMi.checked = !!data.miercoles;
         diaSa.checked = !!data.sabado;
         if (data.horaMiercoles) horaMi.value = data.horaMiercoles;
         if (data.horaSabado) horaSa.value = data.horaSabado;
 
-        let partes = [];
-        if (data.miercoles) {
-          partes.push("Miércoles" + (data.horaMiercoles ? " " + data.horaMiercoles : ""));
-        }
-        if (data.sabado) {
-          partes.push("Sábado" + (data.horaSabado ? " " + data.horaSabado : ""));
-        }
+        const partes = [];
+        if (data.miercoles) partes.push("Miércoles" + (data.horaMiercoles ? " " + data.horaMiercoles : ""));
+        if (data.sabado) partes.push("Sábado" + (data.horaSabado ? " " + data.horaSabado : ""));
         resumen.textContent = partes.length ? partes.join(" | ") : "Sin configuración guardada.";
       })
-      .catch((error) => {
-        console.error("Error cargando config reuniones:", error);
-      });
+      .catch((error) => console.error("Error cargando config reuniones:", error));
   }
 
   function guardarConfigReuniones() {
@@ -1411,103 +877,49 @@ if (messaging) {
     const diaSa = document.getElementById("diaSabado").checked;
     const horaSa = document.getElementById("horaSabado").value;
     const estadoEl = document.getElementById("estadoConfig");
+    estadoEl.textContent = ""; estadoEl.className = "estado";
 
-    estadoEl.textContent = "";
-    estadoEl.className = "estado";
+    if (!firebaseHabilitado || !db) { estadoEl.textContent = "No se pudo conectar a la nube."; estadoEl.classList.add("err"); return; }
 
-    if (!firebaseHabilitado || !db) {
-      estadoEl.textContent = "No se pudo conectar a la nube.";
-      estadoEl.classList.add("err");
-      return;
-    }
-
-    db.collection("config")
-      .doc("reuniones")
-      .set(
-        {
-          miercoles: diaMi,
-          horaMiercoles: diaMi ? (horaMi || null) : null,
-          sabado: diaSa,
-          horaSabado: diaSa ? (horaSa || null) : null
-        },
-        { merge: true }
-      )
-      .then(() => {
-        estadoEl.textContent = "✅ Configuración guardada.";
-        estadoEl.classList.add("ok");
-        cargarConfigReuniones();
-      })
-      .catch((error) => {
-        console.error("Error guardando config reuniones:", error);
-        estadoEl.textContent = "❌ Error al guardar.";
-        estadoEl.classList.add("err");
-      });
+    db.collection("config").doc("reuniones").set(
+      { miercoles: diaMi, horaMiercoles: diaMi ? (horaMi || null) : null, sabado: diaSa, horaSabado: diaSa ? (horaSa || null) : null },
+      { merge: true }
+    )
+    .then(() => { estadoEl.textContent = "✅ Configuración guardada."; estadoEl.classList.add("ok"); cargarConfigReuniones(); })
+    .catch((error) => { console.error("Error guardando config reuniones:", error); estadoEl.textContent = "❌ Error al guardar."; estadoEl.classList.add("err"); });
   }
 
-  // --- Asignaciones ---
+  // ================== Asignaciones ==================
   function guardarAsignacion() {
     const fecha = document.getElementById("asigFecha").value;
     const hora = document.getElementById("asigHora").value;
     const rol = document.getElementById("asigRol").value;
     const pinSeleccionado = document.getElementById("asigAcomodador").value;
     const estadoEl = document.getElementById("estadoAsignacion");
+    estadoEl.textContent = ""; estadoEl.className = "estado";
 
-    estadoEl.textContent = "";
-    estadoEl.className = "estado";
+    if (!firebaseHabilitado || !db) { estadoEl.textContent = "No se pudo conectar a la nube."; estadoEl.classList.add("err"); return; }
+    if (!fecha || !hora || !rol || !pinSeleccionado) { estadoEl.textContent = "Complete todos los campos."; estadoEl.classList.add("err"); return; }
 
-    if (!firebaseHabilitado || !db) {
-      estadoEl.textContent = "No se pudo conectar a la nube.";
-      estadoEl.classList.add("err");
-      return;
-    }
-
-    if (!fecha || !hora || !rol || !pinSeleccionado) {
-      estadoEl.textContent = "Complete todos los campos.";
-      estadoEl.classList.add("err");
-      return;
-    }
-
-    db.collection("acomodadores")
-      .where("pin", "==", pinSeleccionado)
-      .limit(1)
-      .get()
+    db.collection("acomodadores").where("pin", "==", pinSeleccionado).limit(1).get()
       .then((snap) => {
         if (snap.empty) throw new Error("No se encontró acomodador para ese PIN.");
         const data = snap.docs[0].data();
         const nombre = data.nombre || "";
-        return db.collection("asignaciones").add({
-          fecha: fecha,
-          hora: hora,
-          rol: rol,
-          nombre: nombre,
-          pin: pinSeleccionado,
-          creadoEn: new Date().toISOString()
-        });
+        return db.collection("asignaciones").add({ fecha, hora, rol, nombre, pin: pinSeleccionado, creadoEn: new Date().toISOString() });
       })
-      .then(() => {
-        estadoEl.textContent = "✅ Asignación guardada.";
-        estadoEl.classList.add("ok");
-      })
-      .catch((error) => {
-        console.error("Error guardando asignación:", error);
-        estadoEl.textContent = "❌ Error al guardar la asignación.";
-        estadoEl.classList.add("err");
-      });
+      .then(() => { estadoEl.textContent = "✅ Asignación guardada."; estadoEl.classList.add("ok"); })
+      .catch((error) => { console.error("Error guardando asignación:", error); estadoEl.textContent = "❌ Error al guardar la asignación."; estadoEl.classList.add("err"); });
   }
 
   function escucharAsignacionesGlobal() {
     if (!firebaseHabilitado || !db) return;
-
-    db.collection("asignaciones")
-      .orderBy("fecha")
-      .onSnapshot((snapshot) => {
-        asignacionesTodas = [];
-        snapshot.forEach((doc) => {
-          asignacionesTodas.push({ id: doc.id, ...doc.data() });
-        });
-        renderProgramaMensual();
-        renderProgramaMensualAcomodador();
-      });
+    db.collection("asignaciones").orderBy("fecha").onSnapshot((snapshot) => {
+      asignacionesTodas = [];
+      snapshot.forEach((doc) => asignacionesTodas.push({ id: doc.id, ...doc.data() }));
+      renderProgramaMensual();
+      renderProgramaMensualAcomodador();
+    });
   }
 
   function obtenerGruposPorFecha(asignaciones, mes) {
@@ -1516,18 +928,9 @@ if (messaging) {
     asignaciones.forEach((a) => {
       const fecha = a.fecha || "";
       if (!fecha.startsWith(mes)) return;
-      if (!grupos[fecha]) {
-        grupos[fecha] = {
-          fecha,
-          entrada: [],
-          auditorio: []
-        };
-      }
-      if (a.rol === "Entrada") {
-        grupos[fecha].entrada.push(a);
-      } else if (a.rol === "Auditorio") {
-        grupos[fecha].auditorio.push(a);
-      }
+      if (!grupos[fecha]) grupos[fecha] = { fecha, entrada: [], auditorio: [] };
+      if (a.rol === "Entrada") grupos[fecha].entrada.push(a);
+      else if (a.rol === "Auditorio") grupos[fecha].auditorio.push(a);
     });
     return Object.keys(grupos).sort().map((k) => grupos[k]);
   }
@@ -1537,15 +940,9 @@ if (messaging) {
     const titulo = document.getElementById("tituloProgramaMes");
     if (!mesInput || !titulo) return;
     const mes = mesInput.value;
-    if (!mes) {
-      titulo.textContent = "";
-      return;
-    }
+    if (!mes) return (titulo.textContent = "");
     const partes = mes.split("-");
-    if (partes.length !== 2) {
-      titulo.textContent = "";
-      return;
-    }
+    if (partes.length !== 2) return (titulo.textContent = "");
     const year = partes[0];
     const m = parseInt(partes[1], 10);
     const nombreMes = mesesNombre[m - 1] || "";
@@ -1560,21 +957,14 @@ if (messaging) {
 
     const mes = mesInput.value;
     const hoyStr = new Date().toISOString().slice(0,10);
-
     tbody.innerHTML = "";
 
     const grupos = obtenerGruposPorFecha(asignacionesTodas, mes);
-
-    if (!grupos.length) {
-      sinEl.style.display = "block";
-      return;
-    } else {
-      sinEl.style.display = "none";
-    }
+    if (!grupos.length) { sinEl.style.display = "block"; return; }
+    sinEl.style.display = "none";
 
     grupos.forEach((g) => {
       const tr = document.createElement("tr");
-
       const d = new Date(g.fecha + "T00:00:00");
       const dow = d.getDay();
       if (dow === 3) tr.classList.add("fila-miercoles");
@@ -1584,78 +974,48 @@ if (messaging) {
       const entradaNombres = g.entrada.map(x => x.nombre || "").join(", ");
       const auditorioNombres = g.auditorio.map(x => x.nombre || "").join(", ");
 
-      const tdFecha = document.createElement("td");
-      tdFecha.textContent = formatearFechaPlanilla(g.fecha);
-      tr.appendChild(tdFecha);
-
-      const tdAcom1 = document.createElement("td");
-      tdAcom1.textContent = entradaNombres || "";
-      tr.appendChild(tdAcom1);
-
-      const tdRol1 = document.createElement("td");
-      tdRol1.textContent = entradaNombres ? "Entrada" : "";
-      tr.appendChild(tdRol1);
-
-      const tdAcom2 = document.createElement("td");
-      tdAcom2.textContent = auditorioNombres || "";
-      tr.appendChild(tdAcom2);
-
-      const tdRol2 = document.createElement("td");
-      tdRol2.textContent = auditorioNombres ? "Auditorio" : "";
-      tr.appendChild(tdRol2);
+      const tdFecha = document.createElement("td"); tdFecha.textContent = formatearFechaPlanilla(g.fecha); tr.appendChild(tdFecha);
+      const tdAcom1 = document.createElement("td"); tdAcom1.textContent = entradaNombres || ""; tr.appendChild(tdAcom1);
+      const tdRol1 = document.createElement("td"); tdRol1.textContent = entradaNombres ? "Entrada" : ""; tr.appendChild(tdRol1);
+      const tdAcom2 = document.createElement("td"); tdAcom2.textContent = auditorioNombres || ""; tr.appendChild(tdAcom2);
+      const tdRol2 = document.createElement("td"); tdRol2.textContent = auditorioNombres ? "Auditorio" : ""; tr.appendChild(tdRol2);
 
       tbody.appendChild(tr);
     });
   }
 
-  // --- Asignaciones (Acomodador) individuales ---
+  // ================== Asignaciones (Acomodador) ==================
   function escucharAsignacionesAcomodador(pin) {
     if (!firebaseHabilitado || !db) {
-      document.getElementById("listaAsignacionesAcomodador").textContent =
-        "No se pudo conectar a la nube.";
+      document.getElementById("listaAsignacionesAcomodador").textContent = "No se pudo conectar a la nube.";
       return;
     }
 
-    db.collection("asignaciones")
-      .where("pin", "==", pin)
-      .onSnapshot((snapshot) => {
-        const cont = document.getElementById("listaAsignacionesAcomodador");
-        asignacionesAcomodador = [];
+    db.collection("asignaciones").where("pin", "==", pin).onSnapshot((snapshot) => {
+      const cont = document.getElementById("listaAsignacionesAcomodador");
+      asignacionesAcomodador = [];
 
-        if (snapshot.empty) {
-          cont.textContent = "No tenés asignaciones cargadas todavía.";
-          document.getElementById("listaReemplazoOpciones").textContent =
-            "No tenés asignaciones próximas para pedir reemplazo.";
-          return;
-        }
+      if (snapshot.empty) {
+        cont.textContent = "No tenés asignaciones cargadas todavía.";
+        document.getElementById("listaReemplazoOpciones").textContent = "No tenés asignaciones próximas para pedir reemplazo.";
+        return;
+      }
 
-        snapshot.forEach((doc) => {
-          asignacionesAcomodador.push(doc.data());
-        });
-
-        renderMisAsignaciones();
-        renderOpcionesReemplazo();
-        programarNotificacionesAsignaciones(asignacionesAcomodador);
-      });
+      snapshot.forEach((doc) => asignacionesAcomodador.push(doc.data()));
+      renderMisAsignaciones();
+      renderOpcionesReemplazo();
+      programarNotificacionesAsignaciones(asignacionesAcomodador);
+    });
   }
 
   function renderMisAsignaciones() {
     const cont = document.getElementById("listaAsignacionesAcomodador");
     if (!cont) return;
 
-    if (!asignacionesAcomodador.length) {
-      cont.textContent = "No tenés asignaciones cargadas.";
-      return;
-    }
+    if (!asignacionesAcomodador.length) { cont.textContent = "No tenés asignaciones cargadas."; return; }
 
     const ahora = new Date();
-    const asigs = [...asignacionesAcomodador];
-
-    asigs.sort((a, b) => {
-      const fa = (a.fecha || "") + " " + (a.hora || "");
-      const fb = (b.fecha || "") + " " + (b.hora || "");
-      return fa.localeCompare(fb);
-    });
+    const asigs = [...asignacionesAcomodador].sort((a, b) => ((a.fecha||"") + " " + (a.hora||"")).localeCompare((b.fecha||"") + " " + (b.hora||"")));
 
     let html = "";
     let proximaTexto = "";
@@ -1685,14 +1045,9 @@ if (messaging) {
       `;
     });
 
-    if (proximaTexto) {
-      cont.innerHTML = `<div class="proxima-label">${proximaTexto}</div>` + html;
-    } else {
-      cont.innerHTML = html;
-    }
+    cont.innerHTML = proximaTexto ? `<div class="proxima-label">${proximaTexto}</div>` + html : html;
   }
 
-  // --- Programa mensual para Acomodador ---
   function renderProgramaMensualAcomodador() {
     const mesInput = document.getElementById("mesProgramaAcom");
     const tbody = document.getElementById("tablaProgramaMensualAcom");
@@ -1701,21 +1056,14 @@ if (messaging) {
 
     const mes = mesInput.value;
     const hoyStr = new Date().toISOString().slice(0,10);
-
     tbody.innerHTML = "";
 
     const grupos = obtenerGruposPorFecha(asignacionesTodas, mes);
-
-    if (!grupos.length) {
-      sinEl.style.display = "block";
-      return;
-    } else {
-      sinEl.style.display = "none";
-    }
+    if (!grupos.length) { sinEl.style.display = "block"; return; }
+    sinEl.style.display = "none";
 
     grupos.forEach((g) => {
       const tr = document.createElement("tr");
-
       const d = new Date(g.fecha + "T00:00:00");
       const dow = d.getDay();
       if (dow === 3) tr.classList.add("fila-miercoles");
@@ -1725,48 +1073,26 @@ if (messaging) {
       const entradaNombres = g.entrada.map(x => x.nombre || "").join(", ");
       const auditorioNombres = g.auditorio.map(x => x.nombre || "").join(", ");
 
-      const tdFecha = document.createElement("td");
-      tdFecha.textContent = formatearFechaPlanilla(g.fecha);
-      tr.appendChild(tdFecha);
-
-      const tdAcom1 = document.createElement("td");
-      tdAcom1.textContent = entradaNombres || "";
-      tr.appendChild(tdAcom1);
-
-      const tdRol1 = document.createElement("td");
-      tdRol1.textContent = entradaNombres ? "Entrada" : "";
-      tr.appendChild(tdRol1);
-
-      const tdAcom2 = document.createElement("td");
-      tdAcom2.textContent = auditorioNombres || "";
-      tr.appendChild(tdAcom2);
-
-      const tdRol2 = document.createElement("td");
-      tdRol2.textContent = auditorioNombres ? "Auditorio" : "";
-      tr.appendChild(tdRol2);
+      const tdFecha = document.createElement("td"); tdFecha.textContent = formatearFechaPlanilla(g.fecha); tr.appendChild(tdFecha);
+      const tdAcom1 = document.createElement("td"); tdAcom1.textContent = entradaNombres || ""; tr.appendChild(tdAcom1);
+      const tdRol1 = document.createElement("td"); tdRol1.textContent = entradaNombres ? "Entrada" : ""; tr.appendChild(tdRol1);
+      const tdAcom2 = document.createElement("td"); tdAcom2.textContent = auditorioNombres || ""; tr.appendChild(tdAcom2);
+      const tdRol2 = document.createElement("td"); tdRol2.textContent = auditorioNombres ? "Auditorio" : ""; tr.appendChild(tdRol2);
 
       tbody.appendChild(tr);
     });
   }
 
-  // --- Reemplazos (Acomodador) ---
+  // ================== Reemplazos (Acomodador) ==================
   function renderOpcionesReemplazo() {
     const cont = document.getElementById("listaReemplazoOpciones");
     if (!cont) return;
 
     const hoyStr = new Date().toISOString().slice(0,10);
-    const asigs = [...asignacionesAcomodador].filter(a => (a.fecha || "") >= hoyStr);
+    const asigs = [...asignacionesAcomodador].filter(a => (a.fecha || "") >= hoyStr)
+      .sort((a, b) => ((a.fecha||"") + " " + (a.hora||"")).localeCompare((b.fecha||"") + " " + (b.hora||"")));
 
-    if (!asigs.length) {
-      cont.textContent = "No tenés asignaciones próximas para pedir reemplazo.";
-      return;
-    }
-
-    asigs.sort((a, b) => {
-      const fa = (a.fecha || "") + " " + (a.hora || "");
-      const fb = (b.fecha || "") + " " + (b.hora || "");
-      return fa.localeCompare(fb);
-    });
+    if (!asigs.length) { cont.textContent = "No tenés asignaciones próximas para pedir reemplazo."; return; }
 
     let html = "";
     asigs.forEach((a, idx) => {
@@ -1778,10 +1104,7 @@ if (messaging) {
             <div><strong>${fechaForm}</strong> ${a.hora || ""}</div>
             <div>Rol: ${rol}</div>
           </div>
-          <button type="button" class="btn-secondary btn-small"
-                  onclick="seleccionarReemplazo(${idx})">
-            Pedir reemplazo
-          </button>
+          <button type="button" class="btn-secondary btn-small" onclick="seleccionarReemplazo(${idx})">Pedir reemplazo</button>
         </div>
       `;
     });
@@ -1791,7 +1114,8 @@ if (messaging) {
 
   function seleccionarReemplazo(idx) {
     const hoyStr = new Date().toISOString().slice(0,10);
-    const asigs = [...asignacionesAcomodador].filter(a => (a.fecha || "") >= hoyStr);
+    const asigs = [...asignacionesAcomodador].filter(a => (a.fecha || "") >= hoyStr)
+      .sort((a, b) => ((a.fecha||"") + " " + (a.hora||"")).localeCompare((b.fecha||"") + " " + (b.hora||"")));
 
     if (idx < 0 || idx >= asigs.length) return;
 
@@ -1801,11 +1125,7 @@ if (messaging) {
 
     const a = asignacionSeleccionadaParaReemplazo;
     const fechaForm = formatearFechaConDia(a.fecha || "");
-    detalle.textContent =
-      "Asignación seleccionada: " +
-      fechaForm + " " + (a.hora || "") +
-      " - " + (a.rol || "") +
-      (a.nombre ? " (" + a.nombre + ")" : "");
+    detalle.textContent = `Asignación seleccionada: ${fechaForm} ${a.hora || ""} - ${a.rol || ""}${a.nombre ? " (" + a.nombre + ")" : ""}`;
 
     btn.style.display = "inline-block";
     const estado = document.getElementById("estadoReemplazo");
@@ -1818,101 +1138,82 @@ if (messaging) {
     estado.textContent = "";
     estado.className = "estado";
 
-    if (!asignacionSeleccionadaParaReemplazo) {
-      estado.textContent = "No hay asignación seleccionada.";
-      estado.classList.add("err");
-      return;
-    }
-    if (!firebaseHabilitado || !db) {
-      estado.textContent = "No se pudo conectar a la nube.";
-      estado.classList.add("err");
-      return;
-    }
+    if (!asignacionSeleccionadaParaReemplazo) { estado.textContent = "No hay asignación seleccionada."; estado.classList.add("err"); return; }
+    if (!firebaseHabilitado || !db) { estado.textContent = "No se pudo conectar a la nube."; estado.classList.add("err"); return; }
 
     const data = asignacionSeleccionadaParaReemplazo;
     estado.textContent = "Enviando pedido...";
 
-    db.collection("reemplazos")
-      .add({
-        fecha: data.fecha,
-        hora: data.hora,
-        rol: data.rol,
-        nombre: data.nombre,
-        pin: data.pin,
-        creadoEn: new Date().toISOString(),
-        estado: "pendiente"
-      })
-      .then(() => {
-        estado.textContent = "✅ Pedido de reemplazo enviado.";
-        estado.classList.add("ok");
-      })
-      .catch((error) => {
-        console.error("Error guardando reemplazo:", error);
-        estado.textContent = "❌ Error al guardar el pedido.";
-        estado.classList.add("err");
-      });
+    db.collection("reemplazos").add({
+      fecha: data.fecha,
+      hora: data.hora,
+      rol: data.rol,
+      nombre: data.nombre,
+      pin: data.pin,
+      creadoEn: new Date().toISOString(),
+      estado: "pendiente"
+    })
+    .then(() => {
+      estado.textContent = "✅ Pedido enviado. Abriendo WhatsApp...";
+      estado.classList.add("ok");
+
+      // Abre WhatsApp del ACOMODADOR hacia tu número (coordinador)
+      const msg = buildMensajeReemplazoParaWa(data);
+      abrirWhatsAppANumero(COORDINADOR_WA, msg);
+    })
+    .catch((error) => {
+      console.error("Error guardando reemplazo:", error);
+      estado.textContent = "❌ Error al guardar el pedido.";
+      estado.classList.add("err");
+    });
   }
 
-  // --- Reemplazos (Coordinador) ---
+  // ================== Reemplazos (Coordinador) ==================
   function escucharReemplazosCoordinador() {
     if (!firebaseHabilitado || !db) return;
 
-    db.collection("reemplazos")
-      .orderBy("fecha")
-      .onSnapshot((snapshot) => {
-        const tbody = document.getElementById("tablaReemplazos");
-        const sinEl = document.getElementById("sinReemplazos");
-        tbody.innerHTML = "";
+    db.collection("reemplazos").orderBy("fecha").onSnapshot((snapshot) => {
+      const tbody = document.getElementById("tablaReemplazos");
+      const sinEl = document.getElementById("sinReemplazos");
+      tbody.innerHTML = "";
 
-        if (snapshot.empty) {
-          sinEl.style.display = "block";
-          return;
-        } else {
-          sinEl.style.display = "none";
-        }
+      if (snapshot.empty) { sinEl.style.display = "block"; return; }
+      sinEl.style.display = "none";
 
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          const tr = document.createElement("tr");
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const tr = document.createElement("tr");
 
-          const tdFecha = document.createElement("td");
-          tdFecha.textContent = formatearFechaConDia(data.fecha || "");
-          tr.appendChild(tdFecha);
+        const tdFecha = document.createElement("td"); tdFecha.textContent = formatearFechaConDia(data.fecha || ""); tr.appendChild(tdFecha);
+        const tdHora = document.createElement("td"); tdHora.textContent = data.hora || ""; tr.appendChild(tdHora);
 
-          const tdHora = document.createElement("td");
-          tdHora.textContent = data.hora || "";
-          tr.appendChild(tdHora);
+        const tdRol = document.createElement("td");
+        tdRol.textContent = data.rol || "";
+        if (data.rol === "Entrada") tdRol.classList.add("rol-entrada");
+        if (data.rol === "Auditorio") tdRol.classList.add("rol-auditorio");
+        tr.appendChild(tdRol);
 
-          const tdRol = document.createElement("td");
-          tdRol.textContent = data.rol || "";
-          if (data.rol === "Entrada") tdRol.classList.add("rol-entrada");
-          if (data.rol === "Auditorio") tdRol.classList.add("rol-auditorio");
-          tr.appendChild(tdRol);
+        const tdNombre = document.createElement("td"); tdNombre.textContent = data.nombre || ""; tr.appendChild(tdNombre);
+        const tdPin = document.createElement("td"); tdPin.textContent = data.pin || ""; tr.appendChild(tdPin);
 
-          const tdNombre = document.createElement("td");
-          tdNombre.textContent = data.nombre || "";
-          tr.appendChild(tdNombre);
+        const tdAcc = document.createElement("td");
+        const btnCopiar = document.createElement("button");
+        btnCopiar.type = "button";
+        btnCopiar.className = "btn-secondary btn-small";
+        btnCopiar.textContent = "📋 Copiar";
+        btnCopiar.onclick = () => copiarAlPortapapeles(buildMensajeReemplazoParaWa(data));
+        tdAcc.appendChild(btnCopiar);
+        tr.appendChild(tdAcc);
 
-          const tdPin = document.createElement("td");
-          tdPin.textContent = data.pin || "";
-          tr.appendChild(tdPin);
-
-          tbody.appendChild(tr);
-        });
+        tbody.appendChild(tr);
       });
+    });
   }
 
-  // --- Notificaciones locales ---
+  // ================== Notificaciones locales ==================
   function solicitarPermisoNotificaciones() {
-    if (!("Notification" in window)) {
-      console.log("Este navegador no soporta notificaciones.");
-      return;
-    }
-    if (Notification.permission === "default") {
-      Notification.requestPermission().then((perm) => {
-        console.log("Permiso notificaciones:", perm);
-      });
-    }
+    if (!("Notification" in window)) return;
+    if (Notification.permission === "default") Notification.requestPermission().then((perm) => console.log("Permiso notificaciones:", perm));
   }
 
   function programarNotificacionesAsignaciones(asignaciones) {
@@ -1922,9 +1223,7 @@ if (messaging) {
     timersNotificaciones.forEach((id) => clearTimeout(id));
     timersNotificaciones = [];
 
-    const hoy = new Date();
-    const hoyStr = hoy.toISOString().slice(0, 10);
-
+    const hoyStr = new Date().toISOString().slice(0, 10);
     asignaciones.forEach((asig) => {
       if (asig.fecha !== hoyStr) return;
       if (!asig.hora) return;
@@ -1943,14 +1242,12 @@ if (messaging) {
       if (diff > 24 * 60 * 60 * 1000) return;
 
       const timerId = setTimeout(() => {
-        new Notification("Recordatorio de asignación", {
-          body: `${asig.hora} - ${asig.rol} (${asig.nombre || ""})`,
-        });
+        new Notification("Recordatorio de asignación", { body: `${asig.hora} - ${asig.rol} (${asig.nombre || ""})` });
       }, diff);
 
       timersNotificaciones.push(timerId);
     });
   }
-</script>
+  </script>
 </body>
 </html>
