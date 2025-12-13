@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Acomoda App – Recordatorios de hoy</title>
+  <title>Acomoda App – Recordatorios</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root { --deep:#1A237E; --light:#7E57C2; }
@@ -16,52 +16,57 @@
     main{ padding:16px; }
     .card{
       background:white; color:var(--deep);
-      border-radius:12px; max-width:760px; margin:0 auto;
+      border-radius:12px; max-width:900px; margin:0 auto;
       padding:16px; box-shadow:0 2px 8px rgba(0,0,0,0.25);
     }
-    h1,h2{ margin-top:0; }
-    .fecha-row{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:10px; }
-    .fecha-row input[type="date"]{ padding:6px 10px; border-radius:8px; border:1px solid #ddd; font-size:14px; }
+    h1,h2,h3{ margin:0 0 8px 0; }
+    .row{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:10px 0; }
+    input[type="date"]{ padding:6px 10px; border-radius:8px; border:1px solid #ddd; font-size:14px; }
     .btn{ padding:6px 12px; border-radius:8px; border:none; cursor:pointer; font-size:13px; }
     .btn-wa{ background:#25D366; color:white; }
     .btn-secondary{ background:#ececff; color:var(--deep); }
-    .top-buttons{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; margin-bottom:8px; }
     .muted{ font-size:12px; color:#666; margin-top:6px; }
-    .error{ color:#b91c1c; font-size:13px; margin-top:6px; }
+    .error{ color:#b91c1c; font-size:13px; margin-top:6px; white-space:pre-wrap; }
     table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
     th,td{ padding:8px; border-bottom:1px solid #eee; text-align:left; }
     th{ background:#f0f2ff; }
-    .pill{ display:inline-block; padding:3px 8px; border-radius:999px; background:#eef2ff; color:var(--deep); font-size:12px; margin-left:6px; }
-    @media (max-width:480px){
-      .fecha-row{ flex-direction:column; align-items:flex-start; }
-      table{ font-size:13px; }
+    code{ background:#f3f4f6; padding:2px 6px; border-radius:6px; }
+    .diag{
+      margin-top:14px;
+      padding:12px;
+      border-radius:10px;
+      background:#f8fafc;
+      color:#111827;
+      border:1px solid #e5e7eb;
+      white-space:pre-wrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size:12px;
+      overflow:auto;
+      max-height:340px;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Acomoda App</h1>
-    <div>Recordatorios (WhatsApp) <span class="pill">Firebase</span></div>
+    <div>Recordatorios (WhatsApp) – conectado a Firebase</div>
   </header>
 
   <main>
     <div class="card">
       <h2>Asignaciones del día</h2>
 
-      <div class="fecha-row">
+      <div class="row">
         <label for="fecha">Elegir fecha:</label>
         <input type="date" id="fecha" />
         <button class="btn btn-secondary" onclick="cargarAsignacionesDelDia()">Ver asignaciones</button>
-      </div>
-
-      <div class="top-buttons">
-        <button class="btn btn-secondary" onclick="copiarParaGrupo()">Copiar mensaje para grupo de WhatsApp</button>
+        <button class="btn btn-secondary" onclick="diagnosticoFirebase()">Diagnóstico (ver cómo están guardadas)</button>
       </div>
 
       <div class="muted" id="subtituloBusqueda"></div>
       <div id="estadoError" class="error" style="display:none;"></div>
 
-      <table id="tablaAsignaciones">
+      <table>
         <thead>
           <tr>
             <th>Rol</th>
@@ -76,6 +81,12 @@
       <div id="mensajeSinAsignaciones" class="muted" style="display:none;">
         No hay asignaciones cargadas para esta fecha.
       </div>
+
+      <h3 style="margin-top:16px;">Diagnóstico</h3>
+      <div class="muted">
+        Si no aparecen asignaciones, tocá <b>Diagnóstico</b> y mirá el valor exacto de <code>fecha</code> en Firebase.
+      </div>
+      <div id="diagBox" class="diag" style="display:none;"></div>
     </div>
   </main>
 
@@ -102,7 +113,7 @@
       db = firebase.firestore();
     }
 
-    // ========= Teléfonos (desde Acomoda App) =========
+    // ========= Teléfonos =========
     function obtenerTelefonos() {
       try {
         const raw = localStorage.getItem("telefonosAcomodadores");
@@ -123,15 +134,31 @@
       return `${año}-${mes}-${dia}`;
     }
 
-    // Con tilde (Miércoles, Sábado)
-    function formatearFechaConTilde(fechaISO) {
-      const dias = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+    // Variantes posibles de fecha para buscar (por si guardaste distinto)
+    function generarVariantesDeFecha(fechaISO) {
+      // ISO: "2025-12-13"
       const d = new Date(fechaISO + "T00:00:00");
-      if (isNaN(d)) return "";
-      return dias[d.getDay()] + " " + d.getDate();
+      const diasConTilde = ["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
+      const diaNombre = diasConTilde[d.getDay()];
+      const diaNum = d.getDate();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      const yyyy = d.getFullYear();
+
+      const conTilde = `${diaNombre} ${diaNum}`;               // "Sábado 13"
+      const sinTilde = quitarTildes(conTilde);                // "Sabado 13"
+      const ddmmyyyy = `${dd}/${mm}/${yyyy}`;                 // "13/12/2025"
+      const ddmmyyyy2 = `${diaNum}/${mm}/${yyyy}`;            // "13/12/2025" (sin cero)
+      const ddmmyyyyGuion = `${dd}-${mm}-${yyyy}`;            // "13-12-2025"
+      const iso = `${yyyy}-${mm}-${dd}`;                      // "2025-12-13"
+      const diaMesAnioTexto = `${diaNombre} ${dd}/${mm}/${yyyy}`; // "Sábado 13/12/2025"
+      const diaMesAnioTexto2 = `${sinTilde} ${dd}/${mm}/${yyyy}`; // "Sabado 13/12/2025"
+
+      // única lista sin duplicados
+      const set = new Set([conTilde, sinTilde, ddmmyyyy, ddmmyyyy2, ddmmyyyyGuion, iso, diaMesAnioTexto, diaMesAnioTexto2]);
+      return Array.from(set);
     }
 
-    // Sin tildes (Miercoles, Sabado)
     function quitarTildes(txt) {
       return (txt || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
@@ -142,25 +169,12 @@
     }
     window.onload = iniciar;
 
-    async function queryAsignacionesPorFechaTexto(fechaTexto) {
-      const snap = await db.collection("asignaciones")
-        .where("fecha", "==", fechaTexto)
-        .get();
-
-      const arr = [];
-      snap.forEach(doc => arr.push(doc.data()));
-      return arr;
-    }
-
     // ========= Cargar asignaciones del día =========
     async function cargarAsignacionesDelDia() {
       initFirebase();
 
       const fechaISO = document.getElementById("fecha").value;
-
-      // Generamos ambas variantes
-      const fechaConTilde = formatearFechaConTilde(fechaISO);     // "Sábado 13"
-      const fechaSinTilde = quitarTildes(fechaConTilde);          // "Sabado 13"
+      const variantes = generarVariantesDeFecha(fechaISO);
 
       const tbody = document.getElementById("tbodyAsignaciones");
       const sinEl = document.getElementById("mensajeSinAsignaciones");
@@ -173,7 +187,7 @@
       errEl.textContent = "";
       asignacionesDiaActual = [];
 
-      subt.textContent = `Buscando en Firebase: "${fechaSinTilde}" y "${fechaConTilde}"`;
+      subt.textContent = `Buscando por campo "fecha" con variantes: ${variantes.join(" | ")}`;
 
       if (!db) {
         errEl.textContent = "No se pudo conectar a Firebase (db no inicializada).";
@@ -183,12 +197,18 @@
       }
 
       try {
-        // 1) Intento SIN tilde
-        let resultados = await queryAsignacionesPorFechaTexto(fechaSinTilde);
+        let resultados = [];
 
-        // 2) Si no hay, intento CON tilde
-        if (!resultados.length && fechaConTilde !== fechaSinTilde) {
-          resultados = await queryAsignacionesPorFechaTexto(fechaConTilde);
+        // probamos variantes una por una hasta encontrar
+        for (const v of variantes) {
+          const snap = await db.collection("asignaciones")
+            .where("fecha", "==", v)
+            .get();
+
+          if (!snap.empty) {
+            snap.forEach(doc => resultados.push(doc.data()));
+            break;
+          }
         }
 
         if (!resultados.length) {
@@ -197,8 +217,6 @@
         }
 
         asignacionesDiaActual = resultados.slice();
-
-        // Orden por hora
         asignacionesDiaActual.sort((a,b) => (a.hora || "").localeCompare(b.hora || ""));
 
         const telefonos = obtenerTelefonos();
@@ -236,7 +254,7 @@
 
       } catch (e) {
         console.error("Error leyendo asignaciones del día:", e);
-        errEl.textContent = "Error leyendo asignaciones del día. Revisá la consola (F12) para ver el detalle.";
+        errEl.textContent = "Error leyendo asignaciones. Abrí la consola (F12) y copiame el error.";
         errEl.style.display = "block";
         sinEl.style.display = "block";
       }
@@ -253,34 +271,56 @@
       window.open(url, "_blank");
     }
 
-    // ========= Mensaje para grupo =========
-    function copiarParaGrupo() {
-      if (!asignacionesDiaActual.length) {
-        alert("No hay asignaciones para esta fecha.");
-        return;
+    // ========= Diagnóstico =========
+    async function diagnosticoFirebase() {
+      initFirebase();
+      const box = document.getElementById("diagBox");
+      box.style.display = "block";
+      box.textContent = "Cargando diagnóstico...\n";
+
+      try {
+        // Trae las últimas 25 asignaciones (sin depender de 'fecha')
+        const snap = await db.collection("asignaciones")
+          .orderBy("creadoEn", "desc")
+          .limit(25)
+          .get();
+
+        if (snap.empty) {
+          box.textContent = "La colección 'asignaciones' está vacía.\n";
+          return;
+        }
+
+        const ejemplos = [];
+        const fechasDistintas = new Set();
+
+        snap.forEach(doc => {
+          const d = doc.data();
+          const obj = {
+            fecha: d.fecha,
+            hora: d.hora,
+            rol: d.rol,
+            nombre: d.nombre,
+            pin: d.pin,
+            creadoEn: d.creadoEn
+          };
+          ejemplos.push(obj);
+          if (typeof d.fecha === "string") fechasDistintas.add(d.fecha);
+        });
+
+        box.textContent =
+          "✅ Se leyeron asignaciones de Firebase.\n\n" +
+          "📌 Valores de 'fecha' encontrados (distintos):\n" +
+          Array.from(fechasDistintas).slice(0, 50).map(x => " - " + x).join("\n") +
+          "\n\n🧾 Ejemplos (últimos 25 documentos):\n" +
+          JSON.stringify(ejemplos, null, 2);
+
+      } catch (e) {
+        console.error("Diagnóstico error:", e);
+        box.textContent =
+          "❌ Error en diagnóstico.\n\n" +
+          "Copiame este error de consola (F12):\n" +
+          (e && e.message ? e.message : String(e));
       }
-      const partes = [];
-      partes.push("Recordatorio de asignaciones de hoy:");
-      asignacionesDiaActual.forEach((a) => {
-        const rol = a.rol || "";
-        const nombre = a.nombre || "";
-        const hora = a.hora || "";
-        partes.push(`${rol}: ${nombre} – ${hora} hs`);
-      });
-
-      const texto = partes.join("\n");
-
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(texto)
-          .then(() => alert("Mensaje copiado. Pegalo en el grupo de WhatsApp."))
-          .catch(() => copiarPorPrompt(texto));
-      } else {
-        copiarPorPrompt(texto);
-      }
-    }
-
-    function copiarPorPrompt(texto) {
-      prompt("Copiá este texto y pegalo en el grupo de WhatsApp:", texto);
     }
   </script>
 </body>
