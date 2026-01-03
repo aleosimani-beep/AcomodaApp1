@@ -586,28 +586,44 @@
   }
 
   // ================== Firebase ==================
-  let db = null;
-  let firebaseHabilitado = false;
-  let asignacionesTodas = [];
-  let asignacionesAcomodador = [];
-  let timersNotificaciones = [];
+ // ================== Firebase ==================
+let db = null;
+let firebaseHabilitado = false;
+let asignacionesTodas = [];
+let asignacionesAcomodador = [];
+let timersNotificaciones = [];
 
-  try {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
-      authDomain: "acomoda-app2.firebaseapp.com",
-      projectId: "acomoda-app2",
-      storageBucket: "acomoda-app2.firebasestorage.app",
-      messagingSenderId: "453109433788",
-      appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
-    };
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    firebaseHabilitado = true;
-    console.log("✅ Firebase habilitado (modo nube).");
-  } catch (e) {
-    console.log("❌ Error inicializando Firebase:", e);
-  }
+try {
+  const firebaseConfig = {
+    apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
+    authDomain: "acomoda-app2.firebaseapp.com",
+    projectId: "acomoda-app2",
+    storageBucket: "acomoda-app2.firebasestorage.app",
+    messagingSenderId: "453109433788",
+    appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
+  };
+
+  // 1️⃣ Inicializa Firebase
+  firebase.initializeApp(firebaseConfig);
+
+  // 2️⃣ 🔐 AUTH ANÓNIMA (ESTO ES LO NUEVO)
+  firebase.auth().signInAnonymously()
+    .then((cred) => {
+      console.log("✅ Auth anónima OK. UID:", cred.user.uid);
+    })
+    .catch((error) => {
+      console.error("❌ Error auth anónima:", error);
+    });
+
+  // 3️⃣ Firestore
+  db = firebase.firestore();
+  firebaseHabilitado = true;
+
+  console.log("✅ Firebase habilitado (modo nube).");
+
+} catch (e) {
+  console.log("❌ Error inicializando Firebase:", e);
+}
 
   window.addEventListener("load", () => {
     const estadoEl = document.getElementById("estadoConexion");
