@@ -653,50 +653,63 @@ try {
   let asignacionSeleccionadaParaReemplazo = null;
 
   function entrar() {
-    const rolEl = document.querySelector('input[name="rol"]:checked');
-    const pin = document.getElementById("pinInput").value.trim();
+  const rolEl = document.querySelector('input[name="rol"]:checked');
+  const pin = document.getElementById("pinInput").value.trim();
 
-    if (!rolEl) return alert("Seleccione si es Coordinador o Acomodador.");
-    if (!pin) return alert("Ingrese su PIN.");
+  if (!rolEl) return alert("Seleccione si es Coordinador o Acomodador.");
+  if (!pin) return alert("Ingrese su PIN.");
 
-    const rol = rolEl.value;
+  const rol = rolEl.value;
 
-   if (rol === "coordinador") {
-  if (pin !== PIN_COORDINADOR) return alert("PIN de coordinador incorrecto.");
+  // ===== COORDINADOR =====
+  if (rol === "coordinador") {
+    if (pin !== PIN_COORDINADOR) return alert("PIN de coordinador incorrecto.");
 
-  // 🔐 FORZAR LOGIN REAL (email/password)
-  const u = firebase.auth().currentUser;
-  if (u && u.isAnonymous) {
-    const email = prompt("Email de coordinador");
-    const pass  = prompt("Contraseña de coordinador");
+    const u = firebase.auth().currentUser;
 
-    firebase.auth().signOut().then(() => {
-      firebase.auth().signInWithEmailAndPassword(email, pass)
-        .then(() => {
-          usuarioRol = "coordinador";
-          usuarioPin = pin;
-          usuarioNombre = "Coordinador";
-          mostrarAppCoordinador();
-        })
-        .catch(() => alert("No se pudo iniciar como coordinador"));
-    });
+    if (u && u.isAnonymous) {
+      const email = prompt("Email de coordinador");
+      const pass  = prompt("Contraseña de coordinador");
 
-    return; // ⛔ importante: corta acá
-  }
+      firebase.auth().signOut().then(() => {
+        firebase.auth().signInWithEmailAndPassword(email, pass)
+          .then(() => {
+            usuarioRol = "coordinador";
+            usuarioPin = pin;
+            usuarioNombre = "Coordinador";
+            mostrarAppCoordinador();
+          })
+          .catch(() => alert("No se pudo iniciar como coordinador"));
+      });
 
-  // ya estaba logueado con email
-  usuarioRol = "coordinador";
-  usuarioPin = pin;
-  usuarioNombre = "Coordinador";
-  mostrarAppCoordinador();
-}
-        })
-        .catch((error) => {
-          console.error("Error validando acomodador:", error);
-          alert("Error validando PIN de acomodador.");
-        });
+      return;
     }
+
+    usuarioRol = "coordinador";
+    usuarioPin = pin;
+    usuarioNombre = "Coordinador";
+    mostrarAppCoordinador();
+    return;
   }
+
+  // ===== ACOMODADOR =====
+  if (!firebaseHabilitado || !db)
+    return alert("No se pudo conectar a la nube.");
+
+  db.collection("acomodadores").where("pin", "==", pin).limit(1).get()
+    .then((snapshot) => {
+      if (snapshot.empty) return alert("PIN de acomodador no registrado.");
+      const data = snapshot.docs[0].data();
+      usuarioRol = "acomodador";
+      usuarioPin = pin;
+      usuarioNombre = data.nombre || "Acomodador";
+      mostrarAppAcomodador();
+    })
+    .catch((error) => {
+      console.error("Error validando acomodador:", error);
+      alert("Error validando PIN de acomodador.");
+    });
+}
 
   function mostrarAppCoordinador() {
     document.getElementById("loginSection").style.display = "none";
