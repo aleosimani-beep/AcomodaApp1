@@ -35,6 +35,10 @@
 
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
+
+  <!-- ✅ AUTH compat (OBLIGATORIO para reglas seguras) -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
+
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
@@ -58,19 +62,19 @@
     <div id="estado" class="estado">Cargando asignaciones...</div>
 
     <div class="table-wrap">
-    <table id="tabla" style="display:none;">
-      <thead>
-        <tr>
-          <th style="width:90px;">Hora</th>
-          <th style="width:110px;">Rol</th>
-          <th style="width:160px;">Acomodador</th>
-          <th>Teléfono</th>
-          <th style="width:280px;">Acciones</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
+      <table id="tabla" style="display:none;">
+        <thead>
+          <tr>
+            <th style="width:90px;">Hora</th>
+            <th style="width:110px;">Rol</th>
+            <th style="width:160px;">Acomodador</th>
+            <th>Teléfono</th>
+            <th style="width:280px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
 
     <div class="box">
       <div class="row" style="justify-content:space-between;">
@@ -92,6 +96,10 @@
   let db = null;
   let firebaseHabilitado = false;
 
+  // ✅ Esperar a que exista un usuario autenticado
+  let _resolverAuthReady;
+  const authReady = new Promise((res)=> (_resolverAuthReady = res));
+
   try {
     const firebaseConfig = {
       apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
@@ -101,12 +109,40 @@
       messagingSenderId: "453109433788",
       appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
     };
+
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
     firebaseHabilitado = true;
+
+    // ✅ Persistencia local (no “pierde” sesión)
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(()=> {
+        firebase.auth().onAuthStateChanged((user)=> {
+          if (user) {
+            console.log("✅ Auth listo:", user.uid, "anon?", user.isAnonymous);
+            _resolverAuthReady(true);
+            return;
+          }
+          firebase.auth().signInAnonymously()
+            .then((cred)=> {
+              console.log("✅ Auth anónima OK:", cred.user.uid);
+              _resolverAuthReady(true);
+            })
+            .catch((e)=> {
+              console.error("❌ Error auth anónima:", e);
+              _resolverAuthReady(false);
+            });
+        });
+      })
+      .catch((e)=> {
+        console.error("❌ Error setPersistence:", e);
+        _resolverAuthReady(false);
+      });
+
   } catch (e) {
     console.error("Error iniciando Firebase:", e);
     firebaseHabilitado = false;
+    _resolverAuthReady(false);
   }
 
   // ================== Utilidades ==================
@@ -248,6 +284,13 @@
       return;
     }
 
+    // ✅ asegurar auth antes de leer Firestore (evita permissions)
+    const okAuth = await authReady;
+    if(!okAuth){
+      setEstado("❌ No se pudo autenticar (Firebase Auth).", "err");
+      return;
+    }
+
     setEstado("Buscando asignaciones de hoy...", "info");
     const fecha = hoyISO();
 
@@ -270,7 +313,7 @@
     }catch(e){
       console.error(e);
       renderTabla([]);
-      setEstado("❌ Error leyendo asignaciones.", "err");
+      setEstado("❌ Error leyendo asignaciones (permisos o conexión).", "err");
     }
   }
 
