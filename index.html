@@ -148,7 +148,6 @@
     .rol-entrada { color: #2563eb; font-weight: 600; }
     .rol-auditorio { color: #059669; font-weight: 600; }
 
-    /* Mis asignaciones - tarjetas */
     .proxima-label { font-size: 0.8rem; color: #2563eb; font-weight: 600; margin-bottom: 0.3rem; }
     .card-asig {
       border-radius: 0.6rem;
@@ -162,7 +161,6 @@
     .card-asig-titulo { font-size: 0.86rem; font-weight: 600; margin-bottom: 0.1rem; }
     .card-asig-rol { font-size: 0.8rem; }
 
-    /* Reemplazos - tarjetas */
     .card-reemp {
       border-radius: 0.6rem;
       border: 1px solid #e5e7eb;
@@ -176,11 +174,9 @@
     }
     .card-reemp-info { font-size: 0.8rem; }
 
-    /* Form fila horizontal */
     .form-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.3rem; }
     .form-field { flex: 1 1 150px; min-width: 0; }
 
-    /* Tabla simple teléfonos */
     .tabla-simple {
       width: 100%;
       max-width: 500px;
@@ -208,14 +204,9 @@
   </style>
 
   <!-- Firebase compat -->
- <!-- Firebase compat -->
-<script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
-
-<!-- 🔐 Firebase Auth compat (OBLIGATORIO) -->
-<script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
-
-<!-- Firestore compat -->
-<script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
 </head>
 
 <body>
@@ -257,7 +248,6 @@
     <!-- APP LOGGED -->
     <div id="appSection" style="display:none;">
       <div class="layout">
-        <!-- Columna izquierda: info usuario -->
         <div>
           <div class="panel">
             <div class="panel-title"><h2>Usuario</h2></div>
@@ -266,9 +256,7 @@
           </div>
         </div>
 
-        <!-- Columna derecha -->
         <div>
-          <!-- MENÚ COORDINADOR -->
           <div id="menuCoordinador" class="panel" style="display:none;">
             <div class="panel-title"><h2>Menú coordinador</h2></div>
             <p class="small-text">Elegí una sección.</p>
@@ -281,7 +269,6 @@
             </div>
           </div>
 
-          <!-- MENÚ ACOMODADOR -->
           <div id="menuAcomodador" class="panel" style="display:none;">
             <div class="panel-title"><h2>Menú acomodador</h2></div>
             <p class="small-text">Elegí qué querés ver.</p>
@@ -480,7 +467,6 @@
 
   <script>
   // ================== CONFIG WHATSAPP (Coordinador) ==================
-  // Tu número (sin +, sin espacios). Ej: 5493517481053
   const COORDINADOR_WA = "5493517481053";
 
   // ================== Utilidades ==================
@@ -592,44 +578,62 @@
   }
 
   // ================== Firebase ==================
- // ================== Firebase ==================
-let db = null;
-let firebaseHabilitado = false;
-let asignacionesTodas = [];
-let asignacionesAcomodador = [];
-let timersNotificaciones = [];
+  let db = null;
+  let firebaseHabilitado = false;
+  let asignacionesTodas = [];
+  let asignacionesAcomodador = [];
+  let timersNotificaciones = [];
 
-try {
-  const firebaseConfig = {
-    apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
-    authDomain: "acomoda-app2.firebaseapp.com",
-    projectId: "acomoda-app2",
-    storageBucket: "acomoda-app2.firebasestorage.app",
-    messagingSenderId: "453109433788",
-    appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
-  };
+  // Promesa para esperar a que haya usuario auth (anónimo o email)
+  let _resolverAuthReady;
+  const authReady = new Promise((res) => (_resolverAuthReady = res));
 
-  // 1️⃣ Inicializa Firebase
-  firebase.initializeApp(firebaseConfig);
+  try {
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
+      authDomain: "acomoda-app2.firebaseapp.com",
+      projectId: "acomoda-app2",
+      storageBucket: "acomoda-app2.firebasestorage.app",
+      messagingSenderId: "453109433788",
+      appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
+    };
 
-  // 2️⃣ 🔐 AUTH ANÓNIMA (ESTO ES LO NUEVO)
-  firebase.auth().signInAnonymously()
-    .then((cred) => {
-      console.log("✅ Auth anónima OK. UID:", cred.user.uid);
-    })
-    .catch((error) => {
-      console.error("❌ Error auth anónima:", error);
-    });
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.firestore();
+    firebaseHabilitado = true;
+    console.log("✅ Firebase habilitado (modo nube).");
 
-  // 3️⃣ Firestore
-  db = firebase.firestore();
-  firebaseHabilitado = true;
+    // ✅ Persistencia local para que no pida siempre
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        firebase.auth().onAuthStateChanged((user) => {
+          if (user) {
+            console.log("✅ Sesión activa:", user.uid, "anon?", user.isAnonymous);
+            _resolverAuthReady(true);
+            return;
+          }
 
-  console.log("✅ Firebase habilitado (modo nube).");
+          // Solo si NO hay usuario, crear anónimo
+          firebase.auth().signInAnonymously()
+            .then((cred) => {
+              console.log("✅ Auth anónima OK. UID:", cred.user.uid);
+              _resolverAuthReady(true);
+            })
+            .catch((e) => {
+              console.error("❌ Error auth anónima:", e);
+              _resolverAuthReady(false);
+            });
+        });
+      })
+      .catch((e) => {
+        console.error("❌ Error setPersistence:", e);
+        _resolverAuthReady(false);
+      });
 
-} catch (e) {
-  console.log("❌ Error inicializando Firebase:", e);
-}
+  } catch (e) {
+    console.log("❌ Error inicializando Firebase:", e);
+    _resolverAuthReady(false);
+  }
 
   window.addEventListener("load", () => {
     const estadoEl = document.getElementById("estadoConexion");
@@ -652,64 +656,70 @@ try {
   let usuarioNombre = null;
   let asignacionSeleccionadaParaReemplazo = null;
 
-  function entrar() {
-  const rolEl = document.querySelector('input[name="rol"]:checked');
-  const pin = document.getElementById("pinInput").value.trim();
+  // ✅ ahora es async para asegurar auth antes de consultar Firestore
+  async function entrar() {
+    await authReady;
 
-  if (!rolEl) return alert("Seleccione si es Coordinador o Acomodador.");
-  if (!pin) return alert("Ingrese su PIN.");
+    const rolEl = document.querySelector('input[name="rol"]:checked');
+    const pin = document.getElementById("pinInput").value.trim();
 
-  const rol = rolEl.value;
+    if (!rolEl) return alert("Seleccione si es Coordinador o Acomodador.");
+    if (!pin) return alert("Ingrese su PIN.");
 
-  // ===== COORDINADOR =====
-  if (rol === "coordinador") {
-    if (pin !== PIN_COORDINADOR) return alert("PIN de coordinador incorrecto.");
+    const rol = rolEl.value;
 
-    const u = firebase.auth().currentUser;
+    // ===== COORDINADOR =====
+    if (rol === "coordinador") {
+      if (pin !== PIN_COORDINADOR) return alert("PIN de coordinador incorrecto.");
 
-    if (u && u.isAnonymous) {
-      const email = prompt("Email de coordinador");
-      const pass  = prompt("Contraseña de coordinador");
+      const u = firebase.auth().currentUser;
 
-      firebase.auth().signOut().then(() => {
-        firebase.auth().signInWithEmailAndPassword(email, pass)
-          .then(() => {
-            usuarioRol = "coordinador";
-            usuarioPin = pin;
-            usuarioNombre = "Coordinador";
-            mostrarAppCoordinador();
-          })
-          .catch(() => alert("No se pudo iniciar como coordinador"));
-      });
+      // si no es email/password, pedir credenciales y loguear
+      if (!u || u.isAnonymous) {
+        const email = prompt("Email de coordinador");
+        const pass  = prompt("Contraseña de coordinador");
+        if (!email || !pass) return;
 
+        try {
+          // asegurar cambio limpio de sesión
+          await firebase.auth().signOut();
+          await firebase.auth().signInWithEmailAndPassword(email, pass);
+        } catch (e) {
+          console.error("Login admin error:", e);
+          alert("No se pudo iniciar como coordinador");
+          return;
+        }
+      }
+
+      usuarioRol = "coordinador";
+      usuarioPin = pin;
+      usuarioNombre = "Coordinador";
+      mostrarAppCoordinador();
       return;
     }
 
-    usuarioRol = "coordinador";
-    usuarioPin = pin;
-    usuarioNombre = "Coordinador";
-    mostrarAppCoordinador();
-    return;
-  }
+    // ===== ACOMODADOR =====
+    if (!firebaseHabilitado || !db) return alert("No se pudo conectar a la nube.");
 
-  // ===== ACOMODADOR =====
-  if (!firebaseHabilitado || !db)
-    return alert("No se pudo conectar a la nube.");
+    // asegurar auth anónima si hiciera falta
+    if (!firebase.auth().currentUser) {
+      try { await firebase.auth().signInAnonymously(); }
+      catch (e) { console.error(e); alert("No se pudo autenticar. Reintentá."); return; }
+    }
 
-  db.collection("acomodadores").where("pin", "==", pin).limit(1).get()
-    .then((snapshot) => {
+    try {
+      const snapshot = await db.collection("acomodadores").where("pin", "==", pin).limit(1).get();
       if (snapshot.empty) return alert("PIN de acomodador no registrado.");
       const data = snapshot.docs[0].data();
       usuarioRol = "acomodador";
       usuarioPin = pin;
       usuarioNombre = data.nombre || "Acomodador";
       mostrarAppAcomodador();
-    })
-    .catch((error) => {
+    } catch (error) {
       console.error("Error validando acomodador:", error);
       alert("Error validando PIN de acomodador.");
-    });
-}
+    }
+  }
 
   function mostrarAppCoordinador() {
     document.getElementById("loginSection").style.display = "none";
@@ -791,7 +801,8 @@ try {
   }
   function volverMenuAcomodador() { ocultarPanelesAcomodador(); document.getElementById("menuAcomodador").style.display = "block"; }
 
-  function cerrarSesion() {
+  async function cerrarSesion() {
+    // reset UI
     usuarioRol = null; usuarioPin = null; usuarioNombre = null;
     asignacionSeleccionadaParaReemplazo = null; asignacionesAcomodador = [];
     document.getElementById("pinInput").value = "";
@@ -803,10 +814,15 @@ try {
     document.getElementById("menuCoordinador").style.display = "none";
     document.getElementById("menuAcomodador").style.display = "none";
     ocultarPanelesCoordinador(); ocultarPanelesAcomodador();
+
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "none";
+
     timersNotificaciones.forEach(id => clearTimeout(id));
     timersNotificaciones = [];
+
+    // ✅ cerrar sesión real
+    try { await firebase.auth().signOut(); } catch (e) { console.error("signOut:", e); }
   }
 
   // ================== Acomodadores (Coordinador) ==================
@@ -1205,7 +1221,6 @@ try {
       estado.textContent = "✅ Pedido enviado. Abriendo WhatsApp...";
       estado.classList.add("ok");
 
-      // Abre WhatsApp del ACOMODADOR hacia tu número (coordinador)
       const msg = buildMensajeReemplazoParaWa(data);
       abrirWhatsAppANumero(COORDINADOR_WA, msg);
     })
