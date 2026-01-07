@@ -10,14 +10,7 @@
       background: linear-gradient(135deg, #2563eb 0%, #10b981 100%);
       color: #111827;
     }
-    body {
-      margin: 0;
-      padding: 1rem;
-      display: flex;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-    }
+    body { margin: 0; padding: 1rem; display: flex; min-height: 100vh; align-items: center; justify-content: center; }
     .card {
       background: #f9fafb;
       padding: 1.5rem;
@@ -62,25 +55,10 @@
       box-sizing: border-box;
       background: #ffffff;
     }
-    input:focus, select:focus {
-      outline: 2px solid #2563eb22;
-      border-color: #2563eb;
-    }
+    input:focus, select:focus { outline: 2px solid #2563eb22; border-color: #2563eb; }
 
-    .rol-row {
-      display: flex;
-      gap: 0.75rem;
-      margin-bottom: 0.5rem;
-      justify-content: center;
-    }
-    .rol-row label {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      margin: 0;
-      font-size: 0.85rem;
-      cursor: pointer;
-    }
+    .rol-row { display: flex; gap: 0.75rem; margin-bottom: 0.5rem; justify-content: center; }
+    .rol-row label { display: flex; align-items: center; gap: 0.35rem; margin: 0; font-size: 0.85rem; cursor: pointer; }
 
     button {
       margin-top: 0.7rem;
@@ -104,35 +82,12 @@
     .estado.info { color: #6b7280; }
     .small-text { font-size: 0.76rem; color: #6b7280; }
 
-    .layout {
-      display: grid;
-      grid-template-columns: 1.1fr 1.4fr;
-      gap: 1rem;
-    }
+    .layout { display: grid; grid-template-columns: 1.1fr 1.4fr; gap: 1rem; }
     @media (max-width: 780px) { .layout { grid-template-columns: 1fr; } }
 
-    .panel {
-      background: #ffffff;
-      border-radius: 0.75rem;
-      padding: 0.9rem;
-      border: 1px solid #e5e7eb;
-      margin-bottom: 0.7rem;
-    }
-    .panel-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .chip {
-      display: inline-block;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      background: #e5e7eb;
-      font-size: 0.8rem;
-      margin-top: 0.2rem;
-    }
+    .panel { background: #ffffff; border-radius: 0.75rem; padding: 0.9rem; border: 1px solid #e5e7eb; margin-bottom: 0.7rem; }
+    .panel-title { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .chip { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; background: #e5e7eb; font-size: 0.8rem; margin-top: 0.2rem; }
     .menu-buttons { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem; }
     .menu-buttons button { width: 100%; text-align: left; }
 
@@ -184,23 +139,10 @@
       margin-top: 0.5rem;
       font-size: 0.9rem;
     }
-    .tabla-simple th, .tabla-simple td {
-      border-bottom: 1px solid #ddd;
-      padding: 4px 6px;
-    }
+    .tabla-simple th, .tabla-simple td { border-bottom: 1px solid #ddd; padding: 4px 6px; }
     .tabla-simple th { background-color: #f3f4f6; text-align: left; }
-    .tabla-simple input {
-      width: 100%;
-      max-width: 180px;
-      padding: 3px 6px;
-      font-size: 0.85rem;
-    }
-    .subpanel {
-      margin-top: 0.75rem;
-      padding: 0.75rem;
-      border-radius: 8px;
-      background-color: #f9fafb;
-    }
+    .tabla-simple input { width: 100%; max-width: 180px; padding: 3px 6px; font-size: 0.85rem; }
+    .subpanel { margin-top: 0.75rem; padding: 0.75rem; border-radius: 8px; background-color: #f9fafb; }
   </style>
 
   <!-- Firebase compat -->
@@ -248,6 +190,7 @@
     <!-- APP LOGGED -->
     <div id="appSection" style="display:none;">
       <div class="layout">
+        <!-- Columna izquierda: info usuario -->
         <div>
           <div class="panel">
             <div class="panel-title"><h2>Usuario</h2></div>
@@ -256,7 +199,9 @@
           </div>
         </div>
 
+        <!-- Columna derecha -->
         <div>
+          <!-- MENÚ COORDINADOR -->
           <div id="menuCoordinador" class="panel" style="display:none;">
             <div class="panel-title"><h2>Menú coordinador</h2></div>
             <p class="small-text">Elegí una sección.</p>
@@ -269,6 +214,7 @@
             </div>
           </div>
 
+          <!-- MENÚ ACOMODADOR -->
           <div id="menuAcomodador" class="panel" style="display:none;">
             <div class="panel-title"><h2>Menú acomodador</h2></div>
             <p class="small-text">Elegí qué querés ver.</p>
@@ -356,7 +302,7 @@
             </div>
 
             <label for="mesPrograma">Mes</label>
-            <input id="mesPrograma" type="month" onchange="renderProgramaMensual()" />
+            <input id="mesPrograma" type="month" onchange="renderProgramaMensual(); actualizarTituloProgramaMes();" />
 
             <h3 style="margin-top:0.5rem;">Agregar asignación</h3>
             <div class="small-text">Seleccioná fecha, hora, rol y acomodador. Se guarda en la nube y se muestra abajo.</div>
@@ -507,15 +453,11 @@
   }
 
   async function copiarAlPortapapeles(texto) {
-    try {
-      await navigator.clipboard.writeText(texto);
-      alert("✅ Mensaje copiado. Pegalo en el grupo de WhatsApp.");
-    } catch (e) {
-      prompt("Copiá y pegá este mensaje:", texto);
-    }
+    try { await navigator.clipboard.writeText(texto); alert("✅ Mensaje copiado. Pegalo en el grupo de WhatsApp."); }
+    catch (e) { prompt("Copiá y pegá este mensaje:", texto); }
   }
 
-  // ================== Teléfonos de acomodadores (localStorage) ==================
+  // ================== Teléfonos (localStorage) ==================
   let listaAcomodadoresFirebase = [];
 
   function obtenerTelefonosGuardados() {
@@ -577,16 +519,15 @@
     });
   }
 
-  // ================== Firebase ==================
+  // ================== Firebase (MEJORADO) ==================
   let db = null;
   let firebaseHabilitado = false;
   let asignacionesTodas = [];
   let asignacionesAcomodador = [];
   let timersNotificaciones = [];
 
-  // Promesa para esperar a que haya usuario auth (anónimo o email)
-  let _resolverAuthReady;
-  const authReady = new Promise((res) => (_resolverAuthReady = res));
+  let _resolveAuthReady;
+  const authReady = new Promise((res) => (_resolveAuthReady = res));
 
   try {
     const firebaseConfig = {
@@ -601,40 +542,103 @@
     firebase.initializeApp(firebaseConfig);
     db = firebase.firestore();
     firebaseHabilitado = true;
-    console.log("✅ Firebase habilitado (modo nube).");
 
-    // ✅ Persistencia local para que no pida siempre
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .then(() => {
-        firebase.auth().onAuthStateChanged((user) => {
-          if (user) {
-            console.log("✅ Sesión activa:", user.uid, "anon?", user.isAnonymous);
-            _resolverAuthReady(true);
+        firebase.auth().onAuthStateChanged(async (u) => {
+          if (u) {
+            console.log("✅ Auth listo:", u.uid, "anon?", u.isAnonymous);
+            _resolveAuthReady(true);
             return;
           }
-
-          // Solo si NO hay usuario, crear anónimo
-          firebase.auth().signInAnonymously()
-            .then((cred) => {
-              console.log("✅ Auth anónima OK. UID:", cred.user.uid);
-              _resolverAuthReady(true);
-            })
-            .catch((e) => {
-              console.error("❌ Error auth anónima:", e);
-              _resolverAuthReady(false);
-            });
+          try {
+            const cred = await firebase.auth().signInAnonymously();
+            console.log("✅ Auth anónima OK:", cred.user.uid);
+            _resolveAuthReady(true);
+          } catch (e) {
+            console.error("❌ Error auth anónima:", e);
+            _resolveAuthReady(false);
+          }
         });
       })
       .catch((e) => {
         console.error("❌ Error setPersistence:", e);
-        _resolverAuthReady(false);
+        _resolveAuthReady(false);
       });
 
+    console.log("✅ Firebase habilitado (modo nube).");
   } catch (e) {
     console.log("❌ Error inicializando Firebase:", e);
-    _resolverAuthReady(false);
+    firebaseHabilitado = false;
+    _resolveAuthReady(false);
   }
 
+  // ================== Usuario actual + helpers (MEJORADO) ==================
+  const PIN_COORDINADOR = "999";
+  let usuarioRol = null;
+  let usuarioPin = null;
+  let usuarioNombre = null;
+  let asignacionSeleccionadaParaReemplazo = null;
+
+  async function ensureAuth() {
+    const ok = await authReady;
+    if (!ok) throw new Error("Auth no disponible");
+    if (!firebase.auth().currentUser) throw new Error("Sin usuario autenticado");
+    return firebase.auth().currentUser;
+  }
+
+  async function isAdminUser() {
+    await ensureAuth();
+    if (!firebaseHabilitado || !db) return false;
+    const uid = firebase.auth().currentUser.uid;
+    const doc = await db.collection("admins").doc(uid).get();
+    return doc.exists && doc.data() && doc.data().enabled === true;
+  }
+
+  function guardarSesionLocal() {
+    try {
+      localStorage.setItem("ac_sesion", JSON.stringify({ rol: usuarioRol, pin: usuarioPin, nombre: usuarioNombre }));
+    } catch {}
+  }
+
+  function limpiarSesionLocal() {
+    try { localStorage.removeItem("ac_sesion"); } catch {}
+  }
+
+  async function restaurarSesionSiExiste() {
+    let s = null;
+    try { s = JSON.parse(localStorage.getItem("ac_sesion") || "null"); } catch {}
+    if (!s || !s.rol) return;
+
+    try { await ensureAuth(); } catch { return; }
+
+    if (s.rol === "coordinador") {
+      try {
+        const adminOk = await isAdminUser();
+        if (!adminOk) return;
+        usuarioRol = "coordinador";
+        usuarioPin = PIN_COORDINADOR;
+        usuarioNombre = "Coordinador";
+        mostrarAppCoordinador();
+        return;
+      } catch { return; }
+    }
+
+    if (s.rol === "acomodador" && s.pin) {
+      try {
+        const snap = await db.collection("acomodadores").where("pin", "==", s.pin).limit(1).get();
+        if (snap.empty) return;
+        const data = snap.docs[0].data();
+        usuarioRol = "acomodador";
+        usuarioPin = s.pin;
+        usuarioNombre = data.nombre || "Acomodador";
+        mostrarAppAcomodador();
+        return;
+      } catch { return; }
+    }
+  }
+
+  // ================== INIT UI ==================
   window.addEventListener("load", () => {
     const estadoEl = document.getElementById("estadoConexion");
     estadoEl.textContent = firebaseHabilitado ? "Conectado a Firebase (modo nube)." : "No se pudo conectar a Firebase. Modo local.";
@@ -647,24 +651,22 @@
     if (mesInputAcom) mesInputAcom.value = mesStr;
 
     actualizarTituloProgramaMes();
+
+    // ✅ Auto reingreso si hay sesión guardada
+    authReady.then(() => restaurarSesionSiExiste());
   });
 
-  // ================== Usuario actual ==================
-  const PIN_COORDINADOR = "999";
-  let usuarioRol = null;
-  let usuarioPin = null;
-  let usuarioNombre = null;
-  let asignacionSeleccionadaParaReemplazo = null;
-
-  // ✅ ahora es async para asegurar auth antes de consultar Firestore
+  // ================== LOGIN (MEJORADO) ==================
   async function entrar() {
-    await authReady;
-
     const rolEl = document.querySelector('input[name="rol"]:checked');
     const pin = document.getElementById("pinInput").value.trim();
 
     if (!rolEl) return alert("Seleccione si es Coordinador o Acomodador.");
     if (!pin) return alert("Ingrese su PIN.");
+    if (!firebaseHabilitado || !db) return alert("No se pudo conectar a la nube.");
+
+    try { await ensureAuth(); }
+    catch (e) { console.error(e); return alert("No se pudo autenticar. Revisá conexión / reglas."); }
 
     const rol = rolEl.value;
 
@@ -672,52 +674,71 @@
     if (rol === "coordinador") {
       if (pin !== PIN_COORDINADOR) return alert("PIN de coordinador incorrecto.");
 
-      const u = firebase.auth().currentUser;
-
-      // si no es email/password, pedir credenciales y loguear
-      if (!u || u.isAnonymous) {
-        const email = prompt("Email de coordinador");
-        const pass  = prompt("Contraseña de coordinador");
-        if (!email || !pass) return;
-
-        try {
-          // asegurar cambio limpio de sesión
-          await firebase.auth().signOut();
-          await firebase.auth().signInWithEmailAndPassword(email, pass);
-        } catch (e) {
-          console.error("Login admin error:", e);
-          alert("No se pudo iniciar como coordinador");
+      // si ya está logueado y es admin -> entra sin pedir email/pass
+      try {
+        const adminOk = await isAdminUser();
+        if (adminOk) {
+          usuarioRol = "coordinador";
+          usuarioPin = pin;
+          usuarioNombre = "Coordinador";
+          guardarSesionLocal();
+          mostrarAppCoordinador();
           return;
         }
+      } catch (e) {
+        console.error("Admin check error:", e);
       }
 
-      usuarioRol = "coordinador";
-      usuarioPin = pin;
-      usuarioNombre = "Coordinador";
-      mostrarAppCoordinador();
-      return;
+      // pedir email/pass y validar admin
+      const email = prompt("Email de coordinador (admin)");
+      if (!email) return;
+      const pass = prompt("Contraseña de coordinador");
+      if (!pass) return;
+
+      try {
+        await firebase.auth().signOut();
+        await firebase.auth().signInWithEmailAndPassword(email, pass);
+
+        const adminOk2 = await isAdminUser();
+        if (!adminOk2) {
+          alert("Ese usuario NO está marcado como admin en /admins/{uid}.");
+          await firebase.auth().signOut();
+          await firebase.auth().signInAnonymously();
+          return;
+        }
+
+        usuarioRol = "coordinador";
+        usuarioPin = pin;
+        usuarioNombre = "Coordinador";
+        guardarSesionLocal();
+        mostrarAppCoordinador();
+        return;
+
+      } catch (e) {
+        console.error(e);
+        alert("No se pudo iniciar como coordinador (email/clave).");
+        try { await firebase.auth().signInAnonymously(); } catch {}
+        return;
+      }
     }
 
     // ===== ACOMODADOR =====
-    if (!firebaseHabilitado || !db) return alert("No se pudo conectar a la nube.");
-
-    // asegurar auth anónima si hiciera falta
-    if (!firebase.auth().currentUser) {
-      try { await firebase.auth().signInAnonymously(); }
-      catch (e) { console.error(e); alert("No se pudo autenticar. Reintentá."); return; }
-    }
-
     try {
-      const snapshot = await db.collection("acomodadores").where("pin", "==", pin).limit(1).get();
-      if (snapshot.empty) return alert("PIN de acomodador no registrado.");
-      const data = snapshot.docs[0].data();
+      const snap = await db.collection("acomodadores").where("pin", "==", pin).limit(1).get();
+      if (snap.empty) return alert("PIN de acomodador no registrado.");
+
+      const data = snap.docs[0].data();
       usuarioRol = "acomodador";
       usuarioPin = pin;
       usuarioNombre = data.nombre || "Acomodador";
+      guardarSesionLocal();
       mostrarAppAcomodador();
-    } catch (error) {
-      console.error("Error validando acomodador:", error);
-      alert("Error validando PIN de acomodador.");
+      return;
+
+    } catch (e) {
+      console.error("Error validando acomodador:", e);
+      alert("Error validando PIN de acomodador (permisos o conexión).");
+      return;
     }
   }
 
@@ -801,8 +822,8 @@
   }
   function volverMenuAcomodador() { ocultarPanelesAcomodador(); document.getElementById("menuAcomodador").style.display = "block"; }
 
-  async function cerrarSesion() {
-    // reset UI
+  // ✅ SALIR (MEJORADO): borra sesión local y vuelve a auth anónima
+  function cerrarSesion() {
     usuarioRol = null; usuarioPin = null; usuarioNombre = null;
     asignacionSeleccionadaParaReemplazo = null; asignacionesAcomodador = [];
     document.getElementById("pinInput").value = "";
@@ -814,15 +835,13 @@
     document.getElementById("menuCoordinador").style.display = "none";
     document.getElementById("menuAcomodador").style.display = "none";
     ocultarPanelesCoordinador(); ocultarPanelesAcomodador();
-
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "none";
-
     timersNotificaciones.forEach(id => clearTimeout(id));
     timersNotificaciones = [];
 
-    // ✅ cerrar sesión real
-    try { await firebase.auth().signOut(); } catch (e) { console.error("signOut:", e); }
+    limpiarSesionLocal();
+    firebase.auth().signOut().then(() => firebase.auth().signInAnonymously()).catch(()=>{});
   }
 
   // ================== Acomodadores (Coordinador) ==================
@@ -1208,6 +1227,7 @@
     const data = asignacionSeleccionadaParaReemplazo;
     estado.textContent = "Enviando pedido...";
 
+    // ✅ Con reglas seguras, esto requiere: allow create para signedIn() en /reemplazos
     db.collection("reemplazos").add({
       fecha: data.fecha,
       hora: data.hora,
@@ -1226,7 +1246,7 @@
     })
     .catch((error) => {
       console.error("Error guardando reemplazo:", error);
-      estado.textContent = "❌ Error al guardar el pedido.";
+      estado.textContent = "❌ Error al guardar el pedido (permisos/reglas).";
       estado.classList.add("err");
     });
   }
