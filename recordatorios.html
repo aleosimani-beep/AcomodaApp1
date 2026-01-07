@@ -35,10 +35,7 @@
 
   <!-- Firebase compat -->
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
-
-  <!-- ✅ AUTH compat (OBLIGATORIO para reglas seguras) -->
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-auth-compat.js"></script>
-
   <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
@@ -100,7 +97,7 @@
   let _resolverAuthReady;
   const authReady = new Promise((res)=> (_resolverAuthReady = res));
 
-  try {
+  function initFirebaseOnce() {
     const firebaseConfig = {
       apiKey: "AIzaSyDfCeqv8Nls3NIog-oRCfFFb7_AnUn9TQE",
       authDomain: "acomoda-app2.firebaseapp.com",
@@ -110,40 +107,68 @@
       appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    // ✅ si ya existe una app (venís desde index), reutilizá
+    if (!firebase.apps || !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
     db = firebase.firestore();
     firebaseHabilitado = true;
 
-    // ✅ Persistencia local (no “pierde” sesión)
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(()=> {
-        firebase.auth().onAuthStateChanged((user)=> {
-          if (user) {
-            console.log("✅ Auth listo:", user.uid, "anon?", user.isAnonymous);
-            _resolverAuthReady(true);
-            return;
-          }
-          firebase.auth().signInAnonymously()
-            .then((cred)=> {
-              console.log("✅ Auth anónima OK:", cred.user.uid);
-              _resolverAuthReady(true);
-            })
-            .catch((e)=> {
-              console.error("❌ Error auth anónima:", e);
-              _resolverAuthReady(false);
-            });
-        });
-      })
-      .catch((e)=> {
-        console.error("❌ Error setPersistence:", e);
-        _resolverAuthReady(false);
+    // ✅ Persistencia local
+    return firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+  }
+
+  async function ensureAuth() {
+    // Si ya hay user, listo
+    const u = firebase.auth().currentUser;
+    if (u) return u;
+
+    // Intento 1: signInAnonymously
+    try {
+      const cred = await firebase.auth().signInAnonymously();
+      return cred.user;
+    } catch (e) {
+      console.error("❌ signInAnonymously error:", e);
+    }
+
+    // Intento 2: esperar a onAuthStateChanged (por si se demoró)
+    return new Promise((resolve, reject) => {
+      const unsub = firebase.auth().onAuthStateChanged((user) => {
+        unsub();
+        if (user) resolve(user);
+        else reject(new Error("No se pudo autenticar"));
+      });
+      setTimeout(() => { try { unsub(); } catch {} reject(new Error("Timeout auth")); }, 5000);
+    });
+  }
+
+  (async () => {
+    try {
+      await initFirebaseOnce();
+
+      firebase.auth().onAuthStateChanged(async (user)=> {
+        if (user) {
+          console.log("✅ Auth listo:", user.uid, "anon?", user.isAnonymous);
+          _resolverAuthReady(true);
+          return;
+        }
+        try {
+          const u = await ensureAuth();
+          console.log("✅ Auth OK:", u.uid, "anon?", u.isAnonymous);
+          _resolverAuthReady(true);
+        } catch (e) {
+          console.error("❌ Error auth:", e);
+          _resolverAuthReady(false);
+        }
       });
 
-  } catch (e) {
-    console.error("Error iniciando Firebase:", e);
-    firebaseHabilitado = false;
-    _resolverAuthReady(false);
-  }
+    } catch (e) {
+      console.error("Error iniciando Firebase:", e);
+      firebaseHabilitado = false;
+      _resolverAuthReady(false);
+    }
+  })();
 
   // ================== Utilidades ==================
   const dias = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"];
@@ -284,7 +309,6 @@
       return;
     }
 
-    // ✅ asegurar auth antes de leer Firestore (evita permissions)
     const okAuth = await authReady;
     if(!okAuth){
       setEstado("❌ No se pudo autenticar (Firebase Auth).", "err");
