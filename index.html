@@ -10,7 +10,14 @@
       background: linear-gradient(135deg, #2563eb 0%, #10b981 100%);
       color: #111827;
     }
-    body { margin: 0; padding: 1rem; display: flex; min-height: 100vh; align-items: center; justify-content: center; }
+    body {
+      margin: 0;
+      padding: 1rem;
+      display: flex;
+      min-height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
     .card {
       background: #f9fafb;
       padding: 1.5rem;
@@ -55,10 +62,25 @@
       box-sizing: border-box;
       background: #ffffff;
     }
-    input:focus, select:focus { outline: 2px solid #2563eb22; border-color: #2563eb; }
+    input:focus, select:focus {
+      outline: 2px solid #2563eb22;
+      border-color: #2563eb;
+    }
 
-    .rol-row { display: flex; gap: 0.75rem; margin-bottom: 0.5rem; justify-content: center; }
-    .rol-row label { display: flex; align-items: center; gap: 0.35rem; margin: 0; font-size: 0.85rem; cursor: pointer; }
+    .rol-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+      justify-content: center;
+    }
+    .rol-row label {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin: 0;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
 
     button {
       margin-top: 0.7rem;
@@ -82,12 +104,35 @@
     .estado.info { color: #6b7280; }
     .small-text { font-size: 0.76rem; color: #6b7280; }
 
-    .layout { display: grid; grid-template-columns: 1.1fr 1.4fr; gap: 1rem; }
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1.4fr;
+      gap: 1rem;
+    }
     @media (max-width: 780px) { .layout { grid-template-columns: 1fr; } }
 
-    .panel { background: #ffffff; border-radius: 0.75rem; padding: 0.9rem; border: 1px solid #e5e7eb; margin-bottom: 0.7rem; }
-    .panel-title { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-    .chip { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 999px; background: #e5e7eb; font-size: 0.8rem; margin-top: 0.2rem; }
+    .panel {
+      background: #ffffff;
+      border-radius: 0.75rem;
+      padding: 0.9rem;
+      border: 1px solid #e5e7eb;
+      margin-bottom: 0.7rem;
+    }
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .chip {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: #e5e7eb;
+      font-size: 0.8rem;
+      margin-top: 0.2rem;
+    }
     .menu-buttons { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem; }
     .menu-buttons button { width: 100%; text-align: left; }
 
@@ -139,10 +184,23 @@
       margin-top: 0.5rem;
       font-size: 0.9rem;
     }
-    .tabla-simple th, .tabla-simple td { border-bottom: 1px solid #ddd; padding: 4px 6px; }
+    .tabla-simple th, .tabla-simple td {
+      border-bottom: 1px solid #ddd;
+      padding: 4px 6px;
+    }
     .tabla-simple th { background-color: #f3f4f6; text-align: left; }
-    .tabla-simple input { width: 100%; max-width: 180px; padding: 3px 6px; font-size: 0.85rem; }
-    .subpanel { margin-top: 0.75rem; padding: 0.75rem; border-radius: 8px; background-color: #f9fafb; }
+    .tabla-simple input {
+      width: 100%;
+      max-width: 180px;
+      padding: 3px 6px;
+      font-size: 0.85rem;
+    }
+    .subpanel {
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background-color: #f9fafb;
+    }
   </style>
 
   <!-- Firebase compat -->
@@ -190,7 +248,7 @@
     <!-- APP LOGGED -->
     <div id="appSection" style="display:none;">
       <div class="layout">
-        <!-- Columna izquierda: info usuario -->
+
         <div>
           <div class="panel">
             <div class="panel-title"><h2>Usuario</h2></div>
@@ -199,7 +257,6 @@
           </div>
         </div>
 
-        <!-- Columna derecha -->
         <div>
           <!-- MENÚ COORDINADOR -->
           <div id="menuCoordinador" class="panel" style="display:none;">
@@ -302,7 +359,7 @@
             </div>
 
             <label for="mesPrograma">Mes</label>
-            <input id="mesPrograma" type="month" onchange="renderProgramaMensual(); actualizarTituloProgramaMes();" />
+            <input id="mesPrograma" type="month" onchange="renderProgramaMensual()" />
 
             <h3 style="margin-top:0.5rem;">Agregar asignación</h3>
             <div class="small-text">Seleccioná fecha, hora, rol y acomodador. Se guarda en la nube y se muestra abajo.</div>
@@ -453,8 +510,12 @@
   }
 
   async function copiarAlPortapapeles(texto) {
-    try { await navigator.clipboard.writeText(texto); alert("✅ Mensaje copiado. Pegalo en el grupo de WhatsApp."); }
-    catch (e) { prompt("Copiá y pegá este mensaje:", texto); }
+    try {
+      await navigator.clipboard.writeText(texto);
+      alert("✅ Mensaje copiado. Pegalo en el grupo de WhatsApp.");
+    } catch (e) {
+      prompt("Copiá y pegá este mensaje:", texto);
+    }
   }
 
   // ================== Teléfonos (localStorage) ==================
@@ -519,15 +580,38 @@
     });
   }
 
-  // ================== Firebase (MEJORADO) ==================
+  // ================== Firebase ==================
   let db = null;
   let firebaseHabilitado = false;
+
   let asignacionesTodas = [];
   let asignacionesAcomodador = [];
   let timersNotificaciones = [];
 
+  // unsubscribers
+  let unsubAcomodadores = null;
+  let unsubAsigGlobal = null;
+  let unsubAsigAcom = null;
+  let unsubReemplazos = null;
+
+  // authReady: asegura que hay usuario logueado (anon o email)
   let _resolveAuthReady;
-  const authReady = new Promise((res) => (_resolveAuthReady = res));
+  const authReady = new Promise((res)=> (_resolveAuthReady = res));
+
+  function stopAllListeners() {
+    if (typeof unsubAcomodadores === "function") { try { unsubAcomodadores(); } catch {} }
+    if (typeof unsubAsigGlobal === "function") { try { unsubAsigGlobal(); } catch {} }
+    if (typeof unsubAsigAcom === "function") { try { unsubAsigAcom(); } catch {} }
+    if (typeof unsubReemplazos === "function") { try { unsubReemplazos(); } catch {} }
+    unsubAcomodadores = unsubAsigGlobal = unsubAsigAcom = unsubReemplazos = null;
+  }
+
+  async function ensureAnonymousIfNoUser() {
+    const u = firebase.auth().currentUser;
+    if (u) return u;
+    const cred = await firebase.auth().signInAnonymously();
+    return cred.user;
+  }
 
   try {
     const firebaseConfig = {
@@ -539,106 +623,40 @@
       appId: "1:453109433788:web:c41f4b5eedde59f63757b9"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    if (!firebase.apps || !firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+
     db = firebase.firestore();
     firebaseHabilitado = true;
 
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        firebase.auth().onAuthStateChanged(async (u) => {
-          if (u) {
-            console.log("✅ Auth listo:", u.uid, "anon?", u.isAnonymous);
-            _resolveAuthReady(true);
-            return;
-          }
-          try {
-            const cred = await firebase.auth().signInAnonymously();
-            console.log("✅ Auth anónima OK:", cred.user.uid);
-            _resolveAuthReady(true);
-          } catch (e) {
-            console.error("❌ Error auth anónima:", e);
-            _resolveAuthReady(false);
-          }
-        });
-      })
-      .catch((e) => {
-        console.error("❌ Error setPersistence:", e);
-        _resolveAuthReady(false);
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).then(() => {
+      firebase.auth().onAuthStateChanged(async (user) => {
+        if (user) {
+          console.log("✅ Auth listo:", user.uid, "anon?", user.isAnonymous);
+          _resolveAuthReady(true);
+          return; // ✅ NO loguear anónimo si ya hay user
+        }
+        try {
+          const u = await firebase.auth().signInAnonymously();
+          console.log("✅ Auth anónima OK:", u.user.uid);
+          _resolveAuthReady(true);
+        } catch (e) {
+          console.error("❌ Error auth anónima:", e);
+          _resolveAuthReady(false);
+        }
       });
+    }).catch((e) => {
+      console.error("❌ Error setPersistence:", e);
+      _resolveAuthReady(false);
+    });
 
-    console.log("✅ Firebase habilitado (modo nube).");
   } catch (e) {
     console.log("❌ Error inicializando Firebase:", e);
     firebaseHabilitado = false;
     _resolveAuthReady(false);
   }
 
-  // ================== Usuario actual + helpers (MEJORADO) ==================
-  const PIN_COORDINADOR = "999";
-  let usuarioRol = null;
-  let usuarioPin = null;
-  let usuarioNombre = null;
-  let asignacionSeleccionadaParaReemplazo = null;
-
-  async function ensureAuth() {
-    const ok = await authReady;
-    if (!ok) throw new Error("Auth no disponible");
-    if (!firebase.auth().currentUser) throw new Error("Sin usuario autenticado");
-    return firebase.auth().currentUser;
-  }
-
-  async function isAdminUser() {
-    await ensureAuth();
-    if (!firebaseHabilitado || !db) return false;
-    const uid = firebase.auth().currentUser.uid;
-    const doc = await db.collection("admins").doc(uid).get();
-    return doc.exists && doc.data() && doc.data().enabled === true;
-  }
-
-  function guardarSesionLocal() {
-    try {
-      localStorage.setItem("ac_sesion", JSON.stringify({ rol: usuarioRol, pin: usuarioPin, nombre: usuarioNombre }));
-    } catch {}
-  }
-
-  function limpiarSesionLocal() {
-    try { localStorage.removeItem("ac_sesion"); } catch {}
-  }
-
-  async function restaurarSesionSiExiste() {
-    let s = null;
-    try { s = JSON.parse(localStorage.getItem("ac_sesion") || "null"); } catch {}
-    if (!s || !s.rol) return;
-
-    try { await ensureAuth(); } catch { return; }
-
-    if (s.rol === "coordinador") {
-      try {
-        const adminOk = await isAdminUser();
-        if (!adminOk) return;
-        usuarioRol = "coordinador";
-        usuarioPin = PIN_COORDINADOR;
-        usuarioNombre = "Coordinador";
-        mostrarAppCoordinador();
-        return;
-      } catch { return; }
-    }
-
-    if (s.rol === "acomodador" && s.pin) {
-      try {
-        const snap = await db.collection("acomodadores").where("pin", "==", s.pin).limit(1).get();
-        if (snap.empty) return;
-        const data = snap.docs[0].data();
-        usuarioRol = "acomodador";
-        usuarioPin = s.pin;
-        usuarioNombre = data.nombre || "Acomodador";
-        mostrarAppAcomodador();
-        return;
-      } catch { return; }
-    }
-  }
-
-  // ================== INIT UI ==================
   window.addEventListener("load", () => {
     const estadoEl = document.getElementById("estadoConexion");
     estadoEl.textContent = firebaseHabilitado ? "Conectado a Firebase (modo nube)." : "No se pudo conectar a Firebase. Modo local.";
@@ -651,79 +669,73 @@
     if (mesInputAcom) mesInputAcom.value = mesStr;
 
     actualizarTituloProgramaMes();
-
-    // ✅ Auto reingreso si hay sesión guardada
-    authReady.then(() => restaurarSesionSiExiste());
   });
 
-  // ================== LOGIN (MEJORADO) ==================
+  // ================== Usuario actual ==================
+  const PIN_COORDINADOR = "999";
+  let usuarioRol = null;
+  let usuarioPin = null;
+  let usuarioNombre = null;
+  let asignacionSeleccionadaParaReemplazo = null;
+
   async function entrar() {
     const rolEl = document.querySelector('input[name="rol"]:checked');
     const pin = document.getElementById("pinInput").value.trim();
 
     if (!rolEl) return alert("Seleccione si es Coordinador o Acomodador.");
     if (!pin) return alert("Ingrese su PIN.");
-    if (!firebaseHabilitado || !db) return alert("No se pudo conectar a la nube.");
-
-    try { await ensureAuth(); }
-    catch (e) { console.error(e); return alert("No se pudo autenticar. Revisá conexión / reglas."); }
 
     const rol = rolEl.value;
+
+    if (!firebaseHabilitado || !db) {
+      return alert("No se pudo conectar a la nube.");
+    }
+
+    const okAuth = await authReady;
+    if (!okAuth) {
+      return alert("No se pudo autenticar con Firebase. Revisá conexión / Auth.");
+    }
 
     // ===== COORDINADOR =====
     if (rol === "coordinador") {
       if (pin !== PIN_COORDINADOR) return alert("PIN de coordinador incorrecto.");
 
-      // si ya está logueado y es admin -> entra sin pedir email/pass
-      try {
-        const adminOk = await isAdminUser();
-        if (adminOk) {
-          usuarioRol = "coordinador";
-          usuarioPin = pin;
-          usuarioNombre = "Coordinador";
-          guardarSesionLocal();
-          mostrarAppCoordinador();
-          return;
-        }
-      } catch (e) {
-        console.error("Admin check error:", e);
-      }
-
-      // pedir email/pass y validar admin
-      const email = prompt("Email de coordinador (admin)");
-      if (!email) return;
-      const pass = prompt("Contraseña de coordinador");
-      if (!pass) return;
+      const email = prompt("Email de coordinador");
+      const pass  = prompt("Contraseña de coordinador");
+      if (!email || !pass) return alert("Falta email o contraseña.");
 
       try {
-        await firebase.auth().signOut();
+        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
         await firebase.auth().signInWithEmailAndPassword(email, pass);
 
-        const adminOk2 = await isAdminUser();
-        if (!adminOk2) {
-          alert("Ese usuario NO está marcado como admin en /admins/{uid}.");
+        const uid = firebase.auth().currentUser.uid;
+
+        // ✅ admin check (requiere regla /admins/{uid} read own)
+        const adminDoc = await db.collection("admins").doc(uid).get();
+        if (!adminDoc.exists || adminDoc.data().enabled !== true) {
           await firebase.auth().signOut();
-          await firebase.auth().signInAnonymously();
-          return;
+          await ensureAnonymousIfNoUser();
+          return alert("Este usuario NO está habilitado como admin. Creá /admins/{uid} con enabled=true.");
         }
 
         usuarioRol = "coordinador";
         usuarioPin = pin;
         usuarioNombre = "Coordinador";
-        guardarSesionLocal();
         mostrarAppCoordinador();
         return;
 
       } catch (e) {
-        console.error(e);
-        alert("No se pudo iniciar como coordinador (email/clave).");
-        try { await firebase.auth().signInAnonymously(); } catch {}
+        console.error("Login coordinador error:", e);
+        alert("No se pudo iniciar como coordinador (revisá email/contraseña y que Email/Password esté habilitado).");
         return;
       }
     }
 
     // ===== ACOMODADOR =====
     try {
+      // asegurar que haya usuario (anon) para cumplir reglas seguras
+      await ensureAnonymousIfNoUser();
+
       const snap = await db.collection("acomodadores").where("pin", "==", pin).limit(1).get();
       if (snap.empty) return alert("PIN de acomodador no registrado.");
 
@@ -731,14 +743,10 @@
       usuarioRol = "acomodador";
       usuarioPin = pin;
       usuarioNombre = data.nombre || "Acomodador";
-      guardarSesionLocal();
       mostrarAppAcomodador();
-      return;
-
     } catch (e) {
       console.error("Error validando acomodador:", e);
-      alert("Error validando PIN de acomodador (permisos o conexión).");
-      return;
+      alert("Error validando PIN de acomodador.");
     }
   }
 
@@ -750,12 +758,13 @@
     ocultarPanelesCoordinador();
     ocultarPanelesAcomodador();
 
-    document.getElementById("infoUsuario").textContent = "Coordinador (PIN 999)";
+    document.getElementById("infoUsuario").textContent = "Coordinador";
     document.getElementById("infoExtraUsuario").textContent = "Puede gestionar acomodadores, configurar reuniones y cargar el programa mensual.";
 
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "inline-block";
 
+    stopAllListeners();
     escucharAcomodadores();
     escucharAsignacionesGlobal();
     escucharReemplazosCoordinador();
@@ -776,6 +785,7 @@
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "inline-block";
 
+    stopAllListeners();
     escucharAsignacionesGlobal();
     escucharAsignacionesAcomodador(usuarioPin);
     solicitarPermisoNotificaciones();
@@ -822,8 +832,9 @@
   }
   function volverMenuAcomodador() { ocultarPanelesAcomodador(); document.getElementById("menuAcomodador").style.display = "block"; }
 
-  // ✅ SALIR (MEJORADO): borra sesión local y vuelve a auth anónima
-  function cerrarSesion() {
+  async function cerrarSesion() {
+    stopAllListeners();
+
     usuarioRol = null; usuarioPin = null; usuarioNombre = null;
     asignacionSeleccionadaParaReemplazo = null; asignacionesAcomodador = [];
     document.getElementById("pinInput").value = "";
@@ -835,20 +846,23 @@
     document.getElementById("menuCoordinador").style.display = "none";
     document.getElementById("menuAcomodador").style.display = "none";
     ocultarPanelesCoordinador(); ocultarPanelesAcomodador();
+
     const btnSalir = document.getElementById("btnSalir");
     if (btnSalir) btnSalir.style.display = "none";
+
     timersNotificaciones.forEach(id => clearTimeout(id));
     timersNotificaciones = [];
 
-    limpiarSesionLocal();
-    firebase.auth().signOut().then(() => firebase.auth().signInAnonymously()).catch(()=>{});
+    // ✅ salir del email/pass y volver a anónimo (para que el login de acomodador funcione)
+    try { await firebase.auth().signOut(); } catch {}
+    try { await ensureAnonymousIfNoUser(); } catch {}
   }
 
   // ================== Acomodadores (Coordinador) ==================
   function escucharAcomodadores() {
     if (!firebaseHabilitado || !db) return;
 
-    db.collection("acomodadores").orderBy("nombre").onSnapshot((snapshot) => {
+    unsubAcomodadores = db.collection("acomodadores").orderBy("nombre").onSnapshot((snapshot) => {
       const tbody = document.getElementById("tablaAcomodadores");
       const sinEl = document.getElementById("sinAcomodadores");
       const selectAcom = document.getElementById("asigAcomodador");
@@ -890,10 +904,10 @@
       });
 
       inicializarTablaTelefonos();
-    });
+    }, (e) => console.error("Acomodadores snapshot error:", e));
   }
 
-  function agregarAcomodador() {
+  async function agregarAcomodador() {
     const nombre = document.getElementById("nuevoNombreAcom").value.trim();
     const pin = document.getElementById("nuevoPinAcom").value.trim();
     const estadoEl = document.getElementById("estadoAcomodadores");
@@ -902,23 +916,20 @@
     if (!firebaseHabilitado || !db) { estadoEl.textContent = "No se pudo conectar a la nube."; estadoEl.classList.add("err"); return; }
     if (!nombre || !pin) { estadoEl.textContent = "Complete nombre y PIN."; estadoEl.classList.add("err"); return; }
 
-    db.collection("acomodadores").where("pin", "==", pin).get()
-      .then((snap) => {
-        if (!snap.empty) { estadoEl.textContent = "Ya existe un acomodador con ese PIN."; estadoEl.classList.add("err"); return; }
-        return db.collection("acomodadores").add({ nombre, pin });
-      })
-      .then((res) => {
-        if (!res) return;
-        estadoEl.textContent = "✅ Acomodador guardado.";
-        estadoEl.classList.add("ok");
-        document.getElementById("nuevoNombreAcom").value = "";
-        document.getElementById("nuevoPinAcom").value = "";
-      })
-      .catch((error) => {
-        console.error("Error agregando acomodador:", error);
-        estadoEl.textContent = "❌ Error al guardar acomodador.";
-        estadoEl.classList.add("err");
-      });
+    try {
+      const snap = await db.collection("acomodadores").where("pin", "==", pin).get();
+      if (!snap.empty) { estadoEl.textContent = "Ya existe un acomodador con ese PIN."; estadoEl.classList.add("err"); return; }
+
+      await db.collection("acomodadores").add({ nombre, pin });
+      estadoEl.textContent = "✅ Acomodador guardado.";
+      estadoEl.classList.add("ok");
+      document.getElementById("nuevoNombreAcom").value = "";
+      document.getElementById("nuevoPinAcom").value = "";
+    } catch (e) {
+      console.error("Error agregando acomodador:", e);
+      estadoEl.textContent = "❌ Error al guardar acomodador (permisos?).";
+      estadoEl.classList.add("err");
+    }
   }
 
   function eliminarAcomodador(id) {
@@ -969,7 +980,7 @@
       { merge: true }
     )
     .then(() => { estadoEl.textContent = "✅ Configuración guardada."; estadoEl.classList.add("ok"); cargarConfigReuniones(); })
-    .catch((error) => { console.error("Error guardando config reuniones:", error); estadoEl.textContent = "❌ Error al guardar."; estadoEl.classList.add("err"); });
+    .catch((error) => { console.error("Error guardando config reuniones:", error); estadoEl.textContent = "❌ Error al guardar (permisos?)."; estadoEl.classList.add("err"); });
   }
 
   // ================== Asignaciones ==================
@@ -992,17 +1003,17 @@
         return db.collection("asignaciones").add({ fecha, hora, rol, nombre, pin: pinSeleccionado, creadoEn: new Date().toISOString() });
       })
       .then(() => { estadoEl.textContent = "✅ Asignación guardada."; estadoEl.classList.add("ok"); })
-      .catch((error) => { console.error("Error guardando asignación:", error); estadoEl.textContent = "❌ Error al guardar la asignación."; estadoEl.classList.add("err"); });
+      .catch((error) => { console.error("Error guardando asignación:", error); estadoEl.textContent = "❌ Error al guardar (permisos?)."; estadoEl.classList.add("err"); });
   }
 
   function escucharAsignacionesGlobal() {
     if (!firebaseHabilitado || !db) return;
-    db.collection("asignaciones").orderBy("fecha").onSnapshot((snapshot) => {
+    unsubAsigGlobal = db.collection("asignaciones").orderBy("fecha").onSnapshot((snapshot) => {
       asignacionesTodas = [];
       snapshot.forEach((doc) => asignacionesTodas.push({ id: doc.id, ...doc.data() }));
       renderProgramaMensual();
       renderProgramaMensualAcomodador();
-    });
+    }, (e) => console.error("Asignaciones global snapshot error:", e));
   }
 
   function obtenerGruposPorFecha(asignaciones, mes) {
@@ -1074,7 +1085,7 @@
       return;
     }
 
-    db.collection("asignaciones").where("pin", "==", pin).onSnapshot((snapshot) => {
+    unsubAsigAcom = db.collection("asignaciones").where("pin", "==", pin).onSnapshot((snapshot) => {
       const cont = document.getElementById("listaAsignacionesAcomodador");
       asignacionesAcomodador = [];
 
@@ -1088,6 +1099,10 @@
       renderMisAsignaciones();
       renderOpcionesReemplazo();
       programarNotificacionesAsignaciones(asignacionesAcomodador);
+    }, (e) => {
+      console.error("Asignaciones acomodador snapshot error:", e);
+      const cont = document.getElementById("listaAsignacionesAcomodador");
+      if (cont) cont.textContent = "Error leyendo asignaciones (permisos?).";
     });
   }
 
@@ -1227,7 +1242,6 @@
     const data = asignacionSeleccionadaParaReemplazo;
     estado.textContent = "Enviando pedido...";
 
-    // ✅ Con reglas seguras, esto requiere: allow create para signedIn() en /reemplazos
     db.collection("reemplazos").add({
       fecha: data.fecha,
       hora: data.hora,
@@ -1240,13 +1254,12 @@
     .then(() => {
       estado.textContent = "✅ Pedido enviado. Abriendo WhatsApp...";
       estado.classList.add("ok");
-
       const msg = buildMensajeReemplazoParaWa(data);
       abrirWhatsAppANumero(COORDINADOR_WA, msg);
     })
     .catch((error) => {
       console.error("Error guardando reemplazo:", error);
-      estado.textContent = "❌ Error al guardar el pedido (permisos/reglas).";
+      estado.textContent = "❌ Error al guardar el pedido (permisos?).";
       estado.classList.add("err");
     });
   }
@@ -1255,7 +1268,7 @@
   function escucharReemplazosCoordinador() {
     if (!firebaseHabilitado || !db) return;
 
-    db.collection("reemplazos").orderBy("fecha").onSnapshot((snapshot) => {
+    unsubReemplazos = db.collection("reemplazos").orderBy("fecha").onSnapshot((snapshot) => {
       const tbody = document.getElementById("tablaReemplazos");
       const sinEl = document.getElementById("sinReemplazos");
       tbody.innerHTML = "";
@@ -1290,13 +1303,15 @@
 
         tbody.appendChild(tr);
       });
-    });
+    }, (e) => console.error("Reemplazos snapshot error:", e));
   }
 
   // ================== Notificaciones locales ==================
   function solicitarPermisoNotificaciones() {
     if (!("Notification" in window)) return;
-    if (Notification.permission === "default") Notification.requestPermission().then((perm) => console.log("Permiso notificaciones:", perm));
+    if (Notification.permission === "default") {
+      Notification.requestPermission().then((perm) => console.log("Permiso notificaciones:", perm));
+    }
   }
 
   function programarNotificacionesAsignaciones(asignaciones) {
